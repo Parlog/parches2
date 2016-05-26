@@ -1,0 +1,1910 @@
+Eldiff -x '.*' -ruNP srclimpio/Pruebas unitarias/Prueba1/barrier.c jurod2/Pruebas unitarias/Prueba1/barrier.c
+--- srclimpio/Pruebas unitarias/Prueba1/barrier.c	1969-12-31 21:00:00.000000000 -0300
++++ jurod2/Pruebas unitarias/Prueba1/barrier.c	2016-05-20 01:22:51.000000000 -0300
+@@ -0,0 +1,123 @@
++  #include <pthread.h>
++  #include <stdio.h>
++  #include <errno.h>
++
++int  counter = 0;
++int hilos=0;
++int listo=0;
++
++
++typedef int mthread_barrier_t;
++
++mthread_barrier_t barrera;
++
++pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
++
++pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
++
++
++/*===========================================================================*
++ *        mthread_barrier_sync           *
++ *===========================================================================*/
++
++
++int mthread_barrier_sync(mthread_barrier_t *barrier)
++{
++  printf("Estoy trabajando\n");
++  pthread_mutex_lock (&mutex);
++
++  
++   counter=counter + 1;
++   while(listo==0)
++   {
++   pthread_cond_wait(&cond, &mutex);
++   }
++  
++   pthread_mutex_unlock(&mutex);
++   pthread_cond_signal(&cond);
++   printf("termine:  \n");
++
++   return (0);
++  }
++
++void *prueba()
++{
++  mthread_barrier_sync(&barrera);
++   return NULL;
++
++}
++
++/*===========================================================================*
++ *				mthread_barrier_destroy			     *
++ *===========================================================================*/
++int mthread_barrier_destroy(mthread_barrier_t *barrier)
++{
++
++  if (barrier == NULL)
++  	return(EINVAL);
++
++   if(counter==hilos)
++   {
++
++   printf("Esperando a que todos los hilos terminen ...   \n");
++   listo=1;
++   pthread_cond_signal(&cond);
++  
++    pthread_mutex_unlock(&mutex);
++   }
++   else
++      return mthread_barrier_destroy(barrier);
++ 
++  
++  
++
++  return(0);
++}
++
++
++/*===========================================================================*
++ *				mthread_barrier_init			     *
++ *===========================================================================*/
++int mthread_barrier_init(mthread_barrier_t *barrier)
++{
++  struct mthread_barrier_t *a;
++
++  if (barrier == NULL) 
++  	return(EAGAIN);
++  //else if (mthread_attr_valid(barrier)) 
++  	//return(EBUSY);
++
++  /*if ((a = malloc(sizeof(mthread_barrier))) == NULL)
++  	return(ENOMEM);
++    */
++
++
++//mthread_mutex_add(mutex); 
++ //mthread_cond_add(cond);
++  
++
++  return(0);
++}
++
++
++
++int main()
++{ 
++   hilos=2;
++   pthread_t thread1, thread2;
++   mthread_barrier_init(&barrera);
++   pthread_create( &thread1, NULL, &prueba, NULL);
++      
++   pthread_create( &thread2, NULL, &prueba, NULL);
++   
++   mthread_barrier_destroy(&barrera);
++   pthread_join(thread1,NULL);
++   pthread_join(thread2,NULL);
++   
++}
++
++
++
++
++
++
+Binary files srclimpio/Pruebas unitarias/Prueba1/resultados.png and jurod2/Pruebas unitarias/Prueba1/resultados.png differ
+Binary files srclimpio/Pruebas unitarias/Prueba2/Resultados.png and jurod2/Pruebas unitarias/Prueba2/Resultados.png differ
+diff -x '.*' -ruNP srclimpio/Pruebas unitarias/Prueba2/barrier2.c jurod2/Pruebas unitarias/Prueba2/barrier2.c
+--- srclimpio/Pruebas unitarias/Prueba2/barrier2.c	1969-12-31 21:00:00.000000000 -0300
++++ jurod2/Pruebas unitarias/Prueba2/barrier2.c	2016-05-20 00:53:57.000000000 -0300
+@@ -0,0 +1,130 @@
++  #include <pthread.h>
++  #include <stdio.h>
++  #include <errno.h>
++
++int  counter = 0;
++int hilos=0;
++int listo=0;
++int terminados=0;
++
++
++typedef int mthread_barrier_t;
++
++mthread_barrier_t barrera;
++
++pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
++
++pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
++
++
++/*===========================================================================*
++ *        mthread_barrier_sync           *
++ *===========================================================================*/
++
++
++int mthread_barrier_sync(mthread_barrier_t *barrier)
++{
++  printf("Estoy trabajando\n");
++  pthread_mutex_lock (&mutex);
++
++  
++   counter=counter + 1;
++   while(listo==0)
++   {
++   pthread_cond_wait(&cond, &mutex);
++   }
++  
++   pthread_mutex_unlock(&mutex);
++   pthread_cond_signal(&cond);
++   terminados=terminados+1;
++   printf("termine: %i \n",terminados);
++
++   return (0);
++  }
++
++void *prueba()
++{
++  mthread_barrier_sync(&barrera);
++   return NULL;
++
++}
++
++/*===========================================================================*
++ *				mthread_barrier_destroy			     *
++ *===========================================================================*/
++int mthread_barrier_destroy(mthread_barrier_t *barrier)
++{
++
++  if (barrier == NULL)
++  	return(EINVAL);
++
++   if(counter==hilos)
++   {
++
++   printf("Esperando a que todos los hilos terminen ...   \n");
++   listo=1;
++   pthread_cond_signal(&cond);
++  
++    pthread_mutex_unlock(&mutex);
++   }
++   else
++      return mthread_barrier_destroy(barrier);
++ 
++  
++  
++
++  return(0);
++}
++
++
++/*===========================================================================*
++ *				mthread_barrier_init			     *
++ *===========================================================================*/
++int mthread_barrier_init(mthread_barrier_t *barrier)
++{
++  struct mthread_barrier_t *a;
++
++  if (barrier == NULL) 
++  	return(EAGAIN);
++  //else if (mthread_attr_valid(barrier)) 
++  	//return(EBUSY);
++
++  /*if ((a = malloc(sizeof(mthread_barrier))) == NULL)
++  	return(ENOMEM);
++    */
++
++
++//mthread_mutex_add(mutex); 
++ //mthread_cond_add(cond);
++  
++
++  return(0);
++}
++
++
++
++int main()
++{ 
++   hilos=75;
++   pthread_t thread1;
++   int i=0;
++
++   mthread_barrier_init(&barrera);
++   for(i=0;i<hilos;i++)
++   {
++    pthread_create( &thread1, NULL, &prueba, NULL);
++   }
++      
++   //pthread_create( &thread2, NULL, &prueba, NULL);
++   
++   mthread_barrier_destroy(&barrera);
++   pthread_join(thread1,NULL);
++   //pthread_join(thread2,NULL);
++   
++}
++
++
++
++
++
++
+Binary files srclimpio/Pruebas unitarias/prueba3/barrier3 and jurod2/Pruebas unitarias/prueba3/barrier3 differ
+diff -x '.*' -ruNP srclimpio/Pruebas unitarias/prueba3/barrier3.c jurod2/Pruebas unitarias/prueba3/barrier3.c
+--- srclimpio/Pruebas unitarias/prueba3/barrier3.c	1969-12-31 21:00:00.000000000 -0300
++++ jurod2/Pruebas unitarias/prueba3/barrier3.c	2016-05-20 00:56:59.000000000 -0300
+@@ -0,0 +1,130 @@
++  #include <pthread.h>
++  #include <stdio.h>
++  #include <errno.h>
++
++int  counter = 0;
++int hilos=0;
++int listo=0;
++int terminados=0;
++
++
++typedef int mthread_barrier_t;
++
++mthread_barrier_t barrera;
++
++pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
++
++pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
++
++
++/*===========================================================================*
++ *        mthread_barrier_sync           *
++ *===========================================================================*/
++
++
++int mthread_barrier_sync(mthread_barrier_t *barrier)
++{
++  printf("Estoy trabajando\n");
++  pthread_mutex_lock (&mutex);
++
++  
++   counter=counter + 1;
++   while(listo==0)
++   {
++   pthread_cond_wait(&cond, &mutex);
++   }
++  
++   pthread_mutex_unlock(&mutex);
++   pthread_cond_signal(&cond);
++   terminados=terminados+1;
++   printf("termine: %i \n",terminados);
++
++   return (0);
++  }
++
++void *prueba()
++{
++  mthread_barrier_sync(&barrera);
++   return NULL;
++
++}
++
++/*===========================================================================*
++ *				mthread_barrier_destroy			     *
++ *===========================================================================*/
++int mthread_barrier_destroy(mthread_barrier_t *barrier)
++{
++
++  if (barrier == NULL)
++  	return(EINVAL);
++
++   if(counter==hilos)
++   {
++
++   printf("Esperando a que todos los hilos terminen ...   \n");
++   listo=1;
++   pthread_cond_signal(&cond);
++  
++    pthread_mutex_unlock(&mutex);
++   }
++   else
++      return mthread_barrier_destroy(barrier);
++ 
++  
++  
++
++  return(0);
++}
++
++
++/*===========================================================================*
++ *				mthread_barrier_init			     *
++ *===========================================================================*/
++int mthread_barrier_init(mthread_barrier_t *barrier)
++{
++  struct mthread_barrier_t *a;
++
++  if (barrier == NULL) 
++  	return(EAGAIN);
++  //else if (mthread_attr_valid(barrier)) 
++  	//return(EBUSY);
++
++  /*if ((a = malloc(sizeof(mthread_barrier))) == NULL)
++  	return(ENOMEM);
++    */
++
++
++//mthread_mutex_add(mutex); 
++ //mthread_cond_add(cond);
++  
++
++  return(0);
++}
++
++
++
++int main()
++{ 
++   hilos=75;
++   pthread_t thread1;
++   int i=0;
++
++   mthread_barrier_init(&barrera);
++   for(i=0;i<hilos;i++)
++   {
++    pthread_create( &thread1, NULL, &prueba, NULL);
++   }
++      
++   //pthread_create( &thread2, NULL, &prueba, NULL);
++   
++   mthread_barrier_destroy(&barrera);
++   pthread_join(thread1,NULL);
++   //pthread_join(thread2,NULL);
++   
++}
++
++
++
++
++
++
+Binary files srclimpio/Pruebas unitarias/prueba3/resultados.png and jurod2/Pruebas unitarias/prueba3/resultados.png differ
+Binary files srclimpio/Pruebas unitarias/prueba4/barrier4 and jurod2/Pruebas unitarias/prueba4/barrier4 differ
+diff -x '.*' -ruNP srclimpio/Pruebas unitarias/prueba4/barrier4.c jurod2/Pruebas unitarias/prueba4/barrier4.c
+--- srclimpio/Pruebas unitarias/prueba4/barrier4.c	1969-12-31 21:00:00.000000000 -0300
++++ jurod2/Pruebas unitarias/prueba4/barrier4.c	2016-05-20 01:23:02.000000000 -0300
+@@ -0,0 +1,134 @@
++  #include <pthread.h>
++  #include <stdio.h>
++  #include <errno.h>
++
++int  counter = 0;
++int hilos=0;
++int listo=0;
++int terminados=0;
++
++
++typedef int mthread_barrier_t;
++
++mthread_barrier_t barrera;
++
++
++pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
++
++pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
++
++
++/*===========================================================================*
++ *        mthread_barrier_sync           *
++ *===========================================================================*/
++
++
++int mthread_barrier_sync(mthread_barrier_t *barrier)
++{
++  if (barrier == NULL||barrier == 0)
++    return(EINVAL);
++  printf("Estoy trabajando\n");
++  pthread_mutex_lock (&mutex);
++
++  
++   counter=counter + 1;
++   while(listo==0)
++   {
++   pthread_cond_wait(&cond, &mutex);
++   }
++  
++   pthread_mutex_unlock(&mutex);
++   pthread_cond_signal(&cond);
++   terminados=terminados+1;
++   printf("termine: %i \n",terminados);
++
++   return (0);
++  }
++
++void *prueba()
++{
++  mthread_barrier_sync(&barrera);
++   return NULL;
++
++}
++
++/*===========================================================================*
++ *				mthread_barrier_destroy			     *
++ *===========================================================================*/
++int mthread_barrier_destroy(mthread_barrier_t *barrier)
++{
++
++  if (barrier == NULL||barrier == 0)
++  	return(EINVAL);
++
++   if(counter==hilos)
++   {
++
++   printf("Esperando a que todos los hilos terminen ...   \n");
++   listo=1;
++   pthread_cond_signal(&cond);
++  
++    pthread_mutex_unlock(&mutex);
++   }
++   else
++      return mthread_barrier_destroy(barrier);
++ 
++  
++  
++
++  return(0);
++}
++
++
++/*===========================================================================*
++ *				mthread_barrier_init			     *
++ *===========================================================================*/
++int mthread_barrier_init(mthread_barrier_t *barrier)
++{
++  struct mthread_barrier_t *a;
++
++  if (barrier == NULL||barrier == 0) 
++  	return(EAGAIN);
++  //else if (mthread_attr_valid(barrier)) 
++  	//return(EBUSY);
++
++  /*if ((a = malloc(sizeof(mthread_barrier))) == NULL)
++  	return(ENOMEM);
++    */
++
++
++//mthread_mutex_add(mutex); 
++ //mthread_cond_add(cond);
++  
++
++  return(0);
++}
++
++
++
++int main()
++{ 
++   barrera=0;
++   hilos=90;
++   pthread_t thread1;
++   int i=0;
++
++   mthread_barrier_init(&barrera);
++   for(i=0;i<hilos;i++)
++   {
++    pthread_create( &thread1, NULL, &prueba, NULL);
++   }
++      
++   //pthread_create( &thread2, NULL, &prueba, NULL);
++   
++   mthread_barrier_destroy(&barrera);
++   pthread_join(thread1,NULL);
++   //pthread_join(thread2,NULL);
++   
++}
++
++
++
++
++
++
+Binary files srclimpio/Pruebas unitarias/prueba4/resultados.png and jurod2/Pruebas unitarias/prueba4/resultados.png differ
+Binary files srclimpio/Pruebas unitarias/prueba5/barrier5 and jurod2/Pruebas unitarias/prueba5/barrier5 differ
+diff -x '.*' -ruNP srclimpio/Pruebas unitarias/prueba5/barrier5.c jurod2/Pruebas unitarias/prueba5/barrier5.c
+--- srclimpio/Pruebas unitarias/prueba5/barrier5.c	1969-12-31 21:00:00.000000000 -0300
++++ jurod2/Pruebas unitarias/prueba5/barrier5.c	2016-05-20 01:26:50.000000000 -0300
+@@ -0,0 +1,134 @@
++  #include <pthread.h>
++  #include <stdio.h>
++  #include <errno.h>
++
++int  counter = 0;
++int hilos=0;
++int listo=0;
++int terminados=0;
++
++
++typedef int mthread_barrier_t;
++
++mthread_barrier_t barrera;
++
++
++pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
++
++pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
++
++
++/*===========================================================================*
++ *        mthread_barrier_sync           *
++ *===========================================================================*/
++
++
++int mthread_barrier_sync(mthread_barrier_t *barrier)
++{
++  if (barrier == NULL||barrier == 0)
++    return(EINVAL);
++  printf("Estoy trabajando\n");
++  pthread_mutex_lock (&mutex);
++
++  
++   counter=counter + 1;
++   while(listo==0)
++   {
++   pthread_cond_wait(&cond, &mutex);
++   }
++  
++   pthread_mutex_unlock(&mutex);
++   pthread_cond_signal(&cond);
++   terminados=terminados+1;
++   printf("termine: %i \n",terminados);
++
++   return (0);
++  }
++
++void *prueba()
++{
++  mthread_barrier_sync(&barrera);
++   return NULL;
++
++}
++
++/*===========================================================================*
++ *				mthread_barrier_destroy			     *
++ *===========================================================================*/
++int mthread_barrier_destroy(mthread_barrier_t *barrier)
++{
++
++  if (barrier == NULL||barrier == 0)
++  	return(EINVAL);
++
++   if(counter==hilos)
++   {
++
++   printf("Esperando a que todos los hilos terminen ...   \n");
++   listo=1;
++   pthread_cond_signal(&cond);
++  
++    pthread_mutex_unlock(&mutex);
++   }
++   else
++      return mthread_barrier_destroy(barrier);
++ 
++  
++  
++
++  return(0);
++}
++
++
++/*===========================================================================*
++ *				mthread_barrier_init			     *
++ *===========================================================================*/
++int mthread_barrier_init(mthread_barrier_t *barrier)
++{
++  struct mthread_barrier_t *a;
++
++  if (barrier == NULL||barrier == 0) 
++  	return(EAGAIN);
++  //else if (mthread_attr_valid(barrier)) 
++  	//return(EBUSY);
++
++  /*if ((a = malloc(sizeof(mthread_barrier))) == NULL)
++  	return(ENOMEM);
++    */
++
++
++//mthread_mutex_add(mutex); 
++ //mthread_cond_add(cond);
++  
++
++  return(0);
++}
++
++
++
++int main()
++{ 
++   barrera=0;
++   hilos=300;
++   pthread_t thread1;
++   int i=0;
++
++   mthread_barrier_init(&barrera);
++   for(i=0;i<hilos;i++)
++   {
++    pthread_create( &thread1, NULL, &prueba, NULL);
++   }
++      
++   //pthread_create( &thread2, NULL, &prueba, NULL);
++   
++   mthread_barrier_destroy(&barrera);
++   pthread_join(thread1,NULL);
++   //pthread_join(thread2,NULL);
++   
++}
++
++
++
++
++
++
+Binary files srclimpio/Pruebas unitarias/prueba5/resultados.png and jurod2/Pruebas unitarias/prueba5/resultados.png differ
+diff -x '.*' -ruNP srclimpio/avances/Makefile jurod2/avances/Makefile
+--- srclimpio/avances/Makefile	1969-12-31 21:00:00.000000000 -0300
++++ jurod2/avances/Makefile	2016-05-11 15:10:05.000000000 -0300
+@@ -0,0 +1,5 @@
++PROG=	conway
++BINDIR=	/bin
++
++.include <bsd.prog.mk>
++
+Binary files srclimpio/avances/avances juan e ideas.zip and jurod2/avances/avances juan e ideas.zip differ
+diff -x '.*' -ruNP srclimpio/avances/cambios.patch jurod2/avances/cambios.patch
+--- srclimpio/avances/cambios.patch	1969-12-31 21:00:00.000000000 -0300
++++ jurod2/avances/cambios.patch	2016-05-11 18:54:15.000000000 -0300
+@@ -0,0 +1,95 @@
++IBinary files limpio/.DS_Store and madix/.DS_Store differ
++Binary files limpio/.git/index and madix/.git/index differ
++diff -ruNP limpio/.git/logs/HEAD madix/.git/logs/HEAD
++--- limpio/.git/logs/HEAD	2016-05-11 17:14:41.000000000 -0300
+++++ madix/.git/logs/HEAD	2016-05-11 15:31:57.000000000 -0300
++@@ -1 +1 @@
++-0000000000000000000000000000000000000000 8933525b85c631b3d20bed940561520be2b81891 rudolph93 <rodolfo.romero@mail.udp.cl> 1462997681 -0300	clone: from git@giteit.udp.cl:so-2016-1/Minix.git
+++0000000000000000000000000000000000000000 8933525b85c631b3d20bed940561520be2b81891 rudolph93 <rodolfo.romero@mail.udp.cl> 1462991517 -0300	clone: from git@giteit.udp.cl:so-2016-1/Minix.git
++diff -ruNP limpio/.git/logs/refs/heads/master madix/.git/logs/refs/heads/master
++--- limpio/.git/logs/refs/heads/master	2016-05-11 17:14:41.000000000 -0300
+++++ madix/.git/logs/refs/heads/master	2016-05-11 15:31:57.000000000 -0300
++@@ -1 +1 @@
++-0000000000000000000000000000000000000000 8933525b85c631b3d20bed940561520be2b81891 rudolph93 <rodolfo.romero@mail.udp.cl> 1462997681 -0300	clone: from git@giteit.udp.cl:so-2016-1/Minix.git
+++0000000000000000000000000000000000000000 8933525b85c631b3d20bed940561520be2b81891 rudolph93 <rodolfo.romero@mail.udp.cl> 1462991517 -0300	clone: from git@giteit.udp.cl:so-2016-1/Minix.git
++diff -ruNP limpio/.git/logs/refs/remotes/origin/HEAD madix/.git/logs/refs/remotes/origin/HEAD
++--- limpio/.git/logs/refs/remotes/origin/HEAD	2016-05-11 17:14:41.000000000 -0300
+++++ madix/.git/logs/refs/remotes/origin/HEAD	2016-05-11 15:31:57.000000000 -0300
++@@ -1 +1 @@
++-0000000000000000000000000000000000000000 8933525b85c631b3d20bed940561520be2b81891 rudolph93 <rodolfo.romero@mail.udp.cl> 1462997681 -0300	clone: from git@giteit.udp.cl:so-2016-1/Minix.git
+++0000000000000000000000000000000000000000 8933525b85c631b3d20bed940561520be2b81891 rudolph93 <rodolfo.romero@mail.udp.cl> 1462991517 -0300	clone: from git@giteit.udp.cl:so-2016-1/Minix.git
++Binary files limpio/minix/.DS_Store and madix/minix/.DS_Store differ
++Binary files limpio/minix/include/.DS_Store and madix/minix/include/.DS_Store differ
++diff -ruNP limpio/minix/include/minix/mthread.h madix/minix/include/minix/mthread.h
++--- limpio/minix/include/minix/mthread.h	2016-05-11 17:14:59.000000000 -0300
+++++ madix/minix/include/minix/mthread.h	2016-05-11 17:21:58.000000000 -0300
++@@ -11,6 +11,7 @@
++ #include <limits.h>
++ #include <sys/signal.h>
++ 
+++typedef int mthread_barrier_t;
++ typedef int mthread_thread_t;
++ typedef int mthread_once_t;
++ typedef int mthread_key_t;
++@@ -82,6 +83,13 @@
++ int mthread_once(mthread_once_t *once, void (*proc)(void));
++ mthread_thread_t mthread_self(void);
++ 
+++/* barrier.c */
+++int mthread_barrier_init(mthread_barrier_t *barrier);
+++int mthread_barrier_destroy(mthread_barrier_t *barrier);
+++int mthread_barrier_sync(mthread_barrier_t *barrier);
+++
+++
+++
++ /* attribute.c */
++ int mthread_attr_destroy(mthread_attr_t *tattr);
++ int mthread_attr_getdetachstate(mthread_attr_t *tattr, int
++Binary files limpio/minix/lib/.DS_Store and madix/minix/lib/.DS_Store differ
++diff -ruNP limpio/minix/lib/libmthread/barrier.c madix/minix/lib/libmthread/barrier.c
++--- limpio/minix/lib/libmthread/barrier.c	1969-12-31 21:00:00.000000000 -0300
+++++ madix/minix/lib/libmthread/barrier.c	2016-05-11 17:22:00.000000000 -0300
++@@ -0,0 +1,43 @@
+++#include <stdio.h>
+++#include <minix/mthread.h>
+++#include <stdlib.h>
+++#include <perrror.h>
+++#include "global.h"
+++#include "proto.h"
+++
+++
+++//AYAYAIIIIIIIIII
+++
+++
+++/*===========================================================================*
+++ *				mthread_barrier_init			     *
+++ *===========================================================================*/
+++
+++ int mthread_barrier_init(mthread_barrier_t *barrier)
+++ {
+++ 	if (!barrier) 
+++ 	{
+++        printf("no hay memoria");
+++        return -EINVAL;
+++    }
+++
+++
+++ }
+++
+++ /*===========================================================================*
+++ *				mthread_barrier_destroy			     *
+++ *===========================================================================*/
+++
+++ int mthread_barrier_destroy(mthread_barrier_t *barrier)
+++ {
+++ 	
+++ }
+++
+++ /*===========================================================================*
+++ *				mthread_barrier_sync			     *
+++ *===========================================================================*/
+++
+++ int mthread_barrier_sync(mthread_barrier_t *barrier)
+++ {
+++ 	
+++ }
+diff -x '.*' -ruNP srclimpio/avances/conway.c jurod2/avances/conway.c
+--- srclimpio/avances/conway.c	1969-12-31 21:00:00.000000000 -0300
++++ jurod2/avances/conway.c	2016-05-11 15:10:05.000000000 -0300
+@@ -0,0 +1,24 @@
++/*Comando conway (copiado de ps)
++*/
++
++#define _MINIX_SYSTEM 1
++
++#include <minix/config.h>
++#include <minix/endpoint.h>
++#include <minix/paths.h>
++#include <minix/procfs.h>
++#include <limits.h>
++#include <sys/types.h>
++
++#include <minix/const.h>
++#include <minix/type.h>
++#include <minix/dmap.h>
++#include <string.h>
++#include <stdlib.h>
++#include <unistd.h>
++
++#include <fcntl.h>
++#include <dirent.h>
++#include <sys/stat.h>
++#include <stdio.h>
++#include <ttyent.h>
+diff -x '.*' -ruNP srclimpio/avances/prototipobarrera.c jurod2/avances/prototipobarrera.c
+--- srclimpio/avances/prototipobarrera.c	1969-12-31 21:00:00.000000000 -0300
++++ jurod2/avances/prototipobarrera.c	2016-05-19 18:26:09.000000000 -0300
+@@ -0,0 +1,95 @@
++#include <stdio.h>
++#include <stdlib.h>
++#include <pthread.h>
++ 
++int  counter = 0;
++int status=0;
++int listo=0;
++
++struct mthread_barrier_t {
++    pthread_mutex_t     mutex;          // variable mutex 
++    pthread_cond_t      cond;             // variable de condicion para la espera */
++    
++};
++
++
++void *prueba()
++{
++ sync(barrier);
++
++ 
++   return NULL;
++
++}
++
++int init(struct mthread_barrier_t *barrier)
++{
++pthread_mutex_t barrier->mutex = PTHREAD_MUTEX_INITIALIZER;
++pthread_cond_t barrier->cond = PTHREAD_COND_INITIALIZER;
++}
++
++int destroy(struct mthread_barrier_t *barrier)
++{
++	if(counter==2)
++   {
++
++   printf("Esperando a que todos los hilos terminen ...   \n");
++   listo=1;
++   status=1;
++   pthread_cond_signal(&barrier->cond);
++
++    pthread_mutex_unlock(&barrier->mutex);
++   }
++   else
++      return destroy(barrier);
++}
++
++int sync(struct mthread_barrier_t *barrier)
++{
++	status=399;
++
++printf("estatus sin lock : %i  \n",status);
++status = pthread_mutex_lock (&barrier->mutex);
++printf("estatus con lock : %i  \n",status);
++  
++   counter=counter + 1;
++   while(listo==0)
++   {
++   pthread_cond_wait(&barrier->cond, &barrier->mutex);
++   }
++  
++   pthread_mutex_unlock(&barrier->mutex);
++ pthread_cond_signal(&barrier->cond);
++   printf("termine:  \n");
++ 
++}
++
++
++struct mthread_barrier_t barrier;
++
++int main(){
++
++   int err1, err2, err3;
++   pthread_t thread1, thread2, thread3;
++   //struct mthread_barrier_t barrier;
++   init(&barrier);
++
++   if( (err1=pthread_create( &thread1, NULL, &prueba, NULL)) ){
++      printf("Thread creation failed: %d\n", err1);
++   }
++
++   if( (err2=pthread_create( &thread2, NULL, &prueba, NULL)) ){
++      printf("Thread creation failed: %d\n", err2);
++   }
++   destroy(barrier);
++   pthread_join(thread1,NULL);
++   pthread_join(thread2,NULL);
++   
++   
++   
++
++
++   return 0;
++}
++
++
+diff -x '.*' -ruNP srclimpio/avances/pruebabranch.txt jurod2/avances/pruebabranch.txt
+--- srclimpio/avances/pruebabranch.txt	1969-12-31 21:00:00.000000000 -0300
++++ jurod2/avances/pruebabranch.txt	2016-05-06 14:09:08.000000000 -0300
+@@ -0,0 +1 @@
++fsafassaf
+diff -x '.*' -ruNP srclimpio/minix/commands/Makefile jurod2/minix/commands/Makefile
+--- srclimpio/minix/commands/Makefile	2016-05-20 01:55:59.000000000 -0300
++++ jurod2/minix/commands/Makefile	2016-05-20 00:24:57.000000000 -0300
+@@ -4,7 +4,7 @@
+ 
+ SUBDIR=	add_route arp at backup \
+ 	cawf cdprobe \
+-	cleantmp \
++	cleantmp conway \
+ 	compress crc cron crontab \
+ 	DESCRIBE devmand devsize dhcpd \
+ 	dhrystone \
+diff -x '.*' -ruNP srclimpio/minix/commands/conway/Makefile jurod2/minix/commands/conway/Makefile
+--- srclimpio/minix/commands/conway/Makefile	1969-12-31 21:00:00.000000000 -0300
++++ jurod2/minix/commands/conway/Makefile	2016-05-20 00:24:57.000000000 -0300
+@@ -0,0 +1,6 @@
++# Makefile for the process status utility.
++#
++
++PROG=	conway
++
++.include <bsd.prog.mk>
+diff -x '.*' -ruNP srclimpio/minix/commands/conway/conway.1 jurod2/minix/commands/conway/conway.1
+--- srclimpio/minix/commands/conway/conway.1	1969-12-31 21:00:00.000000000 -0300
++++ jurod2/minix/commands/conway/conway.1	2016-05-20 00:24:57.000000000 -0300
+@@ -0,0 +1,88 @@
++.TH PS 1
++.SH NAME
++psconway \- conway game
++.SH SYNOPSIS
++\fBps \fR[\fR[\fB\-\fR]\fBalxE\fR] 
++.br
++.de FL
++.TP
++\\fB\\$1\\fR
++\\$2
++..
++.de EX
++.TP 20
++\\fB\\$1\\fR
++# \\$2
++..
++.SH OPTIONS
++.TP 5
++.B \-a
++# Print all processes with controlling terminals
++.TP 5
++.B \-l
++# Give long listing
++.TP 5
++.B \-x
++# Include processes without a terminal
++.TP 5
++.B \-E
++# Print kernel endpoint numbers where pids are normally printed
++.SH EXAMPLES
++.TP 20
++.B ps
++# Show user's own processes in short format
++.TP 20
++.B ps \-axlE
++# Print all processes and tasks in long format
++.TP 20
++.B ps \axlE
++# Same -- the '\-' is optional
++.SH DESCRIPTION
++.PP
++\fIPs\fR prints the status of active processes.  Normally only the caller's own
++processes are listed in short format (the PID, TTY, TIME and CMD fields as
++explained below).  The long listing contains:
++.PP
++  ST
++	State:
++		R: runnable
++		W: waiting (on a message)
++		S: sleeping (i.e.,suspended on PM or VFS)
++		Z: zombie
++		T: stopped
++.PP
++  UID, PID, PPID, PGRP
++	The user, process, parent process and process group ID's.
++.PP
++  SZ
++	Size of the process in kilobytes.
++.PP
++  RECV
++	Process/task on which a receiving process is waiting or sleeping.
++.PP
++  TTY	
++	Controlling tty for the process.
++.PP
++  TIME
++	Process' cumulative (user + system) execution time.
++.PP
++  CMD	Command line arguments of the process.
++.PP
++.PP
++The \fI/proc\fR file system is used to obtain the process information.
++Terminal names in \fI/dev\fR are used to generate the
++mnemonic names in the TTY column, so \fIps\fR is independent of terminal naming
++conventions.
++.SH NOTES
++The '\-' option prefix is not required.
++For marginal compatibility with System V usage, the hidden option
++.B \-e
++means the same as
++.BR \-ax ,
++and
++.B \-f
++is the same as
++.BR \-l .
++
++.\" edited by ASW 2004-12-14
++
+diff -x '.*' -ruNP srclimpio/minix/commands/conway/conway.c jurod2/minix/commands/conway/conway.c
+--- srclimpio/minix/commands/conway/conway.c	1969-12-31 21:00:00.000000000 -0300
++++ jurod2/minix/commands/conway/conway.c	2016-05-20 00:24:57.000000000 -0300
+@@ -0,0 +1,382 @@
++/* ps - print status			Author: Peter Valkenburg */
++/* Modified for ProcFS by Alen Stojanov and David van Moolenbroek */
++
++/* Ps.c, Peter Valkenburg (valke@psy.vu.nl), january 1990.
++ *
++ * This is a V7 ps(1) look-alike for MINIX >= 1.5.0.
++ * It does not support the 'k' option (i.e. cannot read memory from core file).
++ * If you want to compile this for non-IBM PC architectures, the header files
++ * require that you have your CHIP, MACHINE etc. defined.
++ * Full syntax:
++ *	ps [-][aeflx]
++ * Option `a' gives all processes, `l' for detailed info, `x' includes even
++ * processes without a terminal.
++ * The `f' and `e' options were added by Kees Bot for the convenience of 
++ * Solaris users accustomed to these options. The `e' option is equivalent to 
++ * `a' and `f' is equivalent to  -l. These do not appear in the usage message.
++ */
++
++/* Some technical comments on this implementation:
++ *
++ * Most fields are similar to V7 ps(1), except for CPU, NICE, PRI which are
++ * absent, RECV which replaces WCHAN, and PGRP that is an extra.
++ * The info is obtained from the following fields of proc, mproc and fproc:
++ * ST	- kernel status field, p_rts_flags; pm status field, mp_flags (R if
++ *        p_rts_flags is 0; Z if mp_flags == ZOMBIE; T if mp_flags == STOPPED;
++ *        else W).
++ * UID	- pm eff uid field, mp_effuid
++ * PID	- pm pid field, mp_pid
++ * PPID	- pm parent process index field, mp_parent (used as index in proc).
++ * PGRP - pm process group field, mp_procgrp
++ * SZ	- memory size, including common and shared memory
++ * RECV	- kernel process index field for message receiving, p_getfrom
++ *	  If sleeping, pm's mp_flags, or fs's fp_task are used for more info.
++ * TTY	- fs controlling tty device field, fp_tty.
++ * TIME	- kernel user + system times fields, user_time + sys_time
++ * CMD	- system process index (converted to mnemonic name by using the p_name
++ *	  field), or user process argument list (obtained by reading the stack
++ *	  frame; the resulting address is used to get the argument vector from
++ *	  user space and converted into a concatenated argument list).
++ */
++
++#define _MINIX_SYSTEM 1
++
++/*
++CONVENCION
++1=VIVO
++0=MUERTO
++*/
++
++
++#include <stdio.h>
++#include <stdlib.h>
++
++void movimiento(int M,int N, int matriz[M][N]);
++
++
++int main(int argc, char const *argv[])
++{
++  printf("PRUEBA ARCHIVO\n");
++  int N, M,n,m,h,c,x,y;
++  FILE *file = fopen( argv[1], "r" );
++  if ( file == 0 )
++    {
++        printf( "No existe tal archivo\n" );
++    }
++    fscanf(file,"%d",&M);
++    fscanf(file,"%d",&N);
++    fscanf(file,"%d",&m);
++    fscanf(file,"%d",&n);
++    fscanf(file,"%d",&h);
++    //int **arr;
++    //arr = new int [M][N];
++
++    int matriz[M][N];
++
++    
++
++
++    for (int i = 0; i < M; i++)
++  {
++    for (int j = 0; j < N; j++)
++    {
++      matriz[i][j]= 0;
++
++    }
++  }
++
++  
++    while(!feof(file))
++    {
++      fscanf(file,"%d", &x);
++      fscanf(file,"%d", &y);
++      matriz[x][y] = 1;
++      matriz[x][y] = 1;
++    }
++
++    printf("Se muestra matriz\n");
++    for (int i = 0; i < M; i++)
++  {
++    for (int j = 0; j < N; j++)
++    {
++      printf(" [%d]     ", matriz[i][j]);
++    }
++    printf("\n");
++  }
++
++
++
++  //Aqui parte el show
++  //Idea
++  movimiento(M,N,matriz);
++
++
++  printf("Se muestra matriz de conway\n");
++    for (int i = 0; i < M; i++)
++  {
++    for (int j = 0; j < N; j++)
++    {
++      printf(" [%d]     ", matriz[i][j]);
++    }
++    printf("\n");
++  }
++
++  fclose(file);
++  return 0;
++
++}
++
++
++void movimiento(int M, int N, int matriz[M][N])
++{
++  int count;
++  for (int i = 0; i < M; i++)
++  {
++    for (int j = 0; j < N; j++)
++    {
++      count=0;
++      
++      if(i==0 && j==0)
++      {
++        if(matriz[i+1][j]==1) {count++;}
++        if(matriz[i+1][j+1]==1) {count++;}
++        if(matriz[i][j+1]==1) {count++;}
++
++        if(count < 2 || count > 3){
++        matriz[i][j]=0;
++      }
++
++      else if(matriz[i][j]==1 && (count == 2 || count==3)){
++        matriz[i][j]=1;
++      }
++
++
++      else if(matriz[i][j]==0 && count==3){
++        matriz[i][j]=1;
++      }
++
++      else{
++        matriz[i][j]=0;
++      }
++      count =0;
++      continue;
++      }
++
++      if(i==M-1 && j==N-1)
++      {
++        if(matriz[i][j-1]==1) {count++;}
++        if(matriz[i-1][j]==1) {count++;}
++        if(matriz[i-1][j-1]==1) {count++;}
++
++        if(count < 2 || count > 3){
++        matriz[i][j]=0;
++      }
++
++      else if(matriz[i][j]==1 && (count == 2 || count==3)){
++        matriz[i][j]=1;
++      }
++
++
++      else if(matriz[i][j]==0 && count==3){
++        matriz[i][j]=1;
++      }
++
++      else{
++        matriz[i][j]=0;
++      }
++      count =0;
++      continue;
++      }
++
++      if(i==M-1 && j==0)
++      {
++        if(matriz[i-1][j]==1) {count++;}
++        if(matriz[i-1][j+1]==1) {count++;}
++        if(matriz[i][j+1]==1) {count++;}
++
++        if(count < 2 || count > 3){
++        matriz[i][j]=0;
++      }
++
++      else if(matriz[i][j]==1 && (count == 2 || count==3)){
++        matriz[i][j]=1;
++      }
++
++
++      else if(matriz[i][j]==0 && count==3){
++        matriz[i][j]=1;
++      }
++
++      else{
++        matriz[i][j]=0;
++      }
++      count =0;
++      continue;
++      }
++
++      if(i==0 && j==N-1)
++      {
++        if(matriz[i][j-1]==1) {count++;}
++        if(matriz[i+1][j-1]==1) {count++;}
++        if(matriz[i+1][j]==1) {count++;}
++
++        if(count < 2 || count > 3){
++        matriz[i][j]=0;
++      }
++
++      else if(matriz[i][j]==1 && (count == 2 || count==3)){
++        matriz[i][j]=1;
++      }
++
++
++      else if(matriz[i][j]==0 && count==3){
++        matriz[i][j]=1;
++      }
++
++      else{
++        matriz[i][j]=0;
++      }
++      count =0;
++      continue;
++      }
++
++      if(j==0 && (i>=1 && i<=M-2))
++      {
++        if(matriz[i-1][j]==1) {count++;}
++        if(matriz[i-1][j+1]==1) {count++;}
++        if(matriz[i][j+1]==1) {count++;}
++        if(matriz[i+1][j+1]==1) {count++;}
++        if(matriz[i+1][j]==1) {count++;}
++        if(count < 2 || count > 3){
++        matriz[i][j]=0;
++      }
++
++      else if(matriz[i][j]==1 && (count == 2 || count==3)){
++        matriz[i][j]=1;
++      }
++
++
++      else if(matriz[i][j]==0 && count==3){
++        matriz[i][j]=1;
++      }
++
++      else{
++        matriz[i][j]=0;
++      }
++      count =0;
++      continue;
++      }
++
++      if(j==N-1 && (i>=1 || i<=M-2))
++      {
++        if(matriz[i-1][j]==1) {count++;}
++        if(matriz[i-1][j-1]==1) {count++;}
++        if(matriz[i][j-1]==1) {count++;}
++        if(matriz[i+1][j-1]==1) {count++;}
++        if(matriz[i+1][j]==1) {count++;}
++        if(count < 2 || count > 3){
++        matriz[i][j]=0;
++      }
++
++      else if(matriz[i][j]==1 && (count == 2 || count==3)){
++        matriz[i][j]=1;
++      }
++
++
++      else if(matriz[i][j]==0 && count==3){
++        matriz[i][j]=1;
++      }
++
++      else{
++        matriz[i][j]=0;
++      }
++      count =0;
++      continue; 
++      }
++
++      if(i==0 && (j>=1 && j<=N-2))
++      {
++        if(matriz[i][j-1]==1) {count++;}
++        if(matriz[i][j+1]==1) {count++;}
++        if(matriz[i+1][j-1]==1) {count++;}
++        if(matriz[i+1][j+1]==1) {count++;}
++        if(matriz[i+1][j]==1) {count++;}
++        if(count < 2 || count > 3){
++        matriz[i][j]=0;
++      }
++
++      else if(matriz[i][j]==1 && (count == 2 || count==3)){
++        matriz[i][j]=1;
++      }
++
++
++      else if(matriz[i][j]==0 && count==3){
++        matriz[i][j]=1;
++      }
++
++      else{
++        matriz[i][j]=0;
++      }
++      count =0;
++      continue; 
++      }
++
++      if(i==M-1 && (j>=1 && j<=N-2))
++      {
++
++        if(matriz[i][j-1]==1) {count++;}
++        if(matriz[i][j+1]==1) {count++;}
++        if(matriz[i-1][j-1]==1) {count++;}
++        if(matriz[i-1][j+1]==1) {count++;}
++        if(matriz[i-1][j]==1) {count++;}
++        if(count < 2 || count > 3){
++        matriz[i][j]=0;
++      }
++
++      else if(matriz[i][j]==1 && (count == 2 || count==3)){
++        matriz[i][j]=1;
++      }
++
++
++      else if(matriz[i][j]==0 && count==3){
++        matriz[i][j]=1;
++      }
++
++      else{
++        matriz[i][j]=0;
++      }
++      count =0;
++      continue; 
++      }
++
++
++      
++      if(matriz[i-1][j-1]==1) {count++;}
++      if(matriz[i-1][j]==1) {count++;}
++      if(matriz[i-1][j+1]==1) {count++;}
++      if(matriz[i][j-1]==1) {count++;}
++      if(matriz[i][j+1]==1) {count++;}
++      if(matriz[i+1][j-1]==1) {count++;}
++      if(matriz[i+1][j]==1) {count++;}
++      if(matriz[i+1][j+1]==1) {count++;}
++
++      if(count < 2 || count > 3){
++        matriz[i][j]=0;
++      }
++
++      else if(matriz[i][j]==1 && (count == 2 || count==3)){
++        matriz[i][j]=1;
++      }
++
++
++      else if(matriz[i][j]==0 && count==3){
++        matriz[i][j]=1;
++      }
++
++      else{
++        matriz[i][j]=0;
++      }
++      
++    }
++  }
++}
+\ No newline at end of file
+diff -x '.*' -ruNP srclimpio/minix/include/minix/mthread.h jurod2/minix/include/minix/mthread.h
+--- srclimpio/minix/include/minix/mthread.h	2016-05-20 01:56:00.000000000 -0300
++++ jurod2/minix/include/minix/mthread.h	2016-05-19 21:50:45.000000000 -0300
+@@ -12,6 +12,7 @@
+ #include <sys/signal.h>
+ 
+ typedef int mthread_thread_t;
++typedef int mthread_barrier_t;
+ typedef int mthread_once_t;
+ typedef int mthread_key_t;
+ typedef void * mthread_condattr_t;
+@@ -53,9 +54,17 @@
+ }; 
+ typedef struct __mthread_attr *mthread_attr_t;
+ 
+-typedef struct {
++/*
++struct __mthread_barrier {
+   mthread_mutex_t mutex;
+   mthread_cond_t cond;
++  int contador;
++}; 
++typedef struct __mthread_barrier *mthread_barrier_t;
++*/
++
++typedef struct {
++  mthread_cond_t cond;
+ } mthread_event_t;
+ 
+ typedef struct {
+@@ -103,6 +112,12 @@
+ int mthread_cond_signal(mthread_cond_t *cond);
+ int mthread_cond_wait(mthread_cond_t *cond, mthread_mutex_t *mutex);
+ 
++/* barrier.c 
++int mthread_barrier_destroy(mthread_barrier_t *barrier);
++int mthread_barrier_init(mthread_barrier_t *barrier,int contador);
++int mthread_barrier_sync(mthread_barrier_t *barrier);
++*/
++
+ /* key.c */
+ int mthread_key_create(mthread_key_t *key, void (*destructor)(void *));
+ int mthread_key_delete(mthread_key_t key);
+diff -x '.*' -ruNP srclimpio/minix/lib/libmthread/Makefile jurod2/minix/lib/libmthread/Makefile
+--- srclimpio/minix/lib/libmthread/Makefile	2016-05-20 01:56:00.000000000 -0300
++++ jurod2/minix/lib/libmthread/Makefile	2016-05-19 18:23:03.000000000 -0300
+@@ -14,6 +14,7 @@
+ 	queue.c \
+ 	rwlock.c \
+ 	scheduler.c \
++	barrier.c \	
+ 
+ WARNS?=	4
+ 
+diff -x '.*' -ruNP srclimpio/minix/lib/libmthread/attribute.c jurod2/minix/lib/libmthread/attribute.c
+--- srclimpio/minix/lib/libmthread/attribute.c	2016-05-20 01:56:00.000000000 -0300
++++ jurod2/minix/lib/libmthread/attribute.c	2016-05-13 21:50:15.000000000 -0300
+@@ -1,4 +1,4 @@
+-#include <minix/mthread.h>
++  #include <minix/mthread.h>
+ #include "global.h"
+ #include "proto.h"
+ 
+diff -x '.*' -ruNP srclimpio/minix/lib/libmthread/attribute.h jurod2/minix/lib/libmthread/attribute.h
+--- srclimpio/minix/lib/libmthread/attribute.h	1969-12-31 21:00:00.000000000 -0300
++++ jurod2/minix/lib/libmthread/attribute.h	2016-05-13 13:59:20.000000000 -0300
+@@ -0,0 +1,312 @@
++  #include <minix/mthread.h>
++#include "global.h"
++#include "proto.h"
++
++static struct __mthread_attr *va_front, *va_rear;
++static void mthread_attr_add(mthread_attr_t *a);
++static void mthread_attr_remove(mthread_attr_t *a);
++static int mthread_attr_valid(mthread_attr_t *a);
++
++/*===========================================================================*
++ *			mthread_init_valid_attributes			     *
++ *===========================================================================*/
++void mthread_init_valid_attributes(void)
++{
++/* Initialize list of valid attributs */
++  va_front = va_rear = NULL;
++}
++
++
++/*===========================================================================*
++ *				mthread_attr_add			     *
++ *===========================================================================*/
++static void mthread_attr_add(a) 
++mthread_attr_t *a;
++{
++/* Add attribute to list of valid, initialized attributes */
++
++  if (va_front == NULL) {	/* Empty list */
++  	va_front = *a;
++  	(*a)->ma_prev = NULL;
++  } else {
++  	va_rear->ma_next = *a;
++  	(*a)->ma_prev = va_rear;
++  }
++
++  (*a)->ma_next = NULL;
++  va_rear = *a;
++}
++
++
++/*===========================================================================*
++ *				mthread_attr_destroy			     *
++ *===========================================================================*/
++int mthread_attr_destroy(attr)
++mthread_attr_t *attr;
++{
++/* Invalidate attribute and deallocate resources. */
++
++  if (attr == NULL)
++  	return(EINVAL);
++
++  if (!mthread_attr_valid(attr)) 
++  	return(EINVAL);
++
++  /* Valide attribute; invalidate it */
++  mthread_attr_remove(attr);	
++  free(*attr);
++  *attr = NULL;
++
++  return(0);
++}
++
++
++/*===========================================================================*
++ *				mthread_attr_init			     *
++ *===========================================================================*/
++int mthread_attr_init(attr)
++mthread_attr_t *attr;	/* Attribute */
++{
++/* Initialize the attribute to a known state. */
++  struct __mthread_attr *a;
++
++  if (attr == NULL) 
++  	return(EAGAIN);
++  else if (mthread_attr_valid(attr)) 
++  	return(EBUSY);
++
++  if ((a = malloc(sizeof(struct __mthread_attr))) == NULL)
++  	return(-1);
++
++  a->ma_detachstate = MTHREAD_CREATE_JOINABLE;
++  a->ma_stackaddr = NULL;
++  a->ma_stacksize = (size_t) 0;
++
++  *attr = (mthread_attr_t) a;
++  mthread_attr_add(attr); /* Validate attribute: attribute now in use */
++
++  return(0);
++}
++
++/*===========================================================================*
++ *				mthread_attr_getdetachstate			     *
++ *===========================================================================*/
++int mthread_attr_getdetachstate(attr, detachstate)
++mthread_attr_t *attr;
++int *detachstate;
++{
++/* Get detachstate of a thread attribute */
++  struct __mthread_attr *a;
++
++  if (attr == NULL) 
++  	return(EINVAL);
++
++  a = (struct __mthread_attr *) *attr;
++  if (!mthread_attr_valid(attr)) 
++  	return(EINVAL);
++
++  *detachstate = a->ma_detachstate;
++
++  return(0);
++}
++
++
++/*===========================================================================*
++ *				mthread_attr_setdetachstate			     *
++ *===========================================================================*/
++int mthread_attr_setdetachstate(attr, detachstate)
++mthread_attr_t *attr;
++int detachstate;
++{
++/* Set detachstate of a thread attribute */
++  struct __mthread_attr *a;
++
++  if (attr == NULL) 
++  	return(EINVAL);
++
++  a = (struct __mthread_attr *) *attr;
++  if (!mthread_attr_valid(attr)) 
++  	return(EINVAL);
++  else if(detachstate != MTHREAD_CREATE_JOINABLE &&
++  	  detachstate != MTHREAD_CREATE_DETACHED) 
++	return(EINVAL);
++
++  a->ma_detachstate = detachstate;
++
++  return(0);
++}
++
++
++/*===========================================================================*
++ *				mthread_attr_getstack			     *
++ *===========================================================================*/
++int mthread_attr_getstack(attr, stackaddr, stacksize)
++mthread_attr_t *attr;
++void **stackaddr;
++size_t *stacksize;
++{
++/* Get stack attribute */
++  struct __mthread_attr *a;
++
++  if (attr == NULL) 
++  	return(EINVAL);
++
++  a = (struct __mthread_attr *) *attr;
++  if (!mthread_attr_valid(attr))
++  	return(EINVAL);
++
++  *stackaddr = a->ma_stackaddr;
++  *stacksize = a->ma_stacksize;
++
++  return(0);
++}
++
++
++/*===========================================================================*
++ *				mthread_attr_getstacksize		     *
++ *===========================================================================*/
++int mthread_attr_getstacksize(attr, stacksize)
++mthread_attr_t *attr;
++size_t *stacksize;
++{
++/* Get stack size attribute */
++  struct __mthread_attr *a;
++
++  if (attr == NULL)
++  	return(EINVAL);
++
++  a = (struct __mthread_attr *) *attr;
++  if (!mthread_attr_valid(attr))
++  	return(EINVAL);
++
++  *stacksize = a->ma_stacksize;
++
++  return(0);
++}
++
++
++/*===========================================================================*
++ *				mthread_attr_setstack			     *
++ *===========================================================================*/
++int mthread_attr_setstack(attr, stackaddr, stacksize)
++mthread_attr_t *attr;
++void *stackaddr;
++size_t stacksize;
++{
++/* Set stack attribute */
++  struct __mthread_attr *a;
++
++  if (attr == NULL) 
++  	return(EINVAL);
++
++  a = (struct __mthread_attr *) *attr;
++  if (!mthread_attr_valid(attr) || stacksize < MTHREAD_STACK_MIN) 
++  	return(EINVAL);
++ 
++  /* We don't care about address alignment (POSIX standard). The ucontext
++   * system calls will make sure that the provided stack will be aligned (at
++   * the cost of some memory if needed).
++   */
++
++  a->ma_stackaddr = stackaddr;
++  a->ma_stacksize = stacksize;
++
++  return(0);
++}
++
++
++/*===========================================================================*
++ *				mthread_attr_setstacksize			     *
++ *===========================================================================*/
++int mthread_attr_setstacksize(attr, stacksize)
++mthread_attr_t *attr;
++size_t stacksize;
++{
++/* Set stack size attribute */
++  struct __mthread_attr *a;
++
++  if (attr == NULL)
++  	return(EINVAL);
++
++  a = (struct __mthread_attr *) *attr;
++  if (!mthread_attr_valid(attr) || stacksize < MTHREAD_STACK_MIN) 
++	return(EINVAL);
++
++  a->ma_stacksize = stacksize;
++
++  return(0);
++}
++
++
++/*===========================================================================*
++ *				mthread_attr_remove			     *
++ *===========================================================================*/
++static void mthread_attr_remove(a)
++mthread_attr_t *a;
++{
++/* Remove attribute from list of valid, initialized attributes */
++
++  if ((*a)->ma_prev == NULL)
++  	va_front = (*a)->ma_next;
++  else
++  	(*a)->ma_prev->ma_next = (*a)->ma_next;
++
++  if ((*a)->ma_next == NULL)
++  	va_rear = (*a)->ma_prev;
++  else
++  	(*a)->ma_next->ma_prev = (*a)->ma_prev;
++}
++
++
++/*===========================================================================*
++ *				mthread_attr_valid			     *
++ *===========================================================================*/
++static int mthread_attr_valid(a)
++mthread_attr_t *a;
++{
++/* Check to see if attribute is on the list of valid attributes */
++  struct __mthread_attr *loopitem;
++
++  loopitem = va_front;
++
++  while (loopitem != NULL) {
++  	if (loopitem == *a) 
++  		return(1);
++
++  	loopitem = loopitem->ma_next;
++  }
++
++  return(0);
++}
++
++
++/*===========================================================================*
++ *				mthread_attr_verify			     *
++ *===========================================================================*/
++#ifdef MDEBUG
++int mthread_attr_verify(void)
++{
++/* Return true when no attributes are in use */
++  struct __mthread_attr *loopitem;
++
++  loopitem = va_front;
++
++  while (loopitem != NULL) {
++  	loopitem = loopitem->ma_next;
++  	return(0);
++  }
++
++  return(1);
++}
++#endif
++
++/* pthread compatibility layer. */
++__weak_alias(pthread_attr_destroy, mthread_attr_destroy)
++__weak_alias(pthread_attr_getdetachstate, mthread_attr_getdetachstate)
++__weak_alias(pthread_attr_getstack, mthread_attr_getstack)
++__weak_alias(pthread_attr_getstacksize, mthread_attr_getstacksize)
++__weak_alias(pthread_attr_init, mthread_attr_init)
++__weak_alias(pthread_attr_setdetachstate, mthread_attr_setdetachstate)
++__weak_alias(pthread_attr_setstack, mthread_attr_setstack)
++__weak_alias(pthread_attr_setstacksize, mthread_attr_setstacksize)
++
+diff -x '.*' -ruNP srclimpio/minix/lib/libmthread/barrier.c jurod2/minix/lib/libmthread/barrier.c
+--- srclimpio/minix/lib/libmthread/barrier.c	1969-12-31 21:00:00.000000000 -0300
++++ jurod2/minix/lib/libmthread/barrier.c	2016-05-20 00:54:23.000000000 -0300
+@@ -0,0 +1,106 @@
++  #include "/usr/src/minix/include/minix/mthread.h"
++//#include "global.h"
++//#include "proto.h"
++//#include "mutex.c"
++//#include "condition.c"
++
++#include <stdio.h>
++
++int  counter = 0;
++int hilos=0;
++int listo=0;
++
++mthread_mutex_t mutex;
++mthread_cond_t cond;
++
++
++/*===========================================================================*
++ *				mthread_barrier_destroy			     *
++ *===========================================================================*/
++int mthread_barrier_destroy(mthread_barrier_t *barrier)
++{
++
++  if (barrier == NULL)
++  	return(EINVAL);
++
++   if(counter==hilos)
++   {
++
++   printf("Esperando a que todos los hilos terminen ...   \n");
++   listo=1;
++   status=1;
++   mthread_cond_signal(&cond);
++  
++    mthread_mutex_unlock(&mutex);
++   }
++   else
++      return mthread_barrier_destroy(barrier);
++ 
++  
++  
++
++  return(0);
++}
++
++
++/*===========================================================================*
++ *				mthread_barrier_init			     *
++ *===========================================================================*/
++int mthread_barrier_init(mthread_barrier_t *barrier)
++{
++  struct mthread_barrier_t *a;
++
++  if (barrier == NULL) 
++  	return(EAGAIN);
++  //else if (mthread_attr_valid(barrier)) 
++  	//return(EBUSY);
++
++  /*if ((a = malloc(sizeof(mthread_barrier))) == NULL)
++  	return(ENOMEM);
++    */
++//mutex=PTHREAD_MUTEX_INITIALIZER; 
++//cond=PTHREAD_COND_INITIALIZER;
++//mthread_mutex_add(mutex); 
++ //mthread_cond_add(cond);
++  
++
++  return(0);
++}
++
++
++/*===========================================================================*
++ *        mthread_barrier_sync           *
++ *===========================================================================*/
++int mthread_barrier_sync(mthread_barrier_t *barrier)
++{
++ 
++printf("Estoy trabajando\n");
++
++mthread_mutex_lock (&mutex);
++  
++   counter=counter + 1;
++   while(listo==0)
++   {
++   mthread_cond_wait(&cond, &mutex);
++   }
++  
++   mthread_mutex_unlock(&mutex);
++ mthread_cond_signal(&cond);
++   printf("termine:  \n");
++ 
++
++  return(0);
++}
++
++int main()
++{
++  int numhilos;
++  hilos=numhilos;
++  return(0);
++}
++
++
++
++
++
++

@@ -1,0 +1,881 @@
+diff -x '.*' -ruNP CrPa/README.md CrPa2/README.md
+--- CrPa/README.md	2016-03-25 19:33:33.000000000 -0300
++++ CrPa2/README.md	1969-12-31 21:00:00.000000000 -0300
+@@ -1,2 +0,0 @@
+-Este archivo pretende resumir y mostrar las nociones basicas para el uso del programa.
+-
+diff -x '.*' -ruNP CrPa/games/Makefile CrPa2/games/Makefile
+--- CrPa/games/Makefile	2016-03-25 19:10:09.000000000 -0300
++++ CrPa2/games/Makefile	2016-05-15 22:28:48.000000000 -0300
+@@ -14,7 +14,8 @@
+ 	monop morse number \
+ 	pig ppt primes \
+ 	rain random rogue snake tetris \
+-	wargames
++	wargames \
++	conway
+ 
+ .if !defined(__MINIX)
+ .if ${MKCXX} != "no"
+diff -x '.*' -ruNP CrPa/games/conway/Makefile CrPa2/games/conway/Makefile
+--- CrPa/games/conway/Makefile	1969-12-31 21:00:00.000000000 -0300
++++ CrPa2/games/conway/Makefile	2016-05-15 22:28:48.000000000 -0300
+@@ -0,0 +1,11 @@
++#	$NetBSD: Makefile,v 1.30 2008/02/24 02:43:18 dholland Exp $
++#	@(#)Makefile	8.1 (Berkeley) 5/31/93
++
++.include <bsd.own.mk>
++
++PROG=	conway
++SRCS=	conway.c
++MAN=	monop.6
++HIDEGAME=hidegame
++
++.include <bsd.prog.mk>
+Binary files CrPa/games/conway/a.out and CrPa2/games/conway/a.out differ
+diff -x '.*' -ruNP CrPa/games/conway/config CrPa2/games/conway/config
+--- CrPa/games/conway/config	1969-12-31 21:00:00.000000000 -0300
++++ CrPa2/games/conway/config	2016-05-15 22:28:48.000000000 -0300
+@@ -0,0 +1,8 @@
++5 5 
++10 09
++3
++0 0
++1 1
++2 2
++3 3
++4 4
+\ No newline at end of file
+diff -x '.*' -ruNP CrPa/games/conway/conway.c CrPa2/games/conway/conway.c
+--- CrPa/games/conway/conway.c	1969-12-31 21:00:00.000000000 -0300
++++ CrPa2/games/conway/conway.c	2016-05-15 22:28:48.000000000 -0300
+@@ -0,0 +1,197 @@
++//Se incluyen las librerias necesarias
++#include <stdio.h>
++#include <string.h>
++#include <stdlib.h>
++#include <time.h>
++#include  <curses.h>
++#include <pthread.h>
++#include "entrada.h"
++
++
++/*CODIGO BASADA en JUEGO DE LA VIDA BY: AlmaVagabunda*/
++int Col; // Columnas maximas
++int Row; // Filas maximas
++/*
++char* Reader()
++{
++   FILE *fp;
++   int c;
++  
++   fp = fopen("config","r");
++   while(1)
++   {
++      c = fgetc(fp);
++      if( feof(fp) )
++      { 
++         break ;
++      }
++      return c;
++   }
++   fclose(fp);
++}
++*/
++
++
++void Print(int **M){
++
++    int i,j;
++    for (i = 0;i<Row; i++){
++        for (j = 0; j <Col; j++){
++            if(M[i][j]==0){
++                printf("-"); // It's Dead
++            }
++            else{
++                printf("x"); // It's alive
++            }
++        }
++        printf("\n");
++        
++    }
++}
++
++void Alldead(int **M){ 
++int i, j;       
++        for(i=0;i<Row;i++){
++            for(j=0;j<Col;j++){
++                M [i][j]=0;
++            }
++        }
++
++}
++
++void Duplicar(int **ori, int **dest){
++    int i,j;
++    //Recorremos la matriz
++    for(int i=0;i<Row;i++)
++        for(int j=0;j<Col;j++)
++            //Copiamos la matriz origen en destino
++            dest[i][j]=ori[i][j];
++}
++int NNeighbour(int **matriz,int i,int j){
++            int vecino = 0;
++            if(i>0 && j>0 && matriz[i-1][j-1]==1){
++                vecino++;
++            }
++            if(i>0 && matriz[i-1][j]==1){
++                vecino++;
++            }
++            if(i>0 && j<Row &&matriz[i-1][j+1]==1){
++                vecino++;
++            }
++            if(j>0 &&matriz[i][j-1]==1){
++                vecino++;
++            }
++            if(j<Row && matriz[i][j+1]==1){
++                vecino++;
++            }
++            if(i<Col && j>0 &&matriz[i+1][j-1]==1){
++                vecino++;
++            }
++            if(i<Col &&matriz[i+1][j]==1){
++                vecino++;
++            }
++            if(i<Col && j<Row && matriz[i+1][j+1]==1){
++                vecino++;
++            }
++            return vecino;
++}
++
++void Refrescar(int **matriz){
++    //Creacion de variables
++    int vecinos=0,i,j;   
++    //Inicialización Matriz
++    int **copiamatriz;
++    copiamatriz = (int **)malloc (Row*sizeof(int *));
++    for (i=0;i<Row;i++)
++    copiamatriz[i] = (int *) malloc (Col*sizeof(int));
++    //Copiamos la matriz en una copia auxiliar
++    Duplicar(matriz, copiamatriz);
++    for(i=0;i<Row;i++){
++        for(j=0;j<Col;j++){
++            vecinos = NNeighbour(matriz,i,j);
++ 
++            if(matriz[i][j]==1){ // Esta viva?
++                if(vecinos==2 || vecinos==3){ // Tienes dos o tres vecinos?
++                    copiamatriz[i][j]=1; // sigues vivo
++                }
++                else{
++                    copiamatriz[i][j]=0;// Estas solo por lo tanto muerto :C
++                }
++            }
++            else{ 
++                if(vecinos==3){ // Reviviste de la muerte :)
++                    copiamatriz[i][j]=1;
++                }
++            }
++            //Ponemos a 0 el contador
++            vecinos=0;
++        }
++    }
++    //Devolvemos los nuevos datos a la matriz original
++    Duplicar(copiamatriz, matriz);
++}
++
++void Juego(){
++
++    //Declaración de variables
++    int i,j;
++    int **matriz;
++    char letra = ' ';
++    matriz = (int **)malloc (Row*sizeof(int *));
++    for (i=0;i<Row;i++){ matriz[i] = (int *) malloc (Col*sizeof(int));}
++    //Menu inicial
++    do{
++        //Ponemos todas las celulas muertas inicialmente
++        Alldead(matriz);
++        Print(matriz);
++    
++            /*do
++            {
++                //Opciones en el juego
++                letra=getch();
++                //Limpiamos el buffer
++                fflush(stdin);
++                if(letra=='s'){
++                    system("cls");
++                    Imprimir(Matriz);
++                    printf("\nFin del juego");
++                }
++                else if(letra=='f'){
++                    Patron(Matriz);
++                }
++                else if(letra=='c'){
++                    system("cls");
++                    Imprimir(Matriz);
++                    Resucitar(Matriz);
++                }
++                else{
++                    Refrescar(Matriz);
++                }
++            }
++ 
++            //Confirmacion de salida, para prevenir equivocaciones
++            system("cls");
++            printf("\n\n\n\n%20cSeguro que quieres salir? [s/n]", ' ');
++            confirmar=getch();
++            fflush(stdin);
++ 
++        }while(confirmar=='n');*/
++    }while(letra=='s');
++ 
++ 
++}
++int main(void){
++    Row = 5;
++    Col = 5;
++    pthread_t hilo;
++    int err1;
++    int *Argvector = (int*) malloc (sizeof(int));
++    Argvector =Argv();
++    int Argleght= Arg();
++   /* if( (err1=pthread_create( &thread1, NULL, &Juego, NULL)) ){
++      printf("Thread creation failed: %d\n", err1);
++    }*/
++    Juego();
++    return 0;
++
++}
+\ No newline at end of file
+diff -x '.*' -ruNP CrPa/games/conway/conway2.c CrPa2/games/conway/conway2.c
+--- CrPa/games/conway/conway2.c	1969-12-31 21:00:00.000000000 -0300
++++ CrPa2/games/conway/conway2.c	2016-05-15 22:28:48.000000000 -0300
+@@ -0,0 +1,144 @@
++#include <stdio.h>
++#include <stdlib.h>
++#include <unistd.h>
++#include <string.h>
++#include "entrada.c"
++ // Juego basado en  Juego de la vida  de :AlmaVagabunda
++ // Juego basado en  Conway_ Game_of_Life  de :rosettacode.org
++
++#define for_x for (int x = 0; x < h; x++) // ciclo para x
++#define for_y for (int y = 0; y < w; y++) // ciclo para y
++#define for_xy for_x for_y
++void show(void *u, int w, int h)
++{
++	int (*univ)[w] = u;
++	for_y {
++		for_x             
++			if(univ[y][x]==0){
++                printf("\033[7;31m :( "); // It's Dead
++            }
++            else{
++                printf("\033[7;32m :) "); // It's alive
++            }
++        printf("\n");
++	}
++	fflush(stdout);
++	printf("\n");
++}
++int NNeighbour(void *u,int w, int h,int i,int j){
++unsigned (*univ)[w] = u;
++int vecino = 0;
++            if(i>0 && j>0 && univ[i-1][j-1]==1){ // diagonal izq arriba
++                vecino++;
++            }
++            if(i>0 && univ[i-1][j]==1){ // arriba
++                vecino++;
++            }
++            if(i>0 && j<w &&univ[i-1][j+1]==1){ //diagonal derecha superior 
++                vecino++;
++            }
++            if(j>0 &&univ[i][j-1]==1){ // izquierda*
++                vecino++;
++            }
++            if(j<w && univ[i][j+1]==1){ // derecha
++                vecino++;
++            }
++            if(i<h && j>0 &&univ[i+1][j-1]==1){ // diagonal izqueda inferior*
++                vecino++;
++            }
++            if(i<h &&univ[i+1][j]==1){ // abajo*
++                vecino++;
++            }
++            if(i<h && j<w && univ[i+1][j+1]==1){ // diagonal derecha inferior
++                vecino++;
++            }
++            return vecino;
++}
++ 
++void evolve(void *u, int w, int h)
++{
++	unsigned (*univ)[w] = u;
++	unsigned new[h][w];
++ 		for_y for_x new[y][x] = univ[y][x];
++ 		int vecinos = 0;
++	for_y 
++		for_x{
++			vecinos = NNeighbour(u,w,h,y,x);
++			if(univ[y][x]==1){ // Esta viva?
++                if(vecinos==2 || vecinos==3){ // Tienes dos o tres vecinos?
++                    new[y][x]=1; // sigues vivo
++                }
++                else{
++                    new[y][x]=0;// Estas solo,por lo tanto, muerto :C
++                }
++            }
++            else{ 
++                if(vecinos==3){ // Reviviste de la muerte :)
++                    new[y][x]=1;
++                }
++            }
++            vecinos = 0; 
++		
++	}
++	for_y for_x univ[y][x] = new[y][x];
++}
++ 
++void Alldead(void *u,  int w, int h){ 
++	int (*univ)[w] = u;
++for_y{
++	for_x
++                univ[y][x]=0;
++            }
++
++        }
++
++
++void game(int w, int h, int*Argvector, int Arglenght)
++{
++	unsigned univ[w][h];
++    int i;
++    Alldead(univ,w,h);
++    for (i = 5; i < Arglenght; ++i)
++    {   
++            univ[Argvector[i]][Argvector[i+1]] = 1;
++        i++;
++                
++    }
++	printf("Para continuar presione ENTER\n");
++	do{
++		show(univ, w, h); // width -> ancho -> fi 
++		evolve(univ, w, h);
++		//usleep(2000000);	
++	}while (getchar() == '\n'); 
++	printf("\033[0m ");
++	printf("\033[2K");
++
++}
++
++//****************** MODO EJECUCION*******************
++// compilación ideal :  gcc -std=c99 -Wall conway2.c -o salida
++// compilación estandar :  gcc conway2.c -o salida
++// Archivo de prueba : config
++// ejecición de prueba :./salida config
++ 
++int main(int argc,char *argv[])
++{	
++	int w = 0, h = 0;
++	int vecc = 0;
++	int *vec = (int*) malloc (sizeof(int));
++	for (int i = 0; i < argc; ++i)
++	{
++		if(strncmp(argv[i],"config",6)){
++			vec = Argv(argv[1]);
++			vecc = Argc(argv[1]);
++			w = vec[0];
++			h = vec[1];
++			game(w, h, vec, vecc);
++			exit(0);
++		}else{
++			printf("ERROR 1: EJECCIÓN ESTANDAR ARCHIVO: 'CONFIG'");
++			exit(0);
++		}
++
++	}
++}
+\ No newline at end of file
+diff -x '.*' -ruNP CrPa/games/conway/entrada.c CrPa2/games/conway/entrada.c
+--- CrPa/games/conway/entrada.c	1969-12-31 21:00:00.000000000 -0300
++++ CrPa2/games/conway/entrada.c	2016-05-15 22:28:48.000000000 -0300
+@@ -0,0 +1,42 @@
++    #include "entrada.h"
++    #include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++
++    int* Argv(char *archivo){
++    FILE *fp;
++    int *arg = (int*) malloc (sizeof(int));
++    char ch = ' ';
++    fp = fopen("config","r");
++    if(fp == NULL)
++        exit(1);
++    int i = 0, t = 0;
++    while (feof(fp)==0){
++        ch = fgetc(fp);
++        if(ch == ' ' || ch == '\n'){
++            t++;
++            arg[t] = 0;
++        }
++            if((ch-48)>0)
++               arg[t] = (ch-48) + arg[t]*10;
++    }  
++   fclose(fp);
++return arg;
++       }
++
++    int Argc(char *archivo){
++    FILE *fp;
++    char ch = ' ';
++    fp = fopen("config","r");
++    if(fp == NULL)
++        exit(1);
++    int t = 0;
++    while (feof(fp)==0){
++        ch = fgetc(fp);
++        if(ch == ' ' || ch == '\n'){
++            t++;
++        }
++    }  
++   fclose(fp);
++return t+1;
++       }
+\ No newline at end of file
+diff -x '.*' -ruNP CrPa/games/conway/entrada.h CrPa2/games/conway/entrada.h
+--- CrPa/games/conway/entrada.h	1969-12-31 21:00:00.000000000 -0300
++++ CrPa2/games/conway/entrada.h	2016-05-15 22:28:48.000000000 -0300
+@@ -0,0 +1,7 @@
++#ifndef	ENTRADA_H
++#define	ENTRADA_H
++
++    int* Argv(char *archivo);
++    int Argc(char *archivo);
++
++#endif  /*ENTRADA_H */
+\ No newline at end of file
+diff -x '.*' -ruNP CrPa/games/conway/propm.h CrPa2/games/conway/propm.h
+--- CrPa/games/conway/propm.h	1969-12-31 21:00:00.000000000 -0300
++++ CrPa2/games/conway/propm.h	2016-05-15 22:28:48.000000000 -0300
+@@ -0,0 +1,9 @@
++#ifndef	PROPM_H
++#define	PROPM_H
++unsigned Rellenar(int Row, int Col);
++void Duplicar(int **ori, int **dest,int Row, int Col);/*ENTRADA_H */
++void Print(int **M, int Row, int Col);
++void Alldead(int **M, int Row, int Col);
++
++
++#endif /*PROPM_H*/
+\ No newline at end of file
+Binary files CrPa/games/conway/salida and CrPa2/games/conway/salida differ
+Binary files CrPa/informe_avances/InformeSO_2_Final.pdf and CrPa2/informe_avances/InformeSO_2_Final.pdf differ
+diff -x '.*' -ruNP CrPa/minix/commands/conway/Makefile CrPa2/minix/commands/conway/Makefile
+--- CrPa/minix/commands/conway/Makefile	1969-12-31 21:00:00.000000000 -0300
++++ CrPa2/minix/commands/conway/Makefile	2016-05-06 20:50:25.000000000 -0300
+@@ -0,0 +1,3 @@
++PROG=	conway
++
++.include <bsd.prog.mk>
+diff -x '.*' -ruNP CrPa/minix/commands/conway/conway.c CrPa2/minix/commands/conway/conway.c
+--- CrPa/minix/commands/conway/conway.c	1969-12-31 21:00:00.000000000 -0300
++++ CrPa2/minix/commands/conway/conway.c	2016-05-06 22:37:50.000000000 -0300
+@@ -0,0 +1,33 @@
++#include <string.h>
++#include <stdio.h>
++
++/* El archivo que se recibe por parametro es la ruta del archivo config */
++
++int main(int argc, char *argv[]) {
++ 
++	char * line = NULL;
++    size_t len = 0;
++    ssize_t read;
++
++	if (!argv [1])
++	{
++		printf("Error, no existe el archivo");
++		return 0;
++	}
++
++	FILE *file = fopen(argv[1], "r");
++	int rows = 0;
++	while ((read = getline(&line, &len, file)) != -1) {
++        printf("%s", line);
++        rows = rows + 1;
++    }
++    printf("%d\n", rows);
++
++	char *valores[rows][2]; // Matriz para guardar los valores que ocuparan los hilos y el programa
++    
++	/* Volver a hacer el ciclo */
++
++	/* Poner el juego */ 
++
++    return 0;
++}
+\ No newline at end of file
+diff -x '.*' -ruNP CrPa/minix/include/minix/mthread.h CrPa2/minix/include/minix/mthread.h
+--- CrPa/minix/include/minix/mthread.h	2016-05-06 20:15:40.000000000 -0300
++++ CrPa2/minix/include/minix/mthread.h	2016-05-15 22:40:24.000000000 -0300
+@@ -1,5 +1,5 @@
+ #ifndef _MTHREAD_H
+-#define _MTHREAD_H 
++#define _MTHREAD_H
+ 
+ #include <minix/config.h>	/* MUST be first */
+ #include <minix/const.h>
+@@ -34,20 +34,6 @@
+ };
+ typedef struct __mthread_mutex *mthread_mutex_t;
+ 
+-/* -------------------- Definicion de estructura barrier --------------------*/
+-
+-struct __mthread_barrier {
+-  // mthread_barrier_t barrier_owner; 
+-#ifdef MTHREAD_STRICT
+-  struct __mthread_barrier *bar_prev;
+-  struct __mthread_barrier *bar_next;
+-#endif
+-  // unsigned int 
+-};
+-typedef struct __mthread_barrier *mthread_barrier_t;
+-
+-/* -------------------- Termino de definicion para estructura barrier -------------------- */
+-
+ struct __mthread_cond {
+   struct __mthread_mutex *mc_mutex;	/* Associate mutex with condition */
+ #ifdef MTHREAD_STRICT
+@@ -58,6 +44,21 @@
+ };
+ typedef struct __mthread_cond *mthread_cond_t;
+ 
++/* -------------------- Definicion de estructura barrier --------------------*/
++
++struct __mthread_barrier {
++  int cantmax;
++  int cantdisp;
++  int ciclo;
++  mthread_mutex_t mutex;
++  mthread_cond_t cond;
++};
++typedef struct __mthread_barrier mthread_barrier_t;
++
++
++/* -------------------- Termino de definicion para estructura barrier -------------------- */
++
++
+ struct __mthread_attr {
+   size_t ma_stacksize;
+   char *ma_stackaddr;
+@@ -70,7 +71,6 @@
+ typedef struct {
+   mthread_mutex_t mutex;
+   mthread_cond_t cond;
+-  mthread_barrier_t barrier; // add 
+ } mthread_event_t;
+ 
+ typedef struct {
+@@ -140,8 +140,8 @@
+ int mthread_mutex_unlock(mthread_mutex_t *mutex);
+ 
+ /* barrier.c */
+-int mthread_barrier_init(mthread_barrier_t *barrier);
+-int mthread_barrier_destroy(mthread_barrier_t *barrier);
++int mthread_barrier_init(mthread_barrier_t *barrier, int hilos);
++int mthread_barrier_destroy(int index);
+ int mthread_barrier_sync(mthread_barrier_t *barrier);
+ 
+ /* event.c */
+@@ -227,14 +227,6 @@
+ int pthread_mutex_trylock(pthread_mutex_t *mutex);
+ int pthread_mutex_unlock(pthread_mutex_t *mutex);
+ 
+-/* mutex.c */
+-int mthread_mutex_destroy(pthread_mutex_t *mutex);
+-int mthread_mutex_init(pthread_mutex_t *mutex, mthread_mutexattr_t
+-  *mattr);
+-int mthread_mutex_lock(pthread_mutex_t *mutex);
+-int mthread_mutex_trylock(pthread_mutex_t *mutex);
+-int mthread_mutex_unlock(thread_mutex_t *mutex);
+-
+ /* event.c */
+ int pthread_event_destroy(pthread_event_t *event);
+ int pthread_event_init(pthread_event_t *event);
+diff -x '.*' -ruNP CrPa/minix/lib/libmthread/barrier.c CrPa2/minix/lib/libmthread/barrier.c
+--- CrPa/minix/lib/libmthread/barrier.c	2016-05-06 20:19:23.000000000 -0300
++++ CrPa2/minix/lib/libmthread/barrier.c	2016-05-20 04:37:02.000000000 -0300
+@@ -1,120 +1,179 @@
+ #include <minix/mthread.h>
+ #include "global.h"
+ #include "proto.h"
++#include <errno.h>
+ 
+-#ifdef MTHREAD_STRICT
+-static struct __mthread_barrier *bar_front, *bar_rear;
+-static void mthread_barrier_init(mthread_barrier_t *m);
+-static void mthread_barrier_remove(mthread_barrier_t *m)
++#define ARRAY_SIZE_B 5 /* NOTA: valor de prueba, cambiarlo luego para duplicar memoria en funcion*/
++
++mthread_barrier_t *barreras[ARRAY_SIZE_B]; /* arreglo global para barreras */
++
++unsigned int tope_b; /*indice del ultimo puntero guardado en el arreglo barreras */
+ 
+ 
+ /*===========================================================================*
+- *				mthread_init_valid_barrier	* //INICIALIZA LISTA DE BARRERAS//
++ *				mthread_barrier_init			     *
+  *===========================================================================*/
+-void mthread_init_valid_barrier(void)
+-{
+-#ifdef MTHREAD_STRICT
+-/* Aqui se inicializa la lista de barreras validas */
+-  bar_front = bar_rear = NULL;
+-#endif
+ 
+ 
++int mthread_barrier_init(mthread_barrier_t *barrier, int hilos) {
++
++	int err; /* definicion de variable para codigo de error */
++
++ 	err = mthread_mutex_init(&barrier->mutex, NULL); /* se inicializa el mutex */
++ 	if (err != 0)
++ 		return err; 
++
++ 	err = mthread_cond_init(&barrier->cond, NULL); /* se inicializa variable de condicion */
++ 	if (err != 0) /* error al inicializar la variable de condicion, luego se destruye el mutex */
++ 	{
++ 		mthread_mutex_destroy(&barrier->mutex); 
++ 		return err;
++ 	}
++
++ 	/* se inicializan las variables del objeto */ 
++    barrier->cantmax = hilos;
++	barrier->cantdisp = hilos;
++	barrier->ciclo = 0;
++
++	/* la nueva barrera se guarda en el arreglo global de barreras */
++	int indice = 0;
++	barreras[tope_b] = barrier;
++	indice = tope_b;
++	tope_b += 1;
++
++	return indice; /* se retorna indice donde se guarda la barrera para poder manejarla posteriormente */
++}
++
+ /*===========================================================================*
+- *				mthread_barrier_init	* //AGREGA BARRERA A LA LISTA// 
++ *				mthread_barrier_destroy			     *
+  *===========================================================================*/
+-//#ifdef MTHREAD_STRICT
+-int mthread_barrier_init(mthread_barrier_t *barrier){ 
+-	/* Se agrega una barrera a la lista de barreras */
+-	if (bar_front == NULL) { /* Si es que la lista de barreras esta vacia */
+-		bar_front = barrier;
+-		(barrier)->bar_prev = NULL;
+-	} else { 
+-		bar_rear->bar_next = barrier;
+-		(barrier)->bar_prev = bar_rear;
++
++int mthread_barrier_destroy(int index) { /* recibimos indice donde se guarda la barrera */
++
++	if (!barreras[index]) /* si no existe la barrera que se pasa por parametro en el arreglo retornamos EINVAL */
++		return (EINVAL);
++
++	if (barreras[index]->cantdisp != barreras[index]->cantmax) {
++		mthread_mutex_unlock(&barreras[index]->mutex);
++		return (EBUSY); /* error en caso de que la cantidad de hilos disponible no sea maxima */
+ 	}
++	
++	/* en caso de que no hayan hilos esperando en la barrera liberamos la memoria */ 
++	free(barreras[index]);
++	barreras[index] = NULL;
+ 
+-	(barrier)->bar_next = NULL;
+-	bar_rear = barrier;
++	return 0;
+ }
+ 
+-
+ /*===========================================================================*
+- *				mthread_barrier_destroy	  * 
++ *				mthread_barrier_sync		     *
+  *===========================================================================*/
+-int mthread_mutex_destroy(barrier)
+-mthread_barrier_t *barrier;
+-{
+-	if (barrier == NULL) 
++
++int mthread_barrier_sync(mthread_barrier_t *barrier) {
++
++	if (!barrier) /* si la barrera pasada por parametro no existe retornamos EINVAL */
+ 		return (EINVAL);
+ 
+-// ESTUDIAR USO DE TCB - IMPORTANTE
+-	
+-	// if (!mthread_barrier_valid(barrier)) 
+- //  		return(EINVAL);
+- //  	else if ((*barrier)->bar_owner != NO_THREAD)
+- //  		return(EBUSY);
+-	  
+- //  /* Check if this mutex is not associated with a condition */
+- //  for (t = (mthread_thread_t) 0; t < no_threads; t++) {
+- //  	tcb = mthread_find_tcb(t);
+-	// if (tcb->m_state == MS_CONDITION) {
+-	// 	if (tcb->m_cond != NULL && tcb->m_cond->mc_mutex == *mutex) 
+-	// 		return(EBUSY);
+-	// }
+-
+-	  /* Si la barrera no esta siendo usada se puede eliminar */
+-	  mthread_barrier_remove(barrier);	
+-	  free(*barrier);
+-	  *barrier = NULL;
++	int err; /* definicion de variable para codigo de error */
+ 
+-	  return(0);
++    err = mthread_mutex_lock(&barrier->mutex); /* se lockea el mutex de la barrera */
++    
++    if (err != 0)
++        return err;
++
++    int ciclo, err2;
++
++	ciclo = barrier->ciclo; /* ciclo en el que se esta actualmente */  
++
++    if (--barrier->cantdisp == 0) { 
++       
++        barrier->ciclo = !(barrier->ciclo);
++        barrier->cantdisp = barrier->cantmax; /* se ha alcanzado la cantidad maxima de hilos que se necesitaban */
++
++        err2 = mthread_cond_broadcast(&barrier->cond); /* cambia la condicion luego se despierta a todos los hilos */
++        
++        if (err2 == 0)
++            err2 = -1; /* el ultimo hilo que llega a la barrera retornara -1 */
++    	} else {
++    		while (ciclo == barrier->ciclo) { /* mientras el ciclo de la barrera sea igual se espera */
++	        err2 = mthread_cond_wait(&barrier->cond, &barrier->mutex);
++	        if (err2 != 0) 
++	        	break;
++        	}
++	}
++    mthread_mutex_unlock(&barrier->mutex); /* se unlockea el mutex */
++    return err2; 
++}
+ 
++/********************************************* Otras *********************************************/
+ 
++void print_barrier_array() {
++	for(int i = 0; i < ARRAY_SIZE_B; i++){
++		printf("barreras[%d] = %p\n", i, barreras[i]);
++	}
+ }
+ 
+-/*===========================================================================*
+- *		mthread_barrier_valid	* //VERIFICA SI LA BARRERA ESTA EN LA LISTA// 
+- *===========================================================================*/
+-#ifdef MTHREAD_STRICT
+-int mthread_barrier_valid(barrier)
+-mthread_barrier_t *barrier;
+-{
+-/* Se revisa si la barrera recibida pertenece a la lista de barreras */
+-  
+-  struct __mthread_barrier *loopitem;
+-
+-  loopitem = bar_front;
+-
+-  while (loopitem != NULL) {
+-	if (loopitem == *barrier)
+-		return(1);
+ 
+-	loopitem = loopitem->bar_next;
+-  }
++void duplicate_memory_array(mthread_barrier_t *arr, int old_size) {
++	
++	int new_size = old_size * 2;
++	mthread_barrier_t *barreras[new_size];
++
++	for (int i = 0; i < old_size * 2; i++){
++		barreras[i] = &arr[i];
++	} 
+ 
+-  return(0);
++	return;
+ }
+-#endif
+ 
++static void *test(void *arg) {
++	int *ptr = (int *)arg;
++	int val = *ptr;
++	printf("Soy el hilo numero = %d (antes de la barrera)\n", val);
++	int err = mthread_barrier_sync(barreras[0]);
++	printf("err de sync = %d\n", err);
++	return NULL;
++}
+ 
++/*************************************************************************************************/
+ 
+-/*===========================================================================*
+- *				mthread_barrier_remove			     *
+- *===========================================================================*/
+-#ifdef MTHREAD_STRICT
+-static void mthread_barrier_remove(barrier)
+-mthread_barrier_t *barrier;
+-{
+-	/* Remueve una barrera de la lista de barreras */ 
+-
+-  if ((*barrier)->bar_prev == NULL)
+-  	bar_front = (*barrier)->bar_next;
+-  else
+-  	(*barrier)->bar_prev->bar_next = (*barrier)->bar_next;
+-
+-  if ((*barrier)->bar_next == NULL)
+-  	bar_rear = (*barrier)->bar_prev;
+-  else
+-  	(*barrier)->bar_next->bar_prev = (*barrier)->bar_prev;
++#define NUM 5
++static mthread_thread_t hilos[NUM];
++static int *numbers[NUM];
++
++int main() {
++
++	mthread_barrier_t *barrera0 = malloc(sizeof(struct mthread_barrier_t *));
++
++	int index_bar1 = mthread_barrier_init(barrera0, NUM);
++	
++	printf("\n\n**** PRUEBA DE INIT ****\n\n");	
++
++	print_barrier_array();
++
++	printf("\n\n**** PRUEBA DE SYNC ****\n\n");
++
++	for (int i=0; i<NUM; i++) {
++		numbers[i] = (int *) malloc(sizeof(int));
++		*numbers[i] = i;
++		mthread_create(&hilos[i], NULL, test, numbers[i]);
++	}
++
++	for (int i=0; i<NUM; i++){
++		mthread_join(hilos[i], NULL);
++	}
++	
++	printf("\n\n**** PRUEBA DE DESTROY ****\n\n");
++
++	int err = mthread_barrier_destroy(0);
++	printf("err de destroy = %d\n", err);
++
++	print_barrier_array();
++
++	printf("\n\n");
++
++	return 0;
+ }
+-#endif
+\ No newline at end of file
++
++
++
+Binary files CrPa/testing_barrier/barrier_init&destroy_test.png and CrPa2/testing_barrier/barrier_init&destroy_test.png differ
+Binary files CrPa/testing_barrier/barrier_sync_test1_example.png and CrPa2/testing_barrier/barrier_sync_test1_example.png differ
+Binary files CrPa/testing_barrier/barrier_sync_test2_example.png and CrPa2/testing_barrier/barrier_sync_test2_example.png differ

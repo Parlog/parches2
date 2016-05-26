@@ -1,0 +1,2656 @@
+diff -rupN srcclean/.git/COMMIT_EDITMSG src-github/.git/COMMIT_EDITMSG
+--- srcclean/.git/COMMIT_EDITMSG	1969-12-31 21:00:00.000000000 -0300
++++ src-github/.git/COMMIT_EDITMSG	2016-05-19 19:18:36.579406271 -0400
+@@ -0,0 +1 @@
++Push final con todo listo
+diff -rupN srcclean/.git/config src-github/.git/config
+--- srcclean/.git/config	1969-12-31 21:00:00.000000000 -0300
++++ src-github/.git/config	2016-04-26 21:04:41.980585004 -0300
+@@ -0,0 +1,8 @@
++[core]
++	repositoryformatversion = 0
++	filemode = true
++	bare = false
++	logallrefupdates = true
++[remote "origin"]
++	url = git@github.com:jotaxe/SO2.git
++	fetch = +refs/heads/*:refs/remotes/origin/*
+diff -rupN srcclean/.git/description src-github/.git/description
+--- srcclean/.git/description	1969-12-31 21:00:00.000000000 -0300
++++ src-github/.git/description	2016-04-26 21:04:03.576584368 -0300
+@@ -0,0 +1 @@
++Unnamed repository; edit this file 'description' to name the repository.
+diff -rupN srcclean/.git/FETCH_HEAD src-github/.git/FETCH_HEAD
+--- srcclean/.git/FETCH_HEAD	1969-12-31 21:00:00.000000000 -0300
++++ src-github/.git/FETCH_HEAD	2016-04-26 21:15:20.000595583 -0300
+@@ -0,0 +1 @@
++1ad48934b8667d175782444b48fe7fa07573a3d6		branch 'master' of github.com:jotaxe/SO2
+diff -rupN srcclean/.git/HEAD src-github/.git/HEAD
+--- srcclean/.git/HEAD	1969-12-31 21:00:00.000000000 -0300
++++ src-github/.git/HEAD	2016-04-26 21:04:03.576584368 -0300
+@@ -0,0 +1 @@
++ref: refs/heads/master
+diff -rupN srcclean/.git/hooks/applypatch-msg.sample src-github/.git/hooks/applypatch-msg.sample
+--- srcclean/.git/hooks/applypatch-msg.sample	1969-12-31 21:00:00.000000000 -0300
++++ src-github/.git/hooks/applypatch-msg.sample	2016-04-26 21:04:03.576584368 -0300
+@@ -0,0 +1,15 @@
++#!/bin/sh
++#
++# An example hook script to check the commit log message taken by
++# applypatch from an e-mail message.
++#
++# The hook should exit with non-zero status after issuing an
++# appropriate message if it wants to stop the commit.  The hook is
++# allowed to edit the commit message file.
++#
++# To enable this hook, rename this file to "applypatch-msg".
++
++. git-sh-setup
++test -x "$GIT_DIR/hooks/commit-msg" &&
++	exec "$GIT_DIR/hooks/commit-msg" ${1+"$@"}
++:
+diff -rupN srcclean/.git/hooks/commit-msg.sample src-github/.git/hooks/commit-msg.sample
+--- srcclean/.git/hooks/commit-msg.sample	1969-12-31 21:00:00.000000000 -0300
++++ src-github/.git/hooks/commit-msg.sample	2016-04-26 21:04:03.576584368 -0300
+@@ -0,0 +1,24 @@
++#!/bin/sh
++#
++# An example hook script to check the commit log message.
++# Called by "git commit" with one argument, the name of the file
++# that has the commit message.  The hook should exit with non-zero
++# status after issuing an appropriate message if it wants to stop the
++# commit.  The hook is allowed to edit the commit message file.
++#
++# To enable this hook, rename this file to "commit-msg".
++
++# Uncomment the below to add a Signed-off-by line to the message.
++# Doing this in a hook is a bad idea in general, but the prepare-commit-msg
++# hook is more suited to it.
++#
++# SOB=$(git var GIT_AUTHOR_IDENT | sed -n 's/^\(.*>\).*$/Signed-off-by: \1/p')
++# grep -qs "^$SOB" "$1" || echo "$SOB" >> "$1"
++
++# This example catches duplicate Signed-off-by lines.
++
++test "" = "$(grep '^Signed-off-by: ' "$1" |
++	 sort | uniq -c | sed -e '/^[ 	]*1[ 	]/d')" || {
++	echo >&2 Duplicate Signed-off-by lines.
++	exit 1
++}
+diff -rupN srcclean/.git/hooks/post-update.sample src-github/.git/hooks/post-update.sample
+--- srcclean/.git/hooks/post-update.sample	1969-12-31 21:00:00.000000000 -0300
++++ src-github/.git/hooks/post-update.sample	2016-04-26 21:04:03.576584368 -0300
+@@ -0,0 +1,8 @@
++#!/bin/sh
++#
++# An example hook script to prepare a packed repository for use over
++# dumb transports.
++#
++# To enable this hook, rename this file to "post-update".
++
++exec git update-server-info
+diff -rupN srcclean/.git/hooks/pre-applypatch.sample src-github/.git/hooks/pre-applypatch.sample
+--- srcclean/.git/hooks/pre-applypatch.sample	1969-12-31 21:00:00.000000000 -0300
++++ src-github/.git/hooks/pre-applypatch.sample	2016-04-26 21:04:03.576584368 -0300
+@@ -0,0 +1,14 @@
++#!/bin/sh
++#
++# An example hook script to verify what is about to be committed
++# by applypatch from an e-mail message.
++#
++# The hook should exit with non-zero status after issuing an
++# appropriate message if it wants to stop the commit.
++#
++# To enable this hook, rename this file to "pre-applypatch".
++
++. git-sh-setup
++test -x "$GIT_DIR/hooks/pre-commit" &&
++	exec "$GIT_DIR/hooks/pre-commit" ${1+"$@"}
++:
+diff -rupN srcclean/.git/hooks/pre-commit.sample src-github/.git/hooks/pre-commit.sample
+--- srcclean/.git/hooks/pre-commit.sample	1969-12-31 21:00:00.000000000 -0300
++++ src-github/.git/hooks/pre-commit.sample	2016-04-26 21:04:03.576584368 -0300
+@@ -0,0 +1,49 @@
++#!/bin/sh
++#
++# An example hook script to verify what is about to be committed.
++# Called by "git commit" with no arguments.  The hook should
++# exit with non-zero status after issuing an appropriate message if
++# it wants to stop the commit.
++#
++# To enable this hook, rename this file to "pre-commit".
++
++if git rev-parse --verify HEAD >/dev/null 2>&1
++then
++	against=HEAD
++else
++	# Initial commit: diff against an empty tree object
++	against=4b825dc642cb6eb9a060e54bf8d69288fbee4904
++fi
++
++# If you want to allow non-ASCII filenames set this variable to true.
++allownonascii=$(git config --bool hooks.allownonascii)
++
++# Redirect output to stderr.
++exec 1>&2
++
++# Cross platform projects tend to avoid non-ASCII filenames; prevent
++# them from being added to the repository. We exploit the fact that the
++# printable range starts at the space character and ends with tilde.
++if [ "$allownonascii" != "true" ] &&
++	# Note that the use of brackets around a tr range is ok here, (it's
++	# even required, for portability to Solaris 10's /usr/bin/tr), since
++	# the square bracket bytes happen to fall in the designated range.
++	test $(git diff --cached --name-only --diff-filter=A -z $against |
++	  LC_ALL=C tr -d '[ -~]\0' | wc -c) != 0
++then
++	cat <<\EOF
++Error: Attempt to add a non-ASCII file name.
++
++This can cause problems if you want to work with people on other platforms.
++
++To be portable it is advisable to rename the file.
++
++If you know what you are doing you can disable this check using:
++
++  git config hooks.allownonascii true
++EOF
++	exit 1
++fi
++
++# If there are whitespace errors, print the offending file names and fail.
++exec git diff-index --check --cached $against --
+diff -rupN srcclean/.git/hooks/prepare-commit-msg.sample src-github/.git/hooks/prepare-commit-msg.sample
+--- srcclean/.git/hooks/prepare-commit-msg.sample	1969-12-31 21:00:00.000000000 -0300
++++ src-github/.git/hooks/prepare-commit-msg.sample	2016-04-26 21:04:03.576584368 -0300
+@@ -0,0 +1,36 @@
++#!/bin/sh
++#
++# An example hook script to prepare the commit log message.
++# Called by "git commit" with the name of the file that has the
++# commit message, followed by the description of the commit
++# message's source.  The hook's purpose is to edit the commit
++# message file.  If the hook fails with a non-zero status,
++# the commit is aborted.
++#
++# To enable this hook, rename this file to "prepare-commit-msg".
++
++# This hook includes three examples.  The first comments out the
++# "Conflicts:" part of a merge commit.
++#
++# The second includes the output of "git diff --name-status -r"
++# into the message, just before the "git status" output.  It is
++# commented because it doesn't cope with --amend or with squashed
++# commits.
++#
++# The third example adds a Signed-off-by line to the message, that can
++# still be edited.  This is rarely a good idea.
++
++case "$2,$3" in
++  merge,)
++    /usr/bin/perl -i.bak -ne 's/^/# /, s/^# #/#/ if /^Conflicts/ .. /#/; print' "$1" ;;
++
++# ,|template,)
++#   /usr/bin/perl -i.bak -pe '
++#      print "\n" . `git diff --cached --name-status -r`
++#	 if /^#/ && $first++ == 0' "$1" ;;
++
++  *) ;;
++esac
++
++# SOB=$(git var GIT_AUTHOR_IDENT | sed -n 's/^\(.*>\).*$/Signed-off-by: \1/p')
++# grep -qs "^$SOB" "$1" || echo "$SOB" >> "$1"
+diff -rupN srcclean/.git/hooks/pre-push.sample src-github/.git/hooks/pre-push.sample
+--- srcclean/.git/hooks/pre-push.sample	1969-12-31 21:00:00.000000000 -0300
++++ src-github/.git/hooks/pre-push.sample	2016-04-26 21:04:03.576584368 -0300
+@@ -0,0 +1,54 @@
++#!/bin/sh
++
++# An example hook script to verify what is about to be pushed.  Called by "git
++# push" after it has checked the remote status, but before anything has been
++# pushed.  If this script exits with a non-zero status nothing will be pushed.
++#
++# This hook is called with the following parameters:
++#
++# $1 -- Name of the remote to which the push is being done
++# $2 -- URL to which the push is being done
++#
++# If pushing without using a named remote those arguments will be equal.
++#
++# Information about the commits which are being pushed is supplied as lines to
++# the standard input in the form:
++#
++#   <local ref> <local sha1> <remote ref> <remote sha1>
++#
++# This sample shows how to prevent push of commits where the log message starts
++# with "WIP" (work in progress).
++
++remote="$1"
++url="$2"
++
++z40=0000000000000000000000000000000000000000
++
++IFS=' '
++while read local_ref local_sha remote_ref remote_sha
++do
++	if [ "$local_sha" = $z40 ]
++	then
++		# Handle delete
++		:
++	else
++		if [ "$remote_sha" = $z40 ]
++		then
++			# New branch, examine all commits
++			range="$local_sha"
++		else
++			# Update to existing branch, examine new commits
++			range="$remote_sha..$local_sha"
++		fi
++
++		# Check for WIP commit
++		commit=`git rev-list -n 1 --grep '^WIP' "$range"`
++		if [ -n "$commit" ]
++		then
++			echo "Found WIP commit in $local_ref, not pushing"
++			exit 1
++		fi
++	fi
++done
++
++exit 0
+diff -rupN srcclean/.git/hooks/pre-rebase.sample src-github/.git/hooks/pre-rebase.sample
+--- srcclean/.git/hooks/pre-rebase.sample	1969-12-31 21:00:00.000000000 -0300
++++ src-github/.git/hooks/pre-rebase.sample	2016-04-26 21:04:03.576584368 -0300
+@@ -0,0 +1,169 @@
++#!/bin/sh
++#
++# Copyright (c) 2006, 2008 Junio C Hamano
++#
++# The "pre-rebase" hook is run just before "git rebase" starts doing
++# its job, and can prevent the command from running by exiting with
++# non-zero status.
++#
++# The hook is called with the following parameters:
++#
++# $1 -- the upstream the series was forked from.
++# $2 -- the branch being rebased (or empty when rebasing the current branch).
++#
++# This sample shows how to prevent topic branches that are already
++# merged to 'next' branch from getting rebased, because allowing it
++# would result in rebasing already published history.
++
++publish=next
++basebranch="$1"
++if test "$#" = 2
++then
++	topic="refs/heads/$2"
++else
++	topic=`git symbolic-ref HEAD` ||
++	exit 0 ;# we do not interrupt rebasing detached HEAD
++fi
++
++case "$topic" in
++refs/heads/??/*)
++	;;
++*)
++	exit 0 ;# we do not interrupt others.
++	;;
++esac
++
++# Now we are dealing with a topic branch being rebased
++# on top of master.  Is it OK to rebase it?
++
++# Does the topic really exist?
++git show-ref -q "$topic" || {
++	echo >&2 "No such branch $topic"
++	exit 1
++}
++
++# Is topic fully merged to master?
++not_in_master=`git rev-list --pretty=oneline ^master "$topic"`
++if test -z "$not_in_master"
++then
++	echo >&2 "$topic is fully merged to master; better remove it."
++	exit 1 ;# we could allow it, but there is no point.
++fi
++
++# Is topic ever merged to next?  If so you should not be rebasing it.
++only_next_1=`git rev-list ^master "^$topic" ${publish} | sort`
++only_next_2=`git rev-list ^master           ${publish} | sort`
++if test "$only_next_1" = "$only_next_2"
++then
++	not_in_topic=`git rev-list "^$topic" master`
++	if test -z "$not_in_topic"
++	then
++		echo >&2 "$topic is already up-to-date with master"
++		exit 1 ;# we could allow it, but there is no point.
++	else
++		exit 0
++	fi
++else
++	not_in_next=`git rev-list --pretty=oneline ^${publish} "$topic"`
++	/usr/bin/perl -e '
++		my $topic = $ARGV[0];
++		my $msg = "* $topic has commits already merged to public branch:\n";
++		my (%not_in_next) = map {
++			/^([0-9a-f]+) /;
++			($1 => 1);
++		} split(/\n/, $ARGV[1]);
++		for my $elem (map {
++				/^([0-9a-f]+) (.*)$/;
++				[$1 => $2];
++			} split(/\n/, $ARGV[2])) {
++			if (!exists $not_in_next{$elem->[0]}) {
++				if ($msg) {
++					print STDERR $msg;
++					undef $msg;
++				}
++				print STDERR " $elem->[1]\n";
++			}
++		}
++	' "$topic" "$not_in_next" "$not_in_master"
++	exit 1
++fi
++
++<<\DOC_END
++
++This sample hook safeguards topic branches that have been
++published from being rewound.
++
++The workflow assumed here is:
++
++ * Once a topic branch forks from "master", "master" is never
++   merged into it again (either directly or indirectly).
++
++ * Once a topic branch is fully cooked and merged into "master",
++   it is deleted.  If you need to build on top of it to correct
++   earlier mistakes, a new topic branch is created by forking at
++   the tip of the "master".  This is not strictly necessary, but
++   it makes it easier to keep your history simple.
++
++ * Whenever you need to test or publish your changes to topic
++   branches, merge them into "next" branch.
++
++The script, being an example, hardcodes the publish branch name
++to be "next", but it is trivial to make it configurable via
++$GIT_DIR/config mechanism.
++
++With this workflow, you would want to know:
++
++(1) ... if a topic branch has ever been merged to "next".  Young
++    topic branches can have stupid mistakes you would rather
++    clean up before publishing, and things that have not been
++    merged into other branches can be easily rebased without
++    affecting other people.  But once it is published, you would
++    not want to rewind it.
++
++(2) ... if a topic branch has been fully merged to "master".
++    Then you can delete it.  More importantly, you should not
++    build on top of it -- other people may already want to
++    change things related to the topic as patches against your
++    "master", so if you need further changes, it is better to
++    fork the topic (perhaps with the same name) afresh from the
++    tip of "master".
++
++Let's look at this example:
++
++		   o---o---o---o---o---o---o---o---o---o "next"
++		  /       /           /           /
++		 /   a---a---b A     /           /
++		/   /               /           /
++	       /   /   c---c---c---c B         /
++	      /   /   /             \         /
++	     /   /   /   b---b C     \       /
++	    /   /   /   /             \     /
++    ---o---o---o---o---o---o---o---o---o---o---o "master"
++
++
++A, B and C are topic branches.
++
++ * A has one fix since it was merged up to "next".
++
++ * B has finished.  It has been fully merged up to "master" and "next",
++   and is ready to be deleted.
++
++ * C has not merged to "next" at all.
++
++We would want to allow C to be rebased, refuse A, and encourage
++B to be deleted.
++
++To compute (1):
++
++	git rev-list ^master ^topic next
++	git rev-list ^master        next
++
++	if these match, topic has not merged in next at all.
++
++To compute (2):
++
++	git rev-list master..topic
++
++	if this is empty, it is fully merged to "master".
++
++DOC_END
+diff -rupN srcclean/.git/hooks/update.sample src-github/.git/hooks/update.sample
+--- srcclean/.git/hooks/update.sample	1969-12-31 21:00:00.000000000 -0300
++++ src-github/.git/hooks/update.sample	2016-04-26 21:04:03.576584368 -0300
+@@ -0,0 +1,128 @@
++#!/bin/sh
++#
++# An example hook script to blocks unannotated tags from entering.
++# Called by "git receive-pack" with arguments: refname sha1-old sha1-new
++#
++# To enable this hook, rename this file to "update".
++#
++# Config
++# ------
++# hooks.allowunannotated
++#   This boolean sets whether unannotated tags will be allowed into the
++#   repository.  By default they won't be.
++# hooks.allowdeletetag
++#   This boolean sets whether deleting tags will be allowed in the
++#   repository.  By default they won't be.
++# hooks.allowmodifytag
++#   This boolean sets whether a tag may be modified after creation. By default
++#   it won't be.
++# hooks.allowdeletebranch
++#   This boolean sets whether deleting branches will be allowed in the
++#   repository.  By default they won't be.
++# hooks.denycreatebranch
++#   This boolean sets whether remotely creating branches will be denied
++#   in the repository.  By default this is allowed.
++#
++
++# --- Command line
++refname="$1"
++oldrev="$2"
++newrev="$3"
++
++# --- Safety check
++if [ -z "$GIT_DIR" ]; then
++	echo "Don't run this script from the command line." >&2
++	echo " (if you want, you could supply GIT_DIR then run" >&2
++	echo "  $0 <ref> <oldrev> <newrev>)" >&2
++	exit 1
++fi
++
++if [ -z "$refname" -o -z "$oldrev" -o -z "$newrev" ]; then
++	echo "usage: $0 <ref> <oldrev> <newrev>" >&2
++	exit 1
++fi
++
++# --- Config
++allowunannotated=$(git config --bool hooks.allowunannotated)
++allowdeletebranch=$(git config --bool hooks.allowdeletebranch)
++denycreatebranch=$(git config --bool hooks.denycreatebranch)
++allowdeletetag=$(git config --bool hooks.allowdeletetag)
++allowmodifytag=$(git config --bool hooks.allowmodifytag)
++
++# check for no description
++projectdesc=$(sed -e '1q' "$GIT_DIR/description")
++case "$projectdesc" in
++"Unnamed repository"* | "")
++	echo "*** Project description file hasn't been set" >&2
++	exit 1
++	;;
++esac
++
++# --- Check types
++# if $newrev is 0000...0000, it's a commit to delete a ref.
++zero="0000000000000000000000000000000000000000"
++if [ "$newrev" = "$zero" ]; then
++	newrev_type=delete
++else
++	newrev_type=$(git cat-file -t $newrev)
++fi
++
++case "$refname","$newrev_type" in
++	refs/tags/*,commit)
++		# un-annotated tag
++		short_refname=${refname##refs/tags/}
++		if [ "$allowunannotated" != "true" ]; then
++			echo "*** The un-annotated tag, $short_refname, is not allowed in this repository" >&2
++			echo "*** Use 'git tag [ -a | -s ]' for tags you want to propagate." >&2
++			exit 1
++		fi
++		;;
++	refs/tags/*,delete)
++		# delete tag
++		if [ "$allowdeletetag" != "true" ]; then
++			echo "*** Deleting a tag is not allowed in this repository" >&2
++			exit 1
++		fi
++		;;
++	refs/tags/*,tag)
++		# annotated tag
++		if [ "$allowmodifytag" != "true" ] && git rev-parse $refname > /dev/null 2>&1
++		then
++			echo "*** Tag '$refname' already exists." >&2
++			echo "*** Modifying a tag is not allowed in this repository." >&2
++			exit 1
++		fi
++		;;
++	refs/heads/*,commit)
++		# branch
++		if [ "$oldrev" = "$zero" -a "$denycreatebranch" = "true" ]; then
++			echo "*** Creating a branch is not allowed in this repository" >&2
++			exit 1
++		fi
++		;;
++	refs/heads/*,delete)
++		# delete branch
++		if [ "$allowdeletebranch" != "true" ]; then
++			echo "*** Deleting a branch is not allowed in this repository" >&2
++			exit 1
++		fi
++		;;
++	refs/remotes/*,commit)
++		# tracking branch
++		;;
++	refs/remotes/*,delete)
++		# delete tracking branch
++		if [ "$allowdeletebranch" != "true" ]; then
++			echo "*** Deleting a tracking branch is not allowed in this repository" >&2
++			exit 1
++		fi
++		;;
++	*)
++		# Anything else (is there anything else?)
++		echo "*** Update hook: unknown type of update to ref $refname of type $newrev_type" >&2
++		exit 1
++		;;
++esac
++
++# --- Finished
++exit 0
+Los archivos binarios srcclean/.git/index y src-github/.git/index son distintos
+diff -rupN srcclean/.git/info/exclude src-github/.git/info/exclude
+--- srcclean/.git/info/exclude	1969-12-31 21:00:00.000000000 -0300
++++ src-github/.git/info/exclude	2016-04-26 21:04:03.576584368 -0300
+@@ -0,0 +1,6 @@
++# git ls-files --others --exclude-from=.git/info/exclude
++# Lines that start with '#' are comments.
++# For a project mostly in C, the following would be a good set of
++# exclude patterns (uncomment them if you want to use them):
++# *.[oa]
++# *~
+diff -rupN srcclean/.git/logs/HEAD src-github/.git/logs/HEAD
+--- srcclean/.git/logs/HEAD	1969-12-31 21:00:00.000000000 -0300
++++ src-github/.git/logs/HEAD	2016-05-19 19:17:34.887404960 -0400
+@@ -0,0 +1,80 @@
++0000000000000000000000000000000000000000 1ad48934b8667d175782444b48fe7fa07573a3d6 Juan Edwards <juan.edwards@mail.udp.cl> 1461716140 -0300	initial pull
++1ad48934b8667d175782444b48fe7fa07573a3d6 9c4d40063a1046b0c0ffd37a7aa3c5f2fbb4b375 Juan Edwards <juan.edwards@mail.udp.cl> 1462838948 -0300	commit: Agregadas todas las funciones de mthread_barrier y creados los tipos necesarios
++9c4d40063a1046b0c0ffd37a7aa3c5f2fbb4b375 1e06894ea4c6dcd9733e54c08f3b2759ecfe9025 Juan Edwards <juan.edwards@mail.udp.cl> 1462840752 -0300	commit: Arreglos menores en mthreads.h
++1e06894ea4c6dcd9733e54c08f3b2759ecfe9025 246b33814c550292589e0c441dcc82545891758f Juan Edwards <juan.edwards@mail.udp.cl> 1462840964 -0300	commit: arreglos menores
++246b33814c550292589e0c441dcc82545891758f 85cd5613dfe723fd439fd1e054a43b08f342fd3f Juan Edwards <juan.edwards@mail.udp.cl> 1462841117 -0300	commit: falto un / en la libreria
++85cd5613dfe723fd439fd1e054a43b08f342fd3f 6265e63fd928c4fd7d189d32ee9c247174c0e22d Juan Edwards <juan.edwards@mail.udp.cl> 1462841299 -0300	commit: falto un / en la libreria
++6265e63fd928c4fd7d189d32ee9c247174c0e22d 108e4dc491d31ba47faceea29910c2d1b41a2526 Juan Edwards <juan.edwards@mail.udp.cl> 1462842610 -0300	commit: probando una nueva forma
++108e4dc491d31ba47faceea29910c2d1b41a2526 3b54a4ada5438ad5135fd9be41aa5b04867119d8 Juan Edwards <juan.edwards@mail.udp.cl> 1462842728 -0300	commit: falto un struct
++3b54a4ada5438ad5135fd9be41aa5b04867119d8 8fd414c37987251a77127b0a973386b9dda1e604 Juan Edwards <juan.edwards@mail.udp.cl> 1462842876 -0300	commit: Ahora si
++8fd414c37987251a77127b0a973386b9dda1e604 9e7386641bef2878eff911e4f9f673930ad196e8 Juan Edwards <juan.edwards@mail.udp.cl> 1462843686 -0300	commit: Ahora si
++9e7386641bef2878eff911e4f9f673930ad196e8 5946558925ffcbe03d75d1b7a6552d3596d84df7 Juan Edwards <juan.edwards@mail.udp.cl> 1462843953 -0300	commit: Ahora si que si wn
++5946558925ffcbe03d75d1b7a6552d3596d84df7 3f27a617ccbe4fdeabed9e8a2d5fe65e354c9438 Juan Edwards <juan.edwards@mail.udp.cl> 1462844339 -0300	commit: Ahora si que si que si que si
++3f27a617ccbe4fdeabed9e8a2d5fe65e354c9438 c4502be2a8687367b2e42e4bdf0d489aca96bbf8 Juan Edwards <juan.edwards@mail.udp.cl> 1463367002 -0400	commit: Conway en su primera version
++c4502be2a8687367b2e42e4bdf0d489aca96bbf8 07b455057841c0ee98c256d1b0f9507a5dc50625 Juan Edwards <juan.edwards@mail.udp.cl> 1463415475 -0400	commit: segunda version de conway
++07b455057841c0ee98c256d1b0f9507a5dc50625 ac5cce56e70f51e9320910141052ac462d4560fa Juan Edwards <juan.edwards@mail.udp.cl> 1463415647 -0400	commit: Conway version 2.1
++ac5cce56e70f51e9320910141052ac462d4560fa fa5d99c57e76546ef751ff68a43d8b0c85ac0590 Juan Edwards <juan.edwards@mail.udp.cl> 1463415882 -0400	commit: otro intento de conway
++fa5d99c57e76546ef751ff68a43d8b0c85ac0590 3873153b877a66467ce215e83767e4dc8da14a89 Juan Edwards <juan.edwards@mail.udp.cl> 1463416107 -0400	commit: otro intento de conway
++3873153b877a66467ce215e83767e4dc8da14a89 d9566fec8af3a154069654bd0d47efc144f0cb9e Juan Edwards <juan.edwards@mail.udp.cl> 1463416150 -0400	commit: otro intento de conway
++d9566fec8af3a154069654bd0d47efc144f0cb9e f6e91e9ed816540da241acd2b16d763ee0ce4079 Juan Edwards <juan.edwards@mail.udp.cl> 1463418257 -0400	commit: Viendo donde esta el problema
++f6e91e9ed816540da241acd2b16d763ee0ce4079 d2741e455e66d29896144c3cd6b5dfe39ec03a2b Juan Edwards <juan.edwards@mail.udp.cl> 1463418405 -0400	commit: Viendo donde esta el problema
++d2741e455e66d29896144c3cd6b5dfe39ec03a2b c6e3ec48854184a42ce24fa174b9fef2085e297c Juan Edwards <juan.edwards@mail.udp.cl> 1463418971 -0400	commit: Viendo donde esta el problema
++c6e3ec48854184a42ce24fa174b9fef2085e297c efd2f75e8c3226a4f53f1b0319edffad7d13dcb8 Juan Edwards <juan.edwards@mail.udp.cl> 1463421345 -0400	commit: Viendo donde esta el problema
++efd2f75e8c3226a4f53f1b0319edffad7d13dcb8 51beb88511ff5bee85189932e17a5eb51f83cf68 Juan Edwards <juan.edwards@mail.udp.cl> 1463421434 -0400	commit: Viendo donde esta el problema
++51beb88511ff5bee85189932e17a5eb51f83cf68 c489f783432663295aa2b3a0fdd9779ab5a6f7a6 Juan Edwards <juan.edwards@mail.udp.cl> 1463421487 -0400	commit: Viendo donde esta el problema
++c489f783432663295aa2b3a0fdd9779ab5a6f7a6 0d1d0c71c04dda268c7b4bbd52545a8b19f2f74f Juan Edwards <juan.edwards@mail.udp.cl> 1463421521 -0400	commit: Viendo donde esta el problema
++0d1d0c71c04dda268c7b4bbd52545a8b19f2f74f e91018b99f920adad99058b3bd7a752b37fc6290 Juan Edwards <juan.edwards@mail.udp.cl> 1463422825 -0400	commit: Viendo donde esta el problema
++e91018b99f920adad99058b3bd7a752b37fc6290 939d02f72deb2bc536727608b10e40eebf28af52 Juan Edwards <juan.edwards@mail.udp.cl> 1463423004 -0400	commit: Viendo donde esta el problema
++939d02f72deb2bc536727608b10e40eebf28af52 5949e66e6bb3b78bf251fcef5bb4549237450b72 Juan Edwards <juan.edwards@mail.udp.cl> 1463423031 -0400	commit: Viendo donde esta el problema
++5949e66e6bb3b78bf251fcef5bb4549237450b72 87a7a6d14b425f5b27bc66a2246fa6ce7b6629d1 Juan Edwards <juan.edwards@mail.udp.cl> 1463423076 -0400	commit: Viendo donde esta el problema
++87a7a6d14b425f5b27bc66a2246fa6ce7b6629d1 bd88c77120818795d44fba8767fd50b8489fd1de Juan Edwards <juan.edwards@mail.udp.cl> 1463423283 -0400	commit: Viendo donde esta el problema
++bd88c77120818795d44fba8767fd50b8489fd1de 65efada878c5a5ce9881c9ae42b9cb06f4a014f5 Juan Edwards <juan.edwards@mail.udp.cl> 1463426114 -0400	commit: Viendo donde esta el problema
++65efada878c5a5ce9881c9ae42b9cb06f4a014f5 e69df3500a0e8aab7ec3d8fac69275e65ed5d1a2 Juan Edwards <juan.edwards@mail.udp.cl> 1463426188 -0400	commit: Viendo donde esta el problema
++e69df3500a0e8aab7ec3d8fac69275e65ed5d1a2 f932dfcba0d991f82f9890ef7107cd05545b5e15 Juan Edwards <juan.edwards@mail.udp.cl> 1463426352 -0400	commit: Viendo donde esta el problema
++f932dfcba0d991f82f9890ef7107cd05545b5e15 ad189bc81016ac02b293ff3b7c43fa2f34e857ff Juan Edwards <juan.edwards@mail.udp.cl> 1463426718 -0400	commit: Viendo donde esta el problema
++ad189bc81016ac02b293ff3b7c43fa2f34e857ff 3c1c67a0f0ffdda811252e6222d8458cfcc7297b Juan Edwards <juan.edwards@mail.udp.cl> 1463435817 -0400	commit: otro intento de conway
++3c1c67a0f0ffdda811252e6222d8458cfcc7297b cfa4da1ab196ae34bdbf4897c2c4637f666ebcf1 Juan Edwards <juan.edwards@mail.udp.cl> 1463435956 -0400	commit: otro intento de conway
++cfa4da1ab196ae34bdbf4897c2c4637f666ebcf1 fb9fcc26ea8dde91874bf7a359ea350811c16a91 Juan Edwards <juan.edwards@mail.udp.cl> 1463436014 -0400	commit: otro intento de conway
++fb9fcc26ea8dde91874bf7a359ea350811c16a91 f859748954dbf8bb36f963afcd1c216865c83343 Juan Edwards <juan.edwards@mail.udp.cl> 1463436070 -0400	commit: otro intento de conway
++f859748954dbf8bb36f963afcd1c216865c83343 a448ffe1fdb3be09c4224e1de9905713840a2329 Juan Edwards <juan.edwards@mail.udp.cl> 1463436941 -0400	commit: otro intento de conway, ahora sin barrera, para ver
++a448ffe1fdb3be09c4224e1de9905713840a2329 9f681b85004ebd4645a2a367fa0a996b0011c5b4 Juan Edwards <juan.edwards@mail.udp.cl> 1463436984 -0400	commit: otro intento de conway, ahora sin barrera, para ver
++9f681b85004ebd4645a2a367fa0a996b0011c5b4 f6ba09e08c3b75934384a468aa9540fe96466f55 Juan Edwards <juan.edwards@mail.udp.cl> 1463437057 -0400	commit: otro intento de conway, ahora sin barrera, para ver
++f6ba09e08c3b75934384a468aa9540fe96466f55 333332e9cfc08e52bcf4801078db05f6fa3f7169 Juan Edwards <juan.edwards@mail.udp.cl> 1463437125 -0400	commit: otro intento de conway, ahora sin barrera, para ver
++333332e9cfc08e52bcf4801078db05f6fa3f7169 d3060c789424bc70650627e42319439e2fc2ccf4 Juan Edwards <juan.edwards@mail.udp.cl> 1463438862 -0400	commit: cambios en la barrera y probando conway nuevamente
++d3060c789424bc70650627e42319439e2fc2ccf4 2b369ad90e78645cec4ae602b81daa30a58a407d Juan Edwards <juan.edwards@mail.udp.cl> 1463439057 -0400	commit: cambios en la barrera y probando conway nuevamente
++2b369ad90e78645cec4ae602b81daa30a58a407d a1fd03d959cde06f1fe7b7422ac060862ed15b6b Juan Edwards <juan.edwards@mail.udp.cl> 1463439192 -0400	commit: cambios en la barrera y probando conway nuevamente
++a1fd03d959cde06f1fe7b7422ac060862ed15b6b 11260cee9f8f3e5120dbef0ec7d45f5a45171716 Juan Edwards <juan.edwards@mail.udp.cl> 1463439987 -0400	commit: cambios en la barrera y probando conway nuevamente
++11260cee9f8f3e5120dbef0ec7d45f5a45171716 981b4c23a4c984344eb3178e9a23bdc0075d03fa Juan Edwards <juan.edwards@mail.udp.cl> 1463440506 -0400	commit: cambios en la barrera y probando conway nuevamente
++981b4c23a4c984344eb3178e9a23bdc0075d03fa 13a14852cf9d79d56181b8254db568a37be7fd83 Juan Edwards <juan.edwards@mail.udp.cl> 1463440696 -0400	commit: cambios en la barrera y probando conway nuevamente
++13a14852cf9d79d56181b8254db568a37be7fd83 0f36133955dafe0006945ea8c6c9ceef7af68a7a Juan Edwards <juan.edwards@mail.udp.cl> 1463440752 -0400	commit: cambios en la barrera y probando conway nuevamente
++0f36133955dafe0006945ea8c6c9ceef7af68a7a 9323de6aacbfead2005b15cb95281b0014f7954b Juan Edwards <juan.edwards@mail.udp.cl> 1463441222 -0400	commit: cambios en la barrera y probando conway nuevamente
++9323de6aacbfead2005b15cb95281b0014f7954b 66dbdc63912e0fecfc6a59ffa6ca358f748af1db Juan Edwards <juan.edwards@mail.udp.cl> 1463441438 -0400	commit: cambios en la barrera y probando conway nuevamente
++66dbdc63912e0fecfc6a59ffa6ca358f748af1db 5addf7f475c72ed81eb1723be27219a07269b77f Juan Edwards <juan.edwards@mail.udp.cl> 1463444654 -0400	commit: me tiene chato la barrera de mierda
++5addf7f475c72ed81eb1723be27219a07269b77f 95143bee311a1edf07260c4e19fa5ebcc67a45fb Juan Edwards <juan.edwards@mail.udp.cl> 1463445370 -0400	commit: me tiene chato la barrera de mierda
++95143bee311a1edf07260c4e19fa5ebcc67a45fb e3b6878585c259a48689e4e17f2dc57f39bce1b0 Juan Edwards <juan.edwards@mail.udp.cl> 1463446164 -0400	commit: me tiene chato la barrera de mierda
++e3b6878585c259a48689e4e17f2dc57f39bce1b0 5302ed86dc90f7dbc5a474bc974783e14f366771 Juan Edwards <juan.edwards@mail.udp.cl> 1463446362 -0400	commit: me tiene chato la barrera de mierda
++5302ed86dc90f7dbc5a474bc974783e14f366771 1124e185a1279a3610555aba52666bca57d5bfd9 Juan Edwards <juan.edwards@mail.udp.cl> 1463447029 -0400	commit: me tiene chato la barrera de mierda
++1124e185a1279a3610555aba52666bca57d5bfd9 e655d38524c977253f37a6cde73fadb5dd6c3dc8 Juan Edwards <juan.edwards@mail.udp.cl> 1463450475 -0400	commit: nueva barrera
++e655d38524c977253f37a6cde73fadb5dd6c3dc8 8c4e55fb72252f057b0f2df376e99f2a9f0a32f4 Juan Edwards <juan.edwards@mail.udp.cl> 1463450642 -0400	commit: nueva barrera
++8c4e55fb72252f057b0f2df376e99f2a9f0a32f4 6fd75fbfb21738fdfc8f0647c8f91c832f51d54d Juan Edwards <juan.edwards@mail.udp.cl> 1463450786 -0400	commit: nueva barrera
++6fd75fbfb21738fdfc8f0647c8f91c832f51d54d 3137d75a4d8a1a55617f2650edd5351feb5fda07 Juan Edwards <juan.edwards@mail.udp.cl> 1463452227 -0400	commit: nueva barrera
++3137d75a4d8a1a55617f2650edd5351feb5fda07 fda54c47b282de195698367a5fb15f4f4a12bd8a Juan Edwards <juan.edwards@mail.udp.cl> 1463452713 -0400	commit: nueva barrera
++fda54c47b282de195698367a5fb15f4f4a12bd8a 2b0cd0fb38987a8f091d013ba7f5481447f4088c Juan Edwards <juan.edwards@mail.udp.cl> 1463452792 -0400	commit: nueva barrera
++2b0cd0fb38987a8f091d013ba7f5481447f4088c 02d563791aacd7de9afee7817c228e8491c1c459 Juan Edwards <juan.edwards@mail.udp.cl> 1463452895 -0400	commit: nueva barrera
++02d563791aacd7de9afee7817c228e8491c1c459 b8537367f1ceaf63a8ee36dd2c63b49dc6ca0fce Juan Edwards <juan.edwards@mail.udp.cl> 1463514116 -0400	commit: Proyecto finalizado
++b8537367f1ceaf63a8ee36dd2c63b49dc6ca0fce f136f2f9cd135b28df33d7d94286344f8f32c2fe Juan Edwards <juan.edwards@mail.udp.cl> 1463514240 -0400	commit: ups, falto el Makefile xD
++f136f2f9cd135b28df33d7d94286344f8f32c2fe cb33ba7b8fc31cfaaa26e2a86573e14733ee13c0 Juan Edwards <juan.edwards@mail.udp.cl> 1463514413 -0400	commit: ups, falto el Makefile que incluye a conway
++cb33ba7b8fc31cfaaa26e2a86573e14733ee13c0 77df115eac770f061a82348e7358dd4f86adc25f Juan Edwards <juan.edwards@mail.udp.cl> 1463514762 -0400	commit: Arreglos en Makefile
++77df115eac770f061a82348e7358dd4f86adc25f 2f7dbe065a6c720c41e034d852e7a3493dd603ed Juan Edwards <juan.edwards@mail.udp.cl> 1463516806 -0400	commit: Arreglos en Makefile
++2f7dbe065a6c720c41e034d852e7a3493dd603ed e89fcd3354c973c19888d867698dc3c6d5af0f46 Juan Edwards <juan.edwards@mail.udp.cl> 1463516974 -0400	commit: Arreglos en Makefile
++e89fcd3354c973c19888d867698dc3c6d5af0f46 68348dd99045afc1dd5b4a1af8a7951e53bc3e65 Juan Edwards <juan.edwards@mail.udp.cl> 1463522632 -0400	commit: Arreglos en Makefile
++68348dd99045afc1dd5b4a1af8a7951e53bc3e65 13a1a519470b1add97a81918682d255fe089d44f Juan Edwards <juan.edwards@mail.udp.cl> 1463522934 -0400	commit: Arreglos en Makefile
++13a1a519470b1add97a81918682d255fe089d44f 44508965e27d06c8738146cdc9d8dcf396a9d073 Juan Edwards <juan.edwards@mail.udp.cl> 1463525512 -0400	commit: Arreglos en Makefile
++44508965e27d06c8738146cdc9d8dcf396a9d073 210231ebd7671a2a3a672986db20283321826c25 Juan Edwards <juan.edwards@mail.udp.cl> 1463525604 -0400	commit: Arreglos en Makefile
++210231ebd7671a2a3a672986db20283321826c25 a267171b6b0a7bd04a50a1032405b626486878af Juan Edwards <juan.edwards@mail.udp.cl> 1463526450 -0400	commit: Arreglos en Makefile
++a267171b6b0a7bd04a50a1032405b626486878af 1fa3d1f933e42c4b4919f6fd63e553bec0b786c9 Juan Edwards <juan.edwards@mail.udp.cl> 1463526740 -0400	commit: Arreglos en Makefile
++1fa3d1f933e42c4b4919f6fd63e553bec0b786c9 7f503df7f0052a5b9a818017bb810cbc20ab4eb8 Juan Edwards <juan.edwards@mail.udp.cl> 1463527279 -0400	commit: Arreglos en Makefile
++7f503df7f0052a5b9a818017bb810cbc20ab4eb8 f4632b39fe0635d0ccd9a187e0c43348423e147a Juan Edwards <juan.edwards@mail.udp.cl> 1463528120 -0400	commit: Arreglos en Makefile
++f4632b39fe0635d0ccd9a187e0c43348423e147a 1fabdd7515ad0152576321dcabff4649053b0a98 Juan Edwards <juan.edwards@mail.udp.cl> 1463528438 -0400	commit: Arreglos en Makefile
++1fabdd7515ad0152576321dcabff4649053b0a98 78166a43bb7cf215cdcb3dff87158aae77592fb8 Juan Edwards <juan.edwards@mail.udp.cl> 1463530154 -0400	commit: Arreglos en Makefile
++78166a43bb7cf215cdcb3dff87158aae77592fb8 e251468103bb18af2a5286a41c478b89a72bf5da Juan Edwards <juan.edwards@mail.udp.cl> 1463699854 -0400	commit: Push final con todo listo
+diff -rupN srcclean/.git/logs/refs/heads/master src-github/.git/logs/refs/heads/master
+--- srcclean/.git/logs/refs/heads/master	1969-12-31 21:00:00.000000000 -0300
++++ src-github/.git/logs/refs/heads/master	2016-05-19 19:17:34.875404959 -0400
+@@ -0,0 +1,80 @@
++0000000000000000000000000000000000000000 1ad48934b8667d175782444b48fe7fa07573a3d6 Juan Edwards <juan.edwards@mail.udp.cl> 1461716140 -0300	initial pull
++1ad48934b8667d175782444b48fe7fa07573a3d6 9c4d40063a1046b0c0ffd37a7aa3c5f2fbb4b375 Juan Edwards <juan.edwards@mail.udp.cl> 1462838948 -0300	commit: Agregadas todas las funciones de mthread_barrier y creados los tipos necesarios
++9c4d40063a1046b0c0ffd37a7aa3c5f2fbb4b375 1e06894ea4c6dcd9733e54c08f3b2759ecfe9025 Juan Edwards <juan.edwards@mail.udp.cl> 1462840752 -0300	commit: Arreglos menores en mthreads.h
++1e06894ea4c6dcd9733e54c08f3b2759ecfe9025 246b33814c550292589e0c441dcc82545891758f Juan Edwards <juan.edwards@mail.udp.cl> 1462840964 -0300	commit: arreglos menores
++246b33814c550292589e0c441dcc82545891758f 85cd5613dfe723fd439fd1e054a43b08f342fd3f Juan Edwards <juan.edwards@mail.udp.cl> 1462841117 -0300	commit: falto un / en la libreria
++85cd5613dfe723fd439fd1e054a43b08f342fd3f 6265e63fd928c4fd7d189d32ee9c247174c0e22d Juan Edwards <juan.edwards@mail.udp.cl> 1462841299 -0300	commit: falto un / en la libreria
++6265e63fd928c4fd7d189d32ee9c247174c0e22d 108e4dc491d31ba47faceea29910c2d1b41a2526 Juan Edwards <juan.edwards@mail.udp.cl> 1462842610 -0300	commit: probando una nueva forma
++108e4dc491d31ba47faceea29910c2d1b41a2526 3b54a4ada5438ad5135fd9be41aa5b04867119d8 Juan Edwards <juan.edwards@mail.udp.cl> 1462842728 -0300	commit: falto un struct
++3b54a4ada5438ad5135fd9be41aa5b04867119d8 8fd414c37987251a77127b0a973386b9dda1e604 Juan Edwards <juan.edwards@mail.udp.cl> 1462842876 -0300	commit: Ahora si
++8fd414c37987251a77127b0a973386b9dda1e604 9e7386641bef2878eff911e4f9f673930ad196e8 Juan Edwards <juan.edwards@mail.udp.cl> 1462843686 -0300	commit: Ahora si
++9e7386641bef2878eff911e4f9f673930ad196e8 5946558925ffcbe03d75d1b7a6552d3596d84df7 Juan Edwards <juan.edwards@mail.udp.cl> 1462843953 -0300	commit: Ahora si que si wn
++5946558925ffcbe03d75d1b7a6552d3596d84df7 3f27a617ccbe4fdeabed9e8a2d5fe65e354c9438 Juan Edwards <juan.edwards@mail.udp.cl> 1462844339 -0300	commit: Ahora si que si que si que si
++3f27a617ccbe4fdeabed9e8a2d5fe65e354c9438 c4502be2a8687367b2e42e4bdf0d489aca96bbf8 Juan Edwards <juan.edwards@mail.udp.cl> 1463367002 -0400	commit: Conway en su primera version
++c4502be2a8687367b2e42e4bdf0d489aca96bbf8 07b455057841c0ee98c256d1b0f9507a5dc50625 Juan Edwards <juan.edwards@mail.udp.cl> 1463415475 -0400	commit: segunda version de conway
++07b455057841c0ee98c256d1b0f9507a5dc50625 ac5cce56e70f51e9320910141052ac462d4560fa Juan Edwards <juan.edwards@mail.udp.cl> 1463415647 -0400	commit: Conway version 2.1
++ac5cce56e70f51e9320910141052ac462d4560fa fa5d99c57e76546ef751ff68a43d8b0c85ac0590 Juan Edwards <juan.edwards@mail.udp.cl> 1463415882 -0400	commit: otro intento de conway
++fa5d99c57e76546ef751ff68a43d8b0c85ac0590 3873153b877a66467ce215e83767e4dc8da14a89 Juan Edwards <juan.edwards@mail.udp.cl> 1463416107 -0400	commit: otro intento de conway
++3873153b877a66467ce215e83767e4dc8da14a89 d9566fec8af3a154069654bd0d47efc144f0cb9e Juan Edwards <juan.edwards@mail.udp.cl> 1463416150 -0400	commit: otro intento de conway
++d9566fec8af3a154069654bd0d47efc144f0cb9e f6e91e9ed816540da241acd2b16d763ee0ce4079 Juan Edwards <juan.edwards@mail.udp.cl> 1463418257 -0400	commit: Viendo donde esta el problema
++f6e91e9ed816540da241acd2b16d763ee0ce4079 d2741e455e66d29896144c3cd6b5dfe39ec03a2b Juan Edwards <juan.edwards@mail.udp.cl> 1463418405 -0400	commit: Viendo donde esta el problema
++d2741e455e66d29896144c3cd6b5dfe39ec03a2b c6e3ec48854184a42ce24fa174b9fef2085e297c Juan Edwards <juan.edwards@mail.udp.cl> 1463418971 -0400	commit: Viendo donde esta el problema
++c6e3ec48854184a42ce24fa174b9fef2085e297c efd2f75e8c3226a4f53f1b0319edffad7d13dcb8 Juan Edwards <juan.edwards@mail.udp.cl> 1463421345 -0400	commit: Viendo donde esta el problema
++efd2f75e8c3226a4f53f1b0319edffad7d13dcb8 51beb88511ff5bee85189932e17a5eb51f83cf68 Juan Edwards <juan.edwards@mail.udp.cl> 1463421434 -0400	commit: Viendo donde esta el problema
++51beb88511ff5bee85189932e17a5eb51f83cf68 c489f783432663295aa2b3a0fdd9779ab5a6f7a6 Juan Edwards <juan.edwards@mail.udp.cl> 1463421487 -0400	commit: Viendo donde esta el problema
++c489f783432663295aa2b3a0fdd9779ab5a6f7a6 0d1d0c71c04dda268c7b4bbd52545a8b19f2f74f Juan Edwards <juan.edwards@mail.udp.cl> 1463421521 -0400	commit: Viendo donde esta el problema
++0d1d0c71c04dda268c7b4bbd52545a8b19f2f74f e91018b99f920adad99058b3bd7a752b37fc6290 Juan Edwards <juan.edwards@mail.udp.cl> 1463422825 -0400	commit: Viendo donde esta el problema
++e91018b99f920adad99058b3bd7a752b37fc6290 939d02f72deb2bc536727608b10e40eebf28af52 Juan Edwards <juan.edwards@mail.udp.cl> 1463423004 -0400	commit: Viendo donde esta el problema
++939d02f72deb2bc536727608b10e40eebf28af52 5949e66e6bb3b78bf251fcef5bb4549237450b72 Juan Edwards <juan.edwards@mail.udp.cl> 1463423031 -0400	commit: Viendo donde esta el problema
++5949e66e6bb3b78bf251fcef5bb4549237450b72 87a7a6d14b425f5b27bc66a2246fa6ce7b6629d1 Juan Edwards <juan.edwards@mail.udp.cl> 1463423076 -0400	commit: Viendo donde esta el problema
++87a7a6d14b425f5b27bc66a2246fa6ce7b6629d1 bd88c77120818795d44fba8767fd50b8489fd1de Juan Edwards <juan.edwards@mail.udp.cl> 1463423283 -0400	commit: Viendo donde esta el problema
++bd88c77120818795d44fba8767fd50b8489fd1de 65efada878c5a5ce9881c9ae42b9cb06f4a014f5 Juan Edwards <juan.edwards@mail.udp.cl> 1463426114 -0400	commit: Viendo donde esta el problema
++65efada878c5a5ce9881c9ae42b9cb06f4a014f5 e69df3500a0e8aab7ec3d8fac69275e65ed5d1a2 Juan Edwards <juan.edwards@mail.udp.cl> 1463426188 -0400	commit: Viendo donde esta el problema
++e69df3500a0e8aab7ec3d8fac69275e65ed5d1a2 f932dfcba0d991f82f9890ef7107cd05545b5e15 Juan Edwards <juan.edwards@mail.udp.cl> 1463426352 -0400	commit: Viendo donde esta el problema
++f932dfcba0d991f82f9890ef7107cd05545b5e15 ad189bc81016ac02b293ff3b7c43fa2f34e857ff Juan Edwards <juan.edwards@mail.udp.cl> 1463426718 -0400	commit: Viendo donde esta el problema
++ad189bc81016ac02b293ff3b7c43fa2f34e857ff 3c1c67a0f0ffdda811252e6222d8458cfcc7297b Juan Edwards <juan.edwards@mail.udp.cl> 1463435817 -0400	commit: otro intento de conway
++3c1c67a0f0ffdda811252e6222d8458cfcc7297b cfa4da1ab196ae34bdbf4897c2c4637f666ebcf1 Juan Edwards <juan.edwards@mail.udp.cl> 1463435956 -0400	commit: otro intento de conway
++cfa4da1ab196ae34bdbf4897c2c4637f666ebcf1 fb9fcc26ea8dde91874bf7a359ea350811c16a91 Juan Edwards <juan.edwards@mail.udp.cl> 1463436014 -0400	commit: otro intento de conway
++fb9fcc26ea8dde91874bf7a359ea350811c16a91 f859748954dbf8bb36f963afcd1c216865c83343 Juan Edwards <juan.edwards@mail.udp.cl> 1463436070 -0400	commit: otro intento de conway
++f859748954dbf8bb36f963afcd1c216865c83343 a448ffe1fdb3be09c4224e1de9905713840a2329 Juan Edwards <juan.edwards@mail.udp.cl> 1463436941 -0400	commit: otro intento de conway, ahora sin barrera, para ver
++a448ffe1fdb3be09c4224e1de9905713840a2329 9f681b85004ebd4645a2a367fa0a996b0011c5b4 Juan Edwards <juan.edwards@mail.udp.cl> 1463436984 -0400	commit: otro intento de conway, ahora sin barrera, para ver
++9f681b85004ebd4645a2a367fa0a996b0011c5b4 f6ba09e08c3b75934384a468aa9540fe96466f55 Juan Edwards <juan.edwards@mail.udp.cl> 1463437057 -0400	commit: otro intento de conway, ahora sin barrera, para ver
++f6ba09e08c3b75934384a468aa9540fe96466f55 333332e9cfc08e52bcf4801078db05f6fa3f7169 Juan Edwards <juan.edwards@mail.udp.cl> 1463437125 -0400	commit: otro intento de conway, ahora sin barrera, para ver
++333332e9cfc08e52bcf4801078db05f6fa3f7169 d3060c789424bc70650627e42319439e2fc2ccf4 Juan Edwards <juan.edwards@mail.udp.cl> 1463438862 -0400	commit: cambios en la barrera y probando conway nuevamente
++d3060c789424bc70650627e42319439e2fc2ccf4 2b369ad90e78645cec4ae602b81daa30a58a407d Juan Edwards <juan.edwards@mail.udp.cl> 1463439057 -0400	commit: cambios en la barrera y probando conway nuevamente
++2b369ad90e78645cec4ae602b81daa30a58a407d a1fd03d959cde06f1fe7b7422ac060862ed15b6b Juan Edwards <juan.edwards@mail.udp.cl> 1463439192 -0400	commit: cambios en la barrera y probando conway nuevamente
++a1fd03d959cde06f1fe7b7422ac060862ed15b6b 11260cee9f8f3e5120dbef0ec7d45f5a45171716 Juan Edwards <juan.edwards@mail.udp.cl> 1463439987 -0400	commit: cambios en la barrera y probando conway nuevamente
++11260cee9f8f3e5120dbef0ec7d45f5a45171716 981b4c23a4c984344eb3178e9a23bdc0075d03fa Juan Edwards <juan.edwards@mail.udp.cl> 1463440506 -0400	commit: cambios en la barrera y probando conway nuevamente
++981b4c23a4c984344eb3178e9a23bdc0075d03fa 13a14852cf9d79d56181b8254db568a37be7fd83 Juan Edwards <juan.edwards@mail.udp.cl> 1463440696 -0400	commit: cambios en la barrera y probando conway nuevamente
++13a14852cf9d79d56181b8254db568a37be7fd83 0f36133955dafe0006945ea8c6c9ceef7af68a7a Juan Edwards <juan.edwards@mail.udp.cl> 1463440752 -0400	commit: cambios en la barrera y probando conway nuevamente
++0f36133955dafe0006945ea8c6c9ceef7af68a7a 9323de6aacbfead2005b15cb95281b0014f7954b Juan Edwards <juan.edwards@mail.udp.cl> 1463441222 -0400	commit: cambios en la barrera y probando conway nuevamente
++9323de6aacbfead2005b15cb95281b0014f7954b 66dbdc63912e0fecfc6a59ffa6ca358f748af1db Juan Edwards <juan.edwards@mail.udp.cl> 1463441438 -0400	commit: cambios en la barrera y probando conway nuevamente
++66dbdc63912e0fecfc6a59ffa6ca358f748af1db 5addf7f475c72ed81eb1723be27219a07269b77f Juan Edwards <juan.edwards@mail.udp.cl> 1463444654 -0400	commit: me tiene chato la barrera de mierda
++5addf7f475c72ed81eb1723be27219a07269b77f 95143bee311a1edf07260c4e19fa5ebcc67a45fb Juan Edwards <juan.edwards@mail.udp.cl> 1463445370 -0400	commit: me tiene chato la barrera de mierda
++95143bee311a1edf07260c4e19fa5ebcc67a45fb e3b6878585c259a48689e4e17f2dc57f39bce1b0 Juan Edwards <juan.edwards@mail.udp.cl> 1463446164 -0400	commit: me tiene chato la barrera de mierda
++e3b6878585c259a48689e4e17f2dc57f39bce1b0 5302ed86dc90f7dbc5a474bc974783e14f366771 Juan Edwards <juan.edwards@mail.udp.cl> 1463446362 -0400	commit: me tiene chato la barrera de mierda
++5302ed86dc90f7dbc5a474bc974783e14f366771 1124e185a1279a3610555aba52666bca57d5bfd9 Juan Edwards <juan.edwards@mail.udp.cl> 1463447029 -0400	commit: me tiene chato la barrera de mierda
++1124e185a1279a3610555aba52666bca57d5bfd9 e655d38524c977253f37a6cde73fadb5dd6c3dc8 Juan Edwards <juan.edwards@mail.udp.cl> 1463450475 -0400	commit: nueva barrera
++e655d38524c977253f37a6cde73fadb5dd6c3dc8 8c4e55fb72252f057b0f2df376e99f2a9f0a32f4 Juan Edwards <juan.edwards@mail.udp.cl> 1463450642 -0400	commit: nueva barrera
++8c4e55fb72252f057b0f2df376e99f2a9f0a32f4 6fd75fbfb21738fdfc8f0647c8f91c832f51d54d Juan Edwards <juan.edwards@mail.udp.cl> 1463450786 -0400	commit: nueva barrera
++6fd75fbfb21738fdfc8f0647c8f91c832f51d54d 3137d75a4d8a1a55617f2650edd5351feb5fda07 Juan Edwards <juan.edwards@mail.udp.cl> 1463452227 -0400	commit: nueva barrera
++3137d75a4d8a1a55617f2650edd5351feb5fda07 fda54c47b282de195698367a5fb15f4f4a12bd8a Juan Edwards <juan.edwards@mail.udp.cl> 1463452713 -0400	commit: nueva barrera
++fda54c47b282de195698367a5fb15f4f4a12bd8a 2b0cd0fb38987a8f091d013ba7f5481447f4088c Juan Edwards <juan.edwards@mail.udp.cl> 1463452792 -0400	commit: nueva barrera
++2b0cd0fb38987a8f091d013ba7f5481447f4088c 02d563791aacd7de9afee7817c228e8491c1c459 Juan Edwards <juan.edwards@mail.udp.cl> 1463452895 -0400	commit: nueva barrera
++02d563791aacd7de9afee7817c228e8491c1c459 b8537367f1ceaf63a8ee36dd2c63b49dc6ca0fce Juan Edwards <juan.edwards@mail.udp.cl> 1463514116 -0400	commit: Proyecto finalizado
++b8537367f1ceaf63a8ee36dd2c63b49dc6ca0fce f136f2f9cd135b28df33d7d94286344f8f32c2fe Juan Edwards <juan.edwards@mail.udp.cl> 1463514240 -0400	commit: ups, falto el Makefile xD
++f136f2f9cd135b28df33d7d94286344f8f32c2fe cb33ba7b8fc31cfaaa26e2a86573e14733ee13c0 Juan Edwards <juan.edwards@mail.udp.cl> 1463514413 -0400	commit: ups, falto el Makefile que incluye a conway
++cb33ba7b8fc31cfaaa26e2a86573e14733ee13c0 77df115eac770f061a82348e7358dd4f86adc25f Juan Edwards <juan.edwards@mail.udp.cl> 1463514762 -0400	commit: Arreglos en Makefile
++77df115eac770f061a82348e7358dd4f86adc25f 2f7dbe065a6c720c41e034d852e7a3493dd603ed Juan Edwards <juan.edwards@mail.udp.cl> 1463516806 -0400	commit: Arreglos en Makefile
++2f7dbe065a6c720c41e034d852e7a3493dd603ed e89fcd3354c973c19888d867698dc3c6d5af0f46 Juan Edwards <juan.edwards@mail.udp.cl> 1463516974 -0400	commit: Arreglos en Makefile
++e89fcd3354c973c19888d867698dc3c6d5af0f46 68348dd99045afc1dd5b4a1af8a7951e53bc3e65 Juan Edwards <juan.edwards@mail.udp.cl> 1463522632 -0400	commit: Arreglos en Makefile
++68348dd99045afc1dd5b4a1af8a7951e53bc3e65 13a1a519470b1add97a81918682d255fe089d44f Juan Edwards <juan.edwards@mail.udp.cl> 1463522934 -0400	commit: Arreglos en Makefile
++13a1a519470b1add97a81918682d255fe089d44f 44508965e27d06c8738146cdc9d8dcf396a9d073 Juan Edwards <juan.edwards@mail.udp.cl> 1463525512 -0400	commit: Arreglos en Makefile
++44508965e27d06c8738146cdc9d8dcf396a9d073 210231ebd7671a2a3a672986db20283321826c25 Juan Edwards <juan.edwards@mail.udp.cl> 1463525604 -0400	commit: Arreglos en Makefile
++210231ebd7671a2a3a672986db20283321826c25 a267171b6b0a7bd04a50a1032405b626486878af Juan Edwards <juan.edwards@mail.udp.cl> 1463526450 -0400	commit: Arreglos en Makefile
++a267171b6b0a7bd04a50a1032405b626486878af 1fa3d1f933e42c4b4919f6fd63e553bec0b786c9 Juan Edwards <juan.edwards@mail.udp.cl> 1463526740 -0400	commit: Arreglos en Makefile
++1fa3d1f933e42c4b4919f6fd63e553bec0b786c9 7f503df7f0052a5b9a818017bb810cbc20ab4eb8 Juan Edwards <juan.edwards@mail.udp.cl> 1463527279 -0400	commit: Arreglos en Makefile
++7f503df7f0052a5b9a818017bb810cbc20ab4eb8 f4632b39fe0635d0ccd9a187e0c43348423e147a Juan Edwards <juan.edwards@mail.udp.cl> 1463528120 -0400	commit: Arreglos en Makefile
++f4632b39fe0635d0ccd9a187e0c43348423e147a 1fabdd7515ad0152576321dcabff4649053b0a98 Juan Edwards <juan.edwards@mail.udp.cl> 1463528438 -0400	commit: Arreglos en Makefile
++1fabdd7515ad0152576321dcabff4649053b0a98 78166a43bb7cf215cdcb3dff87158aae77592fb8 Juan Edwards <juan.edwards@mail.udp.cl> 1463530154 -0400	commit: Arreglos en Makefile
++78166a43bb7cf215cdcb3dff87158aae77592fb8 e251468103bb18af2a5286a41c478b89a72bf5da Juan Edwards <juan.edwards@mail.udp.cl> 1463699854 -0400	commit: Push final con todo listo
+diff -rupN srcclean/.git/logs/refs/remotes/origin/master src-github/.git/logs/refs/remotes/origin/master
+--- srcclean/.git/logs/refs/remotes/origin/master	1969-12-31 21:00:00.000000000 -0300
++++ src-github/.git/logs/refs/remotes/origin/master	2016-05-19 19:18:45.439406459 -0400
+@@ -0,0 +1,80 @@
++0000000000000000000000000000000000000000 1ad48934b8667d175782444b48fe7fa07573a3d6 Juan Edwards <juan.edwards@mail.udp.cl> 1461716120 -0300	pull origin master: storing head
++1ad48934b8667d175782444b48fe7fa07573a3d6 9c4d40063a1046b0c0ffd37a7aa3c5f2fbb4b375 Juan Edwards <juan.edwards@mail.udp.cl> 1462838960 -0300	update by push
++9c4d40063a1046b0c0ffd37a7aa3c5f2fbb4b375 1e06894ea4c6dcd9733e54c08f3b2759ecfe9025 Juan Edwards <juan.edwards@mail.udp.cl> 1462840759 -0300	update by push
++1e06894ea4c6dcd9733e54c08f3b2759ecfe9025 246b33814c550292589e0c441dcc82545891758f Juan Edwards <juan.edwards@mail.udp.cl> 1462840973 -0300	update by push
++246b33814c550292589e0c441dcc82545891758f 85cd5613dfe723fd439fd1e054a43b08f342fd3f Juan Edwards <juan.edwards@mail.udp.cl> 1462841126 -0300	update by push
++85cd5613dfe723fd439fd1e054a43b08f342fd3f 6265e63fd928c4fd7d189d32ee9c247174c0e22d Juan Edwards <juan.edwards@mail.udp.cl> 1462841305 -0300	update by push
++6265e63fd928c4fd7d189d32ee9c247174c0e22d 108e4dc491d31ba47faceea29910c2d1b41a2526 Juan Edwards <juan.edwards@mail.udp.cl> 1462842620 -0300	update by push
++108e4dc491d31ba47faceea29910c2d1b41a2526 3b54a4ada5438ad5135fd9be41aa5b04867119d8 Juan Edwards <juan.edwards@mail.udp.cl> 1462842734 -0300	update by push
++3b54a4ada5438ad5135fd9be41aa5b04867119d8 8fd414c37987251a77127b0a973386b9dda1e604 Juan Edwards <juan.edwards@mail.udp.cl> 1462842889 -0300	update by push
++8fd414c37987251a77127b0a973386b9dda1e604 9e7386641bef2878eff911e4f9f673930ad196e8 Juan Edwards <juan.edwards@mail.udp.cl> 1462843693 -0300	update by push
++9e7386641bef2878eff911e4f9f673930ad196e8 5946558925ffcbe03d75d1b7a6552d3596d84df7 Juan Edwards <juan.edwards@mail.udp.cl> 1462843962 -0300	update by push
++5946558925ffcbe03d75d1b7a6552d3596d84df7 3f27a617ccbe4fdeabed9e8a2d5fe65e354c9438 Juan Edwards <juan.edwards@mail.udp.cl> 1462844350 -0300	update by push
++3f27a617ccbe4fdeabed9e8a2d5fe65e354c9438 c4502be2a8687367b2e42e4bdf0d489aca96bbf8 Juan Edwards <juan.edwards@mail.udp.cl> 1463367019 -0400	update by push
++c4502be2a8687367b2e42e4bdf0d489aca96bbf8 07b455057841c0ee98c256d1b0f9507a5dc50625 Juan Edwards <juan.edwards@mail.udp.cl> 1463415487 -0400	update by push
++07b455057841c0ee98c256d1b0f9507a5dc50625 ac5cce56e70f51e9320910141052ac462d4560fa Juan Edwards <juan.edwards@mail.udp.cl> 1463415657 -0400	update by push
++ac5cce56e70f51e9320910141052ac462d4560fa fa5d99c57e76546ef751ff68a43d8b0c85ac0590 Juan Edwards <juan.edwards@mail.udp.cl> 1463415890 -0400	update by push
++fa5d99c57e76546ef751ff68a43d8b0c85ac0590 3873153b877a66467ce215e83767e4dc8da14a89 Juan Edwards <juan.edwards@mail.udp.cl> 1463416113 -0400	update by push
++3873153b877a66467ce215e83767e4dc8da14a89 d9566fec8af3a154069654bd0d47efc144f0cb9e Juan Edwards <juan.edwards@mail.udp.cl> 1463416156 -0400	update by push
++d9566fec8af3a154069654bd0d47efc144f0cb9e f6e91e9ed816540da241acd2b16d763ee0ce4079 Juan Edwards <juan.edwards@mail.udp.cl> 1463418265 -0400	update by push
++f6e91e9ed816540da241acd2b16d763ee0ce4079 d2741e455e66d29896144c3cd6b5dfe39ec03a2b Juan Edwards <juan.edwards@mail.udp.cl> 1463418409 -0400	update by push
++d2741e455e66d29896144c3cd6b5dfe39ec03a2b c6e3ec48854184a42ce24fa174b9fef2085e297c Juan Edwards <juan.edwards@mail.udp.cl> 1463418976 -0400	update by push
++c6e3ec48854184a42ce24fa174b9fef2085e297c efd2f75e8c3226a4f53f1b0319edffad7d13dcb8 Juan Edwards <juan.edwards@mail.udp.cl> 1463421351 -0400	update by push
++efd2f75e8c3226a4f53f1b0319edffad7d13dcb8 51beb88511ff5bee85189932e17a5eb51f83cf68 Juan Edwards <juan.edwards@mail.udp.cl> 1463421440 -0400	update by push
++51beb88511ff5bee85189932e17a5eb51f83cf68 c489f783432663295aa2b3a0fdd9779ab5a6f7a6 Juan Edwards <juan.edwards@mail.udp.cl> 1463421491 -0400	update by push
++c489f783432663295aa2b3a0fdd9779ab5a6f7a6 0d1d0c71c04dda268c7b4bbd52545a8b19f2f74f Juan Edwards <juan.edwards@mail.udp.cl> 1463421526 -0400	update by push
++0d1d0c71c04dda268c7b4bbd52545a8b19f2f74f e91018b99f920adad99058b3bd7a752b37fc6290 Juan Edwards <juan.edwards@mail.udp.cl> 1463422832 -0400	update by push
++e91018b99f920adad99058b3bd7a752b37fc6290 939d02f72deb2bc536727608b10e40eebf28af52 Juan Edwards <juan.edwards@mail.udp.cl> 1463423008 -0400	update by push
++939d02f72deb2bc536727608b10e40eebf28af52 5949e66e6bb3b78bf251fcef5bb4549237450b72 Juan Edwards <juan.edwards@mail.udp.cl> 1463423035 -0400	update by push
++5949e66e6bb3b78bf251fcef5bb4549237450b72 87a7a6d14b425f5b27bc66a2246fa6ce7b6629d1 Juan Edwards <juan.edwards@mail.udp.cl> 1463423081 -0400	update by push
++87a7a6d14b425f5b27bc66a2246fa6ce7b6629d1 bd88c77120818795d44fba8767fd50b8489fd1de Juan Edwards <juan.edwards@mail.udp.cl> 1463423288 -0400	update by push
++bd88c77120818795d44fba8767fd50b8489fd1de 65efada878c5a5ce9881c9ae42b9cb06f4a014f5 Juan Edwards <juan.edwards@mail.udp.cl> 1463426120 -0400	update by push
++65efada878c5a5ce9881c9ae42b9cb06f4a014f5 e69df3500a0e8aab7ec3d8fac69275e65ed5d1a2 Juan Edwards <juan.edwards@mail.udp.cl> 1463426192 -0400	update by push
++e69df3500a0e8aab7ec3d8fac69275e65ed5d1a2 f932dfcba0d991f82f9890ef7107cd05545b5e15 Juan Edwards <juan.edwards@mail.udp.cl> 1463426356 -0400	update by push
++f932dfcba0d991f82f9890ef7107cd05545b5e15 ad189bc81016ac02b293ff3b7c43fa2f34e857ff Juan Edwards <juan.edwards@mail.udp.cl> 1463426723 -0400	update by push
++ad189bc81016ac02b293ff3b7c43fa2f34e857ff 3c1c67a0f0ffdda811252e6222d8458cfcc7297b Juan Edwards <juan.edwards@mail.udp.cl> 1463435827 -0400	update by push
++3c1c67a0f0ffdda811252e6222d8458cfcc7297b cfa4da1ab196ae34bdbf4897c2c4637f666ebcf1 Juan Edwards <juan.edwards@mail.udp.cl> 1463435960 -0400	update by push
++cfa4da1ab196ae34bdbf4897c2c4637f666ebcf1 fb9fcc26ea8dde91874bf7a359ea350811c16a91 Juan Edwards <juan.edwards@mail.udp.cl> 1463436018 -0400	update by push
++fb9fcc26ea8dde91874bf7a359ea350811c16a91 f859748954dbf8bb36f963afcd1c216865c83343 Juan Edwards <juan.edwards@mail.udp.cl> 1463436077 -0400	update by push
++f859748954dbf8bb36f963afcd1c216865c83343 a448ffe1fdb3be09c4224e1de9905713840a2329 Juan Edwards <juan.edwards@mail.udp.cl> 1463436945 -0400	update by push
++a448ffe1fdb3be09c4224e1de9905713840a2329 9f681b85004ebd4645a2a367fa0a996b0011c5b4 Juan Edwards <juan.edwards@mail.udp.cl> 1463436990 -0400	update by push
++9f681b85004ebd4645a2a367fa0a996b0011c5b4 f6ba09e08c3b75934384a468aa9540fe96466f55 Juan Edwards <juan.edwards@mail.udp.cl> 1463437061 -0400	update by push
++f6ba09e08c3b75934384a468aa9540fe96466f55 333332e9cfc08e52bcf4801078db05f6fa3f7169 Juan Edwards <juan.edwards@mail.udp.cl> 1463437130 -0400	update by push
++333332e9cfc08e52bcf4801078db05f6fa3f7169 d3060c789424bc70650627e42319439e2fc2ccf4 Juan Edwards <juan.edwards@mail.udp.cl> 1463438871 -0400	update by push
++d3060c789424bc70650627e42319439e2fc2ccf4 2b369ad90e78645cec4ae602b81daa30a58a407d Juan Edwards <juan.edwards@mail.udp.cl> 1463439063 -0400	update by push
++2b369ad90e78645cec4ae602b81daa30a58a407d a1fd03d959cde06f1fe7b7422ac060862ed15b6b Juan Edwards <juan.edwards@mail.udp.cl> 1463439197 -0400	update by push
++a1fd03d959cde06f1fe7b7422ac060862ed15b6b 11260cee9f8f3e5120dbef0ec7d45f5a45171716 Juan Edwards <juan.edwards@mail.udp.cl> 1463439992 -0400	update by push
++11260cee9f8f3e5120dbef0ec7d45f5a45171716 981b4c23a4c984344eb3178e9a23bdc0075d03fa Juan Edwards <juan.edwards@mail.udp.cl> 1463440511 -0400	update by push
++981b4c23a4c984344eb3178e9a23bdc0075d03fa 13a14852cf9d79d56181b8254db568a37be7fd83 Juan Edwards <juan.edwards@mail.udp.cl> 1463440700 -0400	update by push
++13a14852cf9d79d56181b8254db568a37be7fd83 0f36133955dafe0006945ea8c6c9ceef7af68a7a Juan Edwards <juan.edwards@mail.udp.cl> 1463440756 -0400	update by push
++0f36133955dafe0006945ea8c6c9ceef7af68a7a 9323de6aacbfead2005b15cb95281b0014f7954b Juan Edwards <juan.edwards@mail.udp.cl> 1463441227 -0400	update by push
++9323de6aacbfead2005b15cb95281b0014f7954b 66dbdc63912e0fecfc6a59ffa6ca358f748af1db Juan Edwards <juan.edwards@mail.udp.cl> 1463441442 -0400	update by push
++66dbdc63912e0fecfc6a59ffa6ca358f748af1db 5addf7f475c72ed81eb1723be27219a07269b77f Juan Edwards <juan.edwards@mail.udp.cl> 1463444662 -0400	update by push
++5addf7f475c72ed81eb1723be27219a07269b77f 95143bee311a1edf07260c4e19fa5ebcc67a45fb Juan Edwards <juan.edwards@mail.udp.cl> 1463445376 -0400	update by push
++95143bee311a1edf07260c4e19fa5ebcc67a45fb e3b6878585c259a48689e4e17f2dc57f39bce1b0 Juan Edwards <juan.edwards@mail.udp.cl> 1463446169 -0400	update by push
++e3b6878585c259a48689e4e17f2dc57f39bce1b0 5302ed86dc90f7dbc5a474bc974783e14f366771 Juan Edwards <juan.edwards@mail.udp.cl> 1463446366 -0400	update by push
++5302ed86dc90f7dbc5a474bc974783e14f366771 1124e185a1279a3610555aba52666bca57d5bfd9 Juan Edwards <juan.edwards@mail.udp.cl> 1463447034 -0400	update by push
++1124e185a1279a3610555aba52666bca57d5bfd9 e655d38524c977253f37a6cde73fadb5dd6c3dc8 Juan Edwards <juan.edwards@mail.udp.cl> 1463450480 -0400	update by push
++e655d38524c977253f37a6cde73fadb5dd6c3dc8 8c4e55fb72252f057b0f2df376e99f2a9f0a32f4 Juan Edwards <juan.edwards@mail.udp.cl> 1463450648 -0400	update by push
++8c4e55fb72252f057b0f2df376e99f2a9f0a32f4 6fd75fbfb21738fdfc8f0647c8f91c832f51d54d Juan Edwards <juan.edwards@mail.udp.cl> 1463450790 -0400	update by push
++6fd75fbfb21738fdfc8f0647c8f91c832f51d54d 3137d75a4d8a1a55617f2650edd5351feb5fda07 Juan Edwards <juan.edwards@mail.udp.cl> 1463452236 -0400	update by push
++3137d75a4d8a1a55617f2650edd5351feb5fda07 fda54c47b282de195698367a5fb15f4f4a12bd8a Juan Edwards <juan.edwards@mail.udp.cl> 1463452718 -0400	update by push
++fda54c47b282de195698367a5fb15f4f4a12bd8a 2b0cd0fb38987a8f091d013ba7f5481447f4088c Juan Edwards <juan.edwards@mail.udp.cl> 1463452798 -0400	update by push
++2b0cd0fb38987a8f091d013ba7f5481447f4088c 02d563791aacd7de9afee7817c228e8491c1c459 Juan Edwards <juan.edwards@mail.udp.cl> 1463452904 -0400	update by push
++02d563791aacd7de9afee7817c228e8491c1c459 b8537367f1ceaf63a8ee36dd2c63b49dc6ca0fce Juan Edwards <juan.edwards@mail.udp.cl> 1463514142 -0400	update by push
++b8537367f1ceaf63a8ee36dd2c63b49dc6ca0fce f136f2f9cd135b28df33d7d94286344f8f32c2fe Juan Edwards <juan.edwards@mail.udp.cl> 1463514248 -0400	update by push
++f136f2f9cd135b28df33d7d94286344f8f32c2fe cb33ba7b8fc31cfaaa26e2a86573e14733ee13c0 Juan Edwards <juan.edwards@mail.udp.cl> 1463514418 -0400	update by push
++cb33ba7b8fc31cfaaa26e2a86573e14733ee13c0 77df115eac770f061a82348e7358dd4f86adc25f Juan Edwards <juan.edwards@mail.udp.cl> 1463514769 -0400	update by push
++77df115eac770f061a82348e7358dd4f86adc25f 2f7dbe065a6c720c41e034d852e7a3493dd603ed Juan Edwards <juan.edwards@mail.udp.cl> 1463516811 -0400	update by push
++2f7dbe065a6c720c41e034d852e7a3493dd603ed e89fcd3354c973c19888d867698dc3c6d5af0f46 Juan Edwards <juan.edwards@mail.udp.cl> 1463516983 -0400	update by push
++e89fcd3354c973c19888d867698dc3c6d5af0f46 68348dd99045afc1dd5b4a1af8a7951e53bc3e65 Juan Edwards <juan.edwards@mail.udp.cl> 1463522637 -0400	update by push
++68348dd99045afc1dd5b4a1af8a7951e53bc3e65 13a1a519470b1add97a81918682d255fe089d44f Juan Edwards <juan.edwards@mail.udp.cl> 1463522940 -0400	update by push
++13a1a519470b1add97a81918682d255fe089d44f 44508965e27d06c8738146cdc9d8dcf396a9d073 Juan Edwards <juan.edwards@mail.udp.cl> 1463525518 -0400	update by push
++44508965e27d06c8738146cdc9d8dcf396a9d073 210231ebd7671a2a3a672986db20283321826c25 Juan Edwards <juan.edwards@mail.udp.cl> 1463525609 -0400	update by push
++210231ebd7671a2a3a672986db20283321826c25 a267171b6b0a7bd04a50a1032405b626486878af Juan Edwards <juan.edwards@mail.udp.cl> 1463526455 -0400	update by push
++a267171b6b0a7bd04a50a1032405b626486878af 1fa3d1f933e42c4b4919f6fd63e553bec0b786c9 Juan Edwards <juan.edwards@mail.udp.cl> 1463526745 -0400	update by push
++1fa3d1f933e42c4b4919f6fd63e553bec0b786c9 7f503df7f0052a5b9a818017bb810cbc20ab4eb8 Juan Edwards <juan.edwards@mail.udp.cl> 1463527283 -0400	update by push
++7f503df7f0052a5b9a818017bb810cbc20ab4eb8 f4632b39fe0635d0ccd9a187e0c43348423e147a Juan Edwards <juan.edwards@mail.udp.cl> 1463528124 -0400	update by push
++f4632b39fe0635d0ccd9a187e0c43348423e147a 1fabdd7515ad0152576321dcabff4649053b0a98 Juan Edwards <juan.edwards@mail.udp.cl> 1463528443 -0400	update by push
++1fabdd7515ad0152576321dcabff4649053b0a98 78166a43bb7cf215cdcb3dff87158aae77592fb8 Juan Edwards <juan.edwards@mail.udp.cl> 1463530192 -0400	update by push
++78166a43bb7cf215cdcb3dff87158aae77592fb8 e251468103bb18af2a5286a41c478b89a72bf5da Juan Edwards <juan.edwards@mail.udp.cl> 1463699925 -0400	update by push
+Los archivos binarios srcclean/.git/objects/01/58fae325fb2dae8dbb432fefdedfd257a533ec y src-github/.git/objects/01/58fae325fb2dae8dbb432fefdedfd257a533ec son distintos
+Los archivos binarios srcclean/.git/objects/02/53aca06740aed01f01c25ed61c0e54fd53b99c y src-github/.git/objects/02/53aca06740aed01f01c25ed61c0e54fd53b99c son distintos
+Los archivos binarios srcclean/.git/objects/02/776172226c4efe0acd1bd63b528b0d58ee9d10 y src-github/.git/objects/02/776172226c4efe0acd1bd63b528b0d58ee9d10 son distintos
+Los archivos binarios srcclean/.git/objects/02/d563791aacd7de9afee7817c228e8491c1c459 y src-github/.git/objects/02/d563791aacd7de9afee7817c228e8491c1c459 son distintos
+Los archivos binarios srcclean/.git/objects/02/e7b3d7e66f73c172474731d9ae76745643faeb y src-github/.git/objects/02/e7b3d7e66f73c172474731d9ae76745643faeb son distintos
+Los archivos binarios srcclean/.git/objects/03/286bca7dd0c89782319a690d1d9ad679fc80f9 y src-github/.git/objects/03/286bca7dd0c89782319a690d1d9ad679fc80f9 son distintos
+Los archivos binarios srcclean/.git/objects/03/68eae72c921a027075fb4b71d3e7aef4cfc4e2 y src-github/.git/objects/03/68eae72c921a027075fb4b71d3e7aef4cfc4e2 son distintos
+Los archivos binarios srcclean/.git/objects/04/41c36fc977edca938da6db6633dbeecc95af0c y src-github/.git/objects/04/41c36fc977edca938da6db6633dbeecc95af0c son distintos
+Los archivos binarios srcclean/.git/objects/06/9b4daa755f05edcb5245ae8889abd3e2773c40 y src-github/.git/objects/06/9b4daa755f05edcb5245ae8889abd3e2773c40 son distintos
+Los archivos binarios srcclean/.git/objects/06/f09dc8f85443ce87af63ef87dd1888c0f773be y src-github/.git/objects/06/f09dc8f85443ce87af63ef87dd1888c0f773be son distintos
+Los archivos binarios srcclean/.git/objects/07/17950625e9e0372aefef29c49e669c1e63cd67 y src-github/.git/objects/07/17950625e9e0372aefef29c49e669c1e63cd67 son distintos
+Los archivos binarios srcclean/.git/objects/07/1ef3975876551235e72473741121c5c6c0b15f y src-github/.git/objects/07/1ef3975876551235e72473741121c5c6c0b15f son distintos
+Los archivos binarios srcclean/.git/objects/07/b455057841c0ee98c256d1b0f9507a5dc50625 y src-github/.git/objects/07/b455057841c0ee98c256d1b0f9507a5dc50625 son distintos
+Los archivos binarios srcclean/.git/objects/08/653e366d6701c5ac2cdaded06d4e5fc2eb2b9e y src-github/.git/objects/08/653e366d6701c5ac2cdaded06d4e5fc2eb2b9e son distintos
+Los archivos binarios srcclean/.git/objects/08/ad8bb8744afdd95e08ef6f11924abf25fead11 y src-github/.git/objects/08/ad8bb8744afdd95e08ef6f11924abf25fead11 son distintos
+Los archivos binarios srcclean/.git/objects/0b/99570ebf3ee8e8c176fdb9a05315163a770803 y src-github/.git/objects/0b/99570ebf3ee8e8c176fdb9a05315163a770803 son distintos
+Los archivos binarios srcclean/.git/objects/0b/b9f1ff27486bfc7a83b5d1d99126ea2afc10d0 y src-github/.git/objects/0b/b9f1ff27486bfc7a83b5d1d99126ea2afc10d0 son distintos
+Los archivos binarios srcclean/.git/objects/0c/0dc3ab4ef759c8215b0bc414777465de43c444 y src-github/.git/objects/0c/0dc3ab4ef759c8215b0bc414777465de43c444 son distintos
+Los archivos binarios srcclean/.git/objects/0c/a32fd4735a622df58dceb32abfa27bad8e6180 y src-github/.git/objects/0c/a32fd4735a622df58dceb32abfa27bad8e6180 son distintos
+diff -rupN srcclean/.git/objects/0d/1d0c71c04dda268c7b4bbd52545a8b19f2f74f src-github/.git/objects/0d/1d0c71c04dda268c7b4bbd52545a8b19f2f74f
+--- srcclean/.git/objects/0d/1d0c71c04dda268c7b4bbd52545a8b19f2f74f	1969-12-31 21:00:00.000000000 -0300
++++ src-github/.git/objects/0d/1d0c71c04dda268c7b4bbd52545a8b19f2f74f	2016-05-16 13:58:41.921451703 -0400
+@@ -0,0 +1 @@
++x•Œ1n√0@—Œ:/Cñ( ä¢Kó ;-Rà€2π~ãÊﬂÚÒs›∂•ÉÙ÷õ*d÷ú4 ' "ñπq>QvEÚêfåÊ‡¶{áåS*qÚËëw)0ªŸ≥-")∆ƒs`*ë…Ÿoµ¡˜…;|…Éõ‹·˝ÁOÉ>ıπÒ≤ßC^?`DÚË∆‡F∏X¥÷‰ˇ—Æ/$Ãu—]*H›EAÔùAW8ZùW›ÿ¸"ÎS
+\ No hay ning√∫n car√°cter de nueva l√≠nea al final del archivo
+Los archivos binarios srcclean/.git/objects/0d/fafa405151da78785fea7d6b84e29fc124e221 y src-github/.git/objects/0d/fafa405151da78785fea7d6b84e29fc124e221 son distintos
+Los archivos binarios srcclean/.git/objects/0e/fa442ef91c2aa04e5609845589e6a69a0501a8 y src-github/.git/objects/0e/fa442ef91c2aa04e5609845589e6a69a0501a8 son distintos
+Los archivos binarios srcclean/.git/objects/0f/36133955dafe0006945ea8c6c9ceef7af68a7a y src-github/.git/objects/0f/36133955dafe0006945ea8c6c9ceef7af68a7a son distintos
+Los archivos binarios srcclean/.git/objects/0f/90de62df2dcd8bf1d07ca46c07caf2ece778f7 y src-github/.git/objects/0f/90de62df2dcd8bf1d07ca46c07caf2ece778f7 son distintos
+Los archivos binarios srcclean/.git/objects/0f/cbc497d0e997d9292a25f2782dfd79a7517af8 y src-github/.git/objects/0f/cbc497d0e997d9292a25f2782dfd79a7517af8 son distintos
+diff -rupN srcclean/.git/objects/10/8e4dc491d31ba47faceea29910c2d1b41a2526 src-github/.git/objects/10/8e4dc491d31ba47faceea29910c2d1b41a2526
+--- srcclean/.git/objects/10/8e4dc491d31ba47faceea29910c2d1b41a2526	1969-12-31 21:00:00.000000000 -0300
++++ src-github/.git/objects/10/8e4dc491d31ba47faceea29910c2d1b41a2526	2016-05-09 22:10:10.722375787 -0300
+@@ -0,0 +1 @@
++x•éAnƒ EªÊæ@#p©™f”Õ‹¬±ç:’"⁄ÎO‘°À∑¯ˇ=Æ˚~ÎÄã{ÈM0í2oõŒnI≥ç4ìKiq—€ÏsNÑlgkjZ:ãÜ9K¬ï}ñ(nM2£jbÙÒ\±UD14˙gmpT‡C~®…ﬁæNöÙè.;›Ó”êc‚˚;8pıxV¿Î©≥ÜCª˛„¬≠nT§¬(eË7AÆm'Û†ÜPp
+\ No hay ning√∫n car√°cter de nueva l√≠nea al final del archivo
+diff -rupN srcclean/.git/objects/11/24e185a1279a3610555aba52666bca57d5bfd9 src-github/.git/objects/11/24e185a1279a3610555aba52666bca57d5bfd9
+--- srcclean/.git/objects/11/24e185a1279a3610555aba52666bca57d5bfd9	1969-12-31 21:00:00.000000000 -0300
++++ src-github/.git/objects/11/24e185a1279a3610555aba52666bca57d5bfd9	2016-05-16 21:03:49.778873532 -0400
+@@ -0,0 +1,2 @@
++x•ŒMNƒ0@a÷9Ö/@Â$ÆìJ#ƒÜ∑pmWS‘üQH≈ıApñﬂÊÈÈπÔkáƒÈ©7w®ôùFö™´&4™±
++JÙÖ”Xïçë4<§˘—aÃò‹*õN∏õu*4ÎT®‘ÏëñÃ\Jrı˚Ÿ‡˝íﬁÏKö}¬Ì„GÉˇÈuóu.{∫Ω@$ŒD”œHàAGªˇ#váæ˙·†wÈ'l≥¥ÊM¿ˆ’õI¯ªÃSv
+\ No hay ning√∫n car√°cter de nueva l√≠nea al final del archivo
+Los archivos binarios srcclean/.git/objects/11/260cee9f8f3e5120dbef0ec7d45f5a45171716 y src-github/.git/objects/11/260cee9f8f3e5120dbef0ec7d45f5a45171716 son distintos
+Los archivos binarios srcclean/.git/objects/11/d44471c4a9f55038372d7c032e3c9705318212 y src-github/.git/objects/11/d44471c4a9f55038372d7c032e3c9705318212 son distintos
+Los archivos binarios srcclean/.git/objects/12/1c507cf3ad29570000f0fb5ad655092ee86cc4 y src-github/.git/objects/12/1c507cf3ad29570000f0fb5ad655092ee86cc4 son distintos
+Los archivos binarios srcclean/.git/objects/12/2fc49947f686250a44972b0a711bc009a73386 y src-github/.git/objects/12/2fc49947f686250a44972b0a711bc009a73386 son distintos
+Los archivos binarios srcclean/.git/objects/12/42308dad7e3723040a7dacce19ce3a76fe99fa y src-github/.git/objects/12/42308dad7e3723040a7dacce19ce3a76fe99fa son distintos
+Los archivos binarios srcclean/.git/objects/13/599218076c6d7a9afc800e246fb96265b1c5bd y src-github/.git/objects/13/599218076c6d7a9afc800e246fb96265b1c5bd son distintos
+diff -rupN srcclean/.git/objects/13/a14852cf9d79d56181b8254db568a37be7fd83 src-github/.git/objects/13/a14852cf9d79d56181b8254db568a37be7fd83
+--- srcclean/.git/objects/13/a14852cf9d79d56181b8254db568a37be7fd83	1969-12-31 21:00:00.000000000 -0300
++++ src-github/.git/objects/13/a14852cf9d79d56181b8254db568a37be7fd83	2016-05-16 19:18:16.062449702 -0400
+@@ -0,0 +1 @@
++x•èKn√0ª÷)xÅ‘«ñE6ŸÙ≈†.,…P‰π}ç‰]Œ[ÊqÕyÈ`ºˇËM<ú(2{ü"z+hf∆—H2:\g5ZÎFµQì“!ãcc…qòùuN¢’~ñ@∆∆ƒà~LhØ§hÔ?µ¡˜N.ÈA-›‡Û˜†AﬁtŒ¥¨√û∂Å◊/–n:d8Ö	NËøBª¸C°òr\Í§¿J©5iOÿZçTRÆÂAO(ª‹)˜D˝Ñ˙Y\
+\ No hay ning√∫n car√°cter de nueva l√≠nea al final del archivo
+Los archivos binarios srcclean/.git/objects/13/a1a519470b1add97a81918682d255fe089d44f y src-github/.git/objects/13/a1a519470b1add97a81918682d255fe089d44f son distintos
+Los archivos binarios srcclean/.git/objects/14/3104ebfd8398e9d63ede51c348037e90a9ac0c y src-github/.git/objects/14/3104ebfd8398e9d63ede51c348037e90a9ac0c son distintos
+Los archivos binarios srcclean/.git/objects/14/906e4cca43c9bbc66343d27280698c71fc15f3 y src-github/.git/objects/14/906e4cca43c9bbc66343d27280698c71fc15f3 son distintos
+Los archivos binarios srcclean/.git/objects/14/e0e2e4bb6e5a2e66142ebdb7c39980b89fde89 y src-github/.git/objects/14/e0e2e4bb6e5a2e66142ebdb7c39980b89fde89 son distintos
+Los archivos binarios srcclean/.git/objects/15/986216dab7120c171481cb38f69aace7658556 y src-github/.git/objects/15/986216dab7120c171481cb38f69aace7658556 son distintos
+Los archivos binarios srcclean/.git/objects/16/dea32c6c9c29deec039cf57adb44bf5f10b3db y src-github/.git/objects/16/dea32c6c9c29deec039cf57adb44bf5f10b3db son distintos
+Los archivos binarios srcclean/.git/objects/17/0198d95e2f241dcddaeeca0cdcda091d9f2fd8 y src-github/.git/objects/17/0198d95e2f241dcddaeeca0cdcda091d9f2fd8 son distintos
+Los archivos binarios srcclean/.git/objects/17/5368e28aed9081352e82143bb7e80288f8795c y src-github/.git/objects/17/5368e28aed9081352e82143bb7e80288f8795c son distintos
+Los archivos binarios srcclean/.git/objects/17/5f4ef6af488b7621bac3eb39514cf5bbfae0db y src-github/.git/objects/17/5f4ef6af488b7621bac3eb39514cf5bbfae0db son distintos
+Los archivos binarios srcclean/.git/objects/17/c79f744f6638c74a65564f298f7b5918013f76 y src-github/.git/objects/17/c79f744f6638c74a65564f298f7b5918013f76 son distintos
+Los archivos binarios srcclean/.git/objects/18/2790d8c010ca248f3982addc51ccd464dd4cce y src-github/.git/objects/18/2790d8c010ca248f3982addc51ccd464dd4cce son distintos
+Los archivos binarios srcclean/.git/objects/18/67bca6570a7b2b615f077019283e4cbdfc6fc1 y src-github/.git/objects/18/67bca6570a7b2b615f077019283e4cbdfc6fc1 son distintos
+Los archivos binarios srcclean/.git/objects/19/cfa619bcfdfa7ce8ac7b83ec97574aae194ee7 y src-github/.git/objects/19/cfa619bcfdfa7ce8ac7b83ec97574aae194ee7 son distintos
+Los archivos binarios srcclean/.git/objects/19/d39cd8b4226ce5441dfc36d6476b0a299e3b87 y src-github/.git/objects/19/d39cd8b4226ce5441dfc36d6476b0a299e3b87 son distintos
+Los archivos binarios srcclean/.git/objects/1a/cb0afa24b8b6de548713365d5e9ab6fd7762aa y src-github/.git/objects/1a/cb0afa24b8b6de548713365d5e9ab6fd7762aa son distintos
+Los archivos binarios srcclean/.git/objects/1b/aff6486f465c15481c1b28b75b107b4709361d y src-github/.git/objects/1b/aff6486f465c15481c1b28b75b107b4709361d son distintos
+Los archivos binarios srcclean/.git/objects/1c/17e633359c36f14a7052b4d4081807c6edd74a y src-github/.git/objects/1c/17e633359c36f14a7052b4d4081807c6edd74a son distintos
+Los archivos binarios srcclean/.git/objects/1c/399429cb8bc531fadbf04c74377e8305830818 y src-github/.git/objects/1c/399429cb8bc531fadbf04c74377e8305830818 son distintos
+Los archivos binarios srcclean/.git/objects/1c/5fafdc2479e838bc6f50b1e474bfd76f1a727b y src-github/.git/objects/1c/5fafdc2479e838bc6f50b1e474bfd76f1a727b son distintos
+Los archivos binarios srcclean/.git/objects/1c/659bb4c17b14b9bf3ed18f7835ed568286d5e0 y src-github/.git/objects/1c/659bb4c17b14b9bf3ed18f7835ed568286d5e0 son distintos
+Los archivos binarios srcclean/.git/objects/1c/b386f964990e3b93edbd8ef8f1eece42a34822 y src-github/.git/objects/1c/b386f964990e3b93edbd8ef8f1eece42a34822 son distintos
+Los archivos binarios srcclean/.git/objects/1d/08ae8871d8e28339353ea999c7a7cffca1265e y src-github/.git/objects/1d/08ae8871d8e28339353ea999c7a7cffca1265e son distintos
+Los archivos binarios srcclean/.git/objects/1d/2dcc613a7c5135139e5f1c227fbf1ddb4cdd68 y src-github/.git/objects/1d/2dcc613a7c5135139e5f1c227fbf1ddb4cdd68 son distintos
+Los archivos binarios srcclean/.git/objects/1d/a4fbd67aa2ddef01b731ba9cfeb94cd1a86325 y src-github/.git/objects/1d/a4fbd67aa2ddef01b731ba9cfeb94cd1a86325 son distintos
+Los archivos binarios srcclean/.git/objects/1d/cbe79e01a146f57d4edfa5f26eea0b8a03e16f y src-github/.git/objects/1d/cbe79e01a146f57d4edfa5f26eea0b8a03e16f son distintos
+diff -rupN srcclean/.git/objects/1e/06894ea4c6dcd9733e54c08f3b2759ecfe9025 src-github/.git/objects/1e/06894ea4c6dcd9733e54c08f3b2759ecfe9025
+--- srcclean/.git/objects/1e/06894ea4c6dcd9733e54c08f3b2759ecfe9025	1969-12-31 21:00:00.000000000 -0300
++++ src-github/.git/objects/1e/06894ea4c6dcd9733e54c08f3b2759ecfe9025	2016-05-09 21:39:12.886336297 -0300
+@@ -0,0 +1 @@
++x•Œ=n√0@·Œ:/É÷oA2dÈ-(í™SXv À»ı[¥GË¯-è∑ZlHoΩ©¬E…Yé<±ùDï—M\B"…ﬁÁ àŸI6Oj∫vòÿãGåéFÙ1#c)‚%"«°ÿí≥œ.CGü∑≠pó5Ÿ·¸ı£Aˇt≠ÙXÜCû/}¥ÔS∞pBáh¯w¥Î?Ê÷ö~.€U◊≠È∫BÌsSí}òÕ7Ø‚T
+\ No hay ning√∫n car√°cter de nueva l√≠nea al final del archivo
+Los archivos binarios srcclean/.git/objects/1e/3135302cc447ff8b552a1c17bac0601a87bc89 y src-github/.git/objects/1e/3135302cc447ff8b552a1c17bac0601a87bc89 son distintos
+Los archivos binarios srcclean/.git/objects/1e/6b00c967594dd7b75ca4f2128ea200aaed8022 y src-github/.git/objects/1e/6b00c967594dd7b75ca4f2128ea200aaed8022 son distintos
+Los archivos binarios srcclean/.git/objects/1e/e61bba9194cb5aff183978610f8496e97222dd y src-github/.git/objects/1e/e61bba9194cb5aff183978610f8496e97222dd son distintos
+diff -rupN srcclean/.git/objects/1f/a3d1f933e42c4b4919f6fd63e553bec0b786c9 src-github/.git/objects/1f/a3d1f933e42c4b4919f6fd63e553bec0b786c9
+--- srcclean/.git/objects/1f/a3d1f933e42c4b4919f6fd63e553bec0b786c9	1969-12-31 21:00:00.000000000 -0300
++++ src-github/.git/objects/1f/a3d1f933e42c4b4919f6fd63e553bec0b786c9	2016-05-17 19:12:20.974762729 -0400
+@@ -0,0 +1 @@
++x•éKj√0@ª÷)Ê1#y$9PJ≤»¶êCå•ô÷â(2Ω~LrÑ./-”4Tp?jÊc€â∂ﬁ™WÎ}::å )™∆ú»#g5+ô+∞—F€á9ˆâwm±uÑæ.P∫ÿ±ﬁÍÔR‡{„.˘èK~¿ÁmßFﬁtöxõ-ØMø¿Rh˝ﬁ&Ñ¢IØ—*ˇHòs)Ú3.êÆ|F1O1NM
+\ No hay ning√∫n car√°cter de nueva l√≠nea al final del archivo
+diff -rupN srcclean/.git/objects/1f/abdd7515ad0152576321dcabff4649053b0a98 src-github/.git/objects/1f/abdd7515ad0152576321dcabff4649053b0a98
+--- srcclean/.git/objects/1f/abdd7515ad0152576321dcabff4649053b0a98	1969-12-31 21:00:00.000000000 -0300
++++ src-github/.git/objects/1f/abdd7515ad0152576321dcabff4649053b0a98	2016-05-17 19:40:39.010798823 -0400
+@@ -0,0 +1,5 @@
++x•éK
++¬0@]ÁsKíô6)àË¬ç‡!∆d¢’˛à)^ﬂ¢Gp˘‡ÒxaÜÆÄ%∑)Y»ã$&nçÎ&
++"rlô£XmØÜµãçOjÊ,cÅD⁄+∂ItÉu‘!¨ÆÒNt DÚdQ9Vºî˚î·ºß¯Ê_∞{¨T…èw}µƒπ
++˝Ã⁄≠≠'Ù∞’§µ
++ﬂ—"$‘1gπı”dÑ?%uΩ®èN
+\ No hay ning√∫n car√°cter de nueva l√≠nea al final del archivo
+Los archivos binarios srcclean/.git/objects/21/0231ebd7671a2a3a672986db20283321826c25 y src-github/.git/objects/21/0231ebd7671a2a3a672986db20283321826c25 son distintos
+Los archivos binarios srcclean/.git/objects/21/10deea8af510d502c6f11a243f9c0bc472b750 y src-github/.git/objects/21/10deea8af510d502c6f11a243f9c0bc472b750 son distintos
+Los archivos binarios srcclean/.git/objects/21/48cf928fc9d5f7f3ec760776a4363c6fc1565d y src-github/.git/objects/21/48cf928fc9d5f7f3ec760776a4363c6fc1565d son distintos
+Los archivos binarios srcclean/.git/objects/21/7005917da1a386391f29e4f67db5c8b9d798a9 y src-github/.git/objects/21/7005917da1a386391f29e4f67db5c8b9d798a9 son distintos
+Los archivos binarios srcclean/.git/objects/23/32a1e5d631271682a242680c481088c74ccc69 y src-github/.git/objects/23/32a1e5d631271682a242680c481088c74ccc69 son distintos
+diff -rupN srcclean/.git/objects/24/1e4be957cf2ec50c8d2477d693dc0e000a8839 src-github/.git/objects/24/1e4be957cf2ec50c8d2477d693dc0e000a8839
+--- srcclean/.git/objects/24/1e4be957cf2ec50c8d2477d693dc0e000a8839	1969-12-31 21:00:00.000000000 -0300
++++ src-github/.git/objects/24/1e4be957cf2ec50c8d2477d693dc0e000a8839	2016-05-09 21:07:04.274295302 -0300
+@@ -0,0 +1,3 @@
++xïT]o€ ›≥R^Ï(kµßUö:©k≥÷R”NYˆål¿	ö?2¿QÚÔw¡@LlOŸìÒΩÓ9˜+/õ}∫ª˚¸a∆ãö≤aº⁄º¨óO¯«˙}Ûé_0éf‡‡5ıE∑sîïeC2≈nöﬂFï⁄	ñQ¨Héö#˜OcÏá∫CÚ%:4úzºu&ô˙«C@)¡Û÷1û·5W¯êïú‚Ã¡d¨!Tk—´ßÂ∑_œØïèÆ±¯¿/NÃj ãH$MM;µS±4Ç+ﬁ‘Wƒ“ÿÈXøŸi*∏¸ÛR≤¨n˜ZwÀ<D3Ø∏$›s°vWcWú}VsWâOà1‡"∆¯{˙∫ƒxÌöæô‡í∞x“§Bdó	4/x…H'πÑnZË$z_%∑∫∂—	 Úv€'aWìpË~†+H∞R≤c
++MåÇ¨v¢|:gËÇÓDŒdúD¨ìÕŒ]UAßj›µ∞ÅÙ*ÍähgˆÁfù>nÇF67∫S‘Ÿ`8ÕA'ﬁhêÏﬂ=&(éÁ«‰„◊™¬U∂Â›ﬂ#∑,“∑tÉWœÈ#hµä∑·pŸw'¶+œÑ‡L‹X&˝ë¥v(åT¢9y5ŒzÏç]‘´‡ˇo…SÉ`∑—h,=WíÏmKª˚—∑LABeU‹⁄ÉﬁãDÃÏ*˜íp{'Ä8Ô∏≥ï{Hæg+lefæó¡⁄Z^¿áY+˚”≤÷ 
+++¢mµ«Í£õ?-’Lóô‹Î@Ae˜F.dÙ¨2ƒ/¸∆ qUÙgËû¨jlöø™ñ∑d’^ù[1§í›0¸Ÿ⁄ö|
+\ No hay ning√∫n car√°cter de nueva l√≠nea al final del archivo
+diff -rupN srcclean/.git/objects/24/6b33814c550292589e0c441dcc82545891758f src-github/.git/objects/24/6b33814c550292589e0c441dcc82545891758f
+--- srcclean/.git/objects/24/6b33814c550292589e0c441dcc82545891758f	1969-12-31 21:00:00.000000000 -0300
++++ src-github/.git/objects/24/6b33814c550292589e0c441dcc82545891758f	2016-05-09 21:42:44.834340802 -0300
+@@ -0,0 +1 @@
++x•éKÇ0@]˜s…–41∆ço1Lß~BÅîØ/—#¯voÛÚxŒ˘YA[s®EZ›≤√éì°®ÉÎp'aEÔ-“{f´*2Uh}¨êe9ÜŒqñ±Of–ù¬Ijßh´èπ¿m£	ÆÒM%ÆpzÌ÷»œ.ôûc≥≈•·Ò≠ı∫∑ºÖ#D≈ﬂ—*$ï"˜q^!À4Y’ÓaM°
+\ No hay ning√∫n car√°cter de nueva l√≠nea al final del archivo
+Los archivos binarios srcclean/.git/objects/24/a9c182cf6fe3df6a6c210af22ea358a462a899 y src-github/.git/objects/24/a9c182cf6fe3df6a6c210af22ea358a462a899 son distintos
+Los archivos binarios srcclean/.git/objects/25/3a90d32d5db5f2436a6766deeb604bd46b7fc5 y src-github/.git/objects/25/3a90d32d5db5f2436a6766deeb604bd46b7fc5 son distintos
+Los archivos binarios srcclean/.git/objects/25/db52f780394dc2508dbfb4742dd3d5414d013c y src-github/.git/objects/25/db52f780394dc2508dbfb4742dd3d5414d013c son distintos
+Los archivos binarios srcclean/.git/objects/26/2d1c10f81937094271ce0096203e22da9a05a0 y src-github/.git/objects/26/2d1c10f81937094271ce0096203e22da9a05a0 son distintos
+Los archivos binarios srcclean/.git/objects/27/aeccbb0610b9ef07a3a19951740f4ff9a2c030 y src-github/.git/objects/27/aeccbb0610b9ef07a3a19951740f4ff9a2c030 son distintos
+diff -rupN srcclean/.git/objects/27/c10387b8a9a4451669379d54de187b6a15ab6c src-github/.git/objects/27/c10387b8a9a4451669379d54de187b6a15ab6c
+--- srcclean/.git/objects/27/c10387b8a9a4451669379d54de187b6a15ab6c	1969-12-31 21:00:00.000000000 -0300
++++ src-github/.git/objects/27/c10387b8a9a4451669379d54de187b6a15ab6c	2016-05-16 22:06:24.762953349 -0400
+@@ -0,0 +1,3 @@
++x•U€j€@Ì´ÙäTÏ‘ˆSi*ó¸Pp‹áíBüÑ.õzâ.ÌjE‚ˇ{fˆ&;íL ∆`ÌÏ—ôŸ9g«iQß∞¯∏XæyÀ´¨hsüK^Òá•‹	ñ‰óªïﬂmº‰≤9âM˛ ER\Ó&nÚW‘≤¶êÔÛJÇ·ä”DŒDú≥Fäz<èKxo ·£ÔÒ€¿¨ ä`{≥ŸP‘L∂¢Çı˜ÌØØõ+ﬂ;¯æátm&!éü1""Rà áÑ.ÎRQΩçLd€LÕÔ)tylÇ≤ïÏ!.ÍÏ.xóŒVj"ã6ÿãÊ«Î∞*Xm∂ Íì!	˚ß¿ß¸m’œ‡ÌÊÁoM7R›–€/´oÑ–Ívrbç]ı&´´‹iLX
++Psåt∂C®Íæò.√'€nD¢¶CæAc 3¶ôΩ§∫JΩWúL¡o·eˆbE√Ä–˘®L
++î$h¯Vì‘√æ√–y÷0÷€◊Îk<≈¨’…úVu{AdX„±±bÌÑ´éíu"}XΩóÌ≥ÇahéÀ˝TˇúxS}ßL/Ã+Á\€cUB;RZsZô•=•æ;Éf≤—©∞¥ÉsûkƒÕæ ˙-t∑öºp~ñzòêE1ﬂò®Ø&JÃ–Î‚ÎFâïùLA¿d÷Ÿ¨sâDÇ&π∞œ'cÈQd'{e*±SQ'yñ4RM={Ø©Ωoìu≥ÒË=‚Éwø„L›⁄ÕT∏cyÔº˘vîL¡yò$√Oó_ôR¸Î∫S[®'iäﬂS˜ÕF3û¨˜˛}…L¶
+\ No hay ning√∫n car√°cter de nueva l√≠nea al final del archivo
+Los archivos binarios srcclean/.git/objects/29/97a88bd4009d376da11d54b24e68e9f3815bfe y src-github/.git/objects/29/97a88bd4009d376da11d54b24e68e9f3815bfe son distintos
+Los archivos binarios srcclean/.git/objects/29/b63790752cce6b4bbdd160c58c3ba1efc97266 y src-github/.git/objects/29/b63790752cce6b4bbdd160c58c3ba1efc97266 son distintos
+diff -rupN srcclean/.git/objects/2b/0cd0fb38987a8f091d013ba7f5481447f4088c src-github/.git/objects/2b/0cd0fb38987a8f091d013ba7f5481447f4088c
+--- srcclean/.git/objects/2b/0cd0fb38987a8f091d013ba7f5481447f4088c	1969-12-31 21:00:00.000000000 -0300
++++ src-github/.git/objects/2b/0cd0fb38987a8f091d013ba7f5481447f4088c	2016-05-16 22:39:52.838996033 -0400
+@@ -0,0 +1 @@
++x•Œ9¬0@Qjüb.@‰eºI—–pãâ=AŸd∏>ÅÚ7O?-”44–(≠2Cê∂$Áº2åI≈¿…†t6d__îI:*±RÂπA…d1°Ôu–ôU¥.„<Ÿ“+[∞ÏÑÓs A[ª/nÕpÕo™˘	ß«^ˇÍ2—0v[^ª4ûA°3hµèé•È;⁄¯BÃøz™ï+âü…K“
+\ No hay ning√∫n car√°cter de nueva l√≠nea al final del archivo
+diff -rupN srcclean/.git/objects/2b/369ad90e78645cec4ae602b81daa30a58a407d src-github/.git/objects/2b/369ad90e78645cec4ae602b81daa30a58a407d
+--- srcclean/.git/objects/2b/369ad90e78645cec4ae602b81daa30a58a407d	1969-12-31 21:00:00.000000000 -0300
++++ src-github/.git/objects/2b/369ad90e78645cec4ae602b81daa30a58a407d	2016-05-16 18:50:57.610414875 -0400
+@@ -0,0 +1,3 @@
++x•èAnƒ EªÊæ¿D<ë™™õŸÙ∆5UC:ö€7jè–Â[¸ßˇ§n€“¡ΩÙ¶
++!åô#! (1S¶®ƒ9dNﬁ¶)¶9ÔÆ9öùõñ…a@°ÎÏ≠èB&ñ‘[7ŒﬁÕj≥XëÏ˝≥6¯8∏¿-=∏•;º~ù4ËΩoº¨√ëˆA÷7}pÁ'ÇzD#øGª˛CaÑ∑∏‘;hÅï!rk⁄û∞∑π§
++RÀÉüP˝ÊÌÃSÛ«oZò
+\ No hay ning√∫n car√°cter de nueva l√≠nea al final del archivo
+Los archivos binarios srcclean/.git/objects/2b/c92e0c4b54aab92862f7eca06a9c1af122d5bb y src-github/.git/objects/2b/c92e0c4b54aab92862f7eca06a9c1af122d5bb son distintos
+Los archivos binarios srcclean/.git/objects/2c/13d961821a4589109c184b33f61e5ac56ca8d6 y src-github/.git/objects/2c/13d961821a4589109c184b33f61e5ac56ca8d6 son distintos
+Los archivos binarios srcclean/.git/objects/2d/a2ffe53b12f1e9f7e6363eb514e8cbe4b27bcd y src-github/.git/objects/2d/a2ffe53b12f1e9f7e6363eb514e8cbe4b27bcd son distintos
+Los archivos binarios srcclean/.git/objects/2e/c3fab80a409833c0424d43b782472116a32610 y src-github/.git/objects/2e/c3fab80a409833c0424d43b782472116a32610 son distintos
+diff -rupN srcclean/.git/objects/2f/7dbe065a6c720c41e034d852e7a3493dd603ed src-github/.git/objects/2f/7dbe065a6c720c41e034d852e7a3493dd603ed
+--- srcclean/.git/objects/2f/7dbe065a6c720c41e034d852e7a3493dd603ed	1969-12-31 21:00:00.000000000 -0300
++++ src-github/.git/objects/2f/7dbe065a6c720c41e034d852e7a3493dd603ed	2016-05-17 16:26:46.541018109 -0400
+@@ -0,0 +1,2 @@
++x•éKj1@≥ˆ)tÅˆÿñ!YtSË!Kn'ôéá^ø°9BñèèóóiÙÅv≠™ÇÌïÆ^H˘ÏËiy'VB
++É/¨W≥r’πëÁ¢r&≤≈¢„‘˚êî|L"°$d…},Ü∑ˆ≥T¯‹xÜ˘Â*8ﬁû‘ÈãŒc∑…⁄ÂÒ.†èìEÿ€`≠…ˇ£MﬂHòK≠˙=.–æ¯Æe’¸âNÉ
+\ No hay ning√∫n car√°cter de nueva l√≠nea al final del archivo
+Los archivos binarios srcclean/.git/objects/31/37d75a4d8a1a55617f2650edd5351feb5fda07 y src-github/.git/objects/31/37d75a4d8a1a55617f2650edd5351feb5fda07 son distintos
+Los archivos binarios srcclean/.git/objects/31/a95d28835a2483348e99df78c22138c14231d7 y src-github/.git/objects/31/a95d28835a2483348e99df78c22138c14231d7 son distintos
+Los archivos binarios srcclean/.git/objects/32/056f847e6fa52f0acaafb31c0120c85d0ef838 y src-github/.git/objects/32/056f847e6fa52f0acaafb31c0120c85d0ef838 son distintos
+Los archivos binarios srcclean/.git/objects/32/25daba1b1c76a7f75ee07325f583224a74b8ad y src-github/.git/objects/32/25daba1b1c76a7f75ee07325f583224a74b8ad son distintos
+Los archivos binarios srcclean/.git/objects/32/fc625f4e1c0f0e89d91df85e2627db08548988 y src-github/.git/objects/32/fc625f4e1c0f0e89d91df85e2627db08548988 son distintos
+Los archivos binarios srcclean/.git/objects/32/fff8dbe171c4ac6e7827c824fe06150508ba0a y src-github/.git/objects/32/fff8dbe171c4ac6e7827c824fe06150508ba0a son distintos
+Los archivos binarios srcclean/.git/objects/33/3332e9cfc08e52bcf4801078db05f6fa3f7169 y src-github/.git/objects/33/3332e9cfc08e52bcf4801078db05f6fa3f7169 son distintos
+Los archivos binarios srcclean/.git/objects/33/9e7cb57fffdb31e84570dbbdd880432feeb4a0 y src-github/.git/objects/33/9e7cb57fffdb31e84570dbbdd880432feeb4a0 son distintos
+Los archivos binarios srcclean/.git/objects/34/09c9e86bdfa146cbbc3656cbe97e97d1f3e1ff y src-github/.git/objects/34/09c9e86bdfa146cbbc3656cbe97e97d1f3e1ff son distintos
+Los archivos binarios srcclean/.git/objects/34/2cf441259edc5bf119b0e727021eed404c473d y src-github/.git/objects/34/2cf441259edc5bf119b0e727021eed404c473d son distintos
+diff -rupN srcclean/.git/objects/35/04f460134a983d5cdf00b6463871a7dc78670a src-github/.git/objects/35/04f460134a983d5cdf00b6463871a7dc78670a
+--- srcclean/.git/objects/35/04f460134a983d5cdf00b6463871a7dc78670a	1969-12-31 21:00:00.000000000 -0300
++++ src-github/.git/objects/35/04f460134a983d5cdf00b6463871a7dc78670a	2016-05-17 15:52:42.948974670 -0400
+@@ -0,0 +1 @@
++x+)JMU07b040031QMÃNMÀÃIe¯oƒvπÅ£ˆìe√¬2ke9›P5…˘yÂâïz…[ó±ΩÚÃÏû’>√ˆ}è·¡Û á;À
+\ No hay ning√∫n car√°cter de nueva l√≠nea al final del archivo
+Los archivos binarios srcclean/.git/objects/35/3c6ed9fcd9f0a0bf2b473722c89e2df875f382 y src-github/.git/objects/35/3c6ed9fcd9f0a0bf2b473722c89e2df875f382 son distintos
+Los archivos binarios srcclean/.git/objects/35/99d8a61e21e80b56afb83f81023102203f2bc8 y src-github/.git/objects/35/99d8a61e21e80b56afb83f81023102203f2bc8 son distintos
+Los archivos binarios srcclean/.git/objects/35/acd602559bbfbe439942e874131f95e25d0269 y src-github/.git/objects/35/acd602559bbfbe439942e874131f95e25d0269 son distintos
+Los archivos binarios srcclean/.git/objects/36/15688269f3f5986cc5dec0c85ae6e79091cff8 y src-github/.git/objects/36/15688269f3f5986cc5dec0c85ae6e79091cff8 son distintos
+Los archivos binarios srcclean/.git/objects/37/812df5d0c62cf466f168e2a80fd3d77795b827 y src-github/.git/objects/37/812df5d0c62cf466f168e2a80fd3d77795b827 son distintos
+Los archivos binarios srcclean/.git/objects/38/73153b877a66467ce215e83767e4dc8da14a89 y src-github/.git/objects/38/73153b877a66467ce215e83767e4dc8da14a89 son distintos
+Los archivos binarios srcclean/.git/objects/38/b346e1705d3cbe497cd9e6185264ed3c1daa7e y src-github/.git/objects/38/b346e1705d3cbe497cd9e6185264ed3c1daa7e son distintos
+Los archivos binarios srcclean/.git/objects/39/b82edc9525f884a321288c6066f7d48ae54c1a y src-github/.git/objects/39/b82edc9525f884a321288c6066f7d48ae54c1a son distintos
+Los archivos binarios srcclean/.git/objects/3a/dd482231976186de373dd37e5d306bb4cad7e4 y src-github/.git/objects/3a/dd482231976186de373dd37e5d306bb4cad7e4 son distintos
+Los archivos binarios srcclean/.git/objects/3a/f7d2cbf864a72f2bbd077ee57ef5845d663e61 y src-github/.git/objects/3a/f7d2cbf864a72f2bbd077ee57ef5845d663e61 son distintos
+Los archivos binarios srcclean/.git/objects/3b/54a4ada5438ad5135fd9be41aa5b04867119d8 y src-github/.git/objects/3b/54a4ada5438ad5135fd9be41aa5b04867119d8 son distintos
+Los archivos binarios srcclean/.git/objects/3b/9a19fa031b8691b5168bf6ee550e0d57cd5206 y src-github/.git/objects/3b/9a19fa031b8691b5168bf6ee550e0d57cd5206 son distintos
+Los archivos binarios srcclean/.git/objects/3c/1c67a0f0ffdda811252e6222d8458cfcc7297b y src-github/.git/objects/3c/1c67a0f0ffdda811252e6222d8458cfcc7297b son distintos
+Los archivos binarios srcclean/.git/objects/3c/7171e5db3d5f0692c814c9600dc14d39771e0b y src-github/.git/objects/3c/7171e5db3d5f0692c814c9600dc14d39771e0b son distintos
+Los archivos binarios srcclean/.git/objects/3c/f08efb1bc1c99b81751b5715f70efb12c270d1 y src-github/.git/objects/3c/f08efb1bc1c99b81751b5715f70efb12c270d1 son distintos
+Los archivos binarios srcclean/.git/objects/3d/95f923aa8e6d08cb74a1d2759e34c5df134dfa y src-github/.git/objects/3d/95f923aa8e6d08cb74a1d2759e34c5df134dfa son distintos
+Los archivos binarios srcclean/.git/objects/3d/def06bf478597d461ae7ed09534cf9ce4d3f02 y src-github/.git/objects/3d/def06bf478597d461ae7ed09534cf9ce4d3f02 son distintos
+Los archivos binarios srcclean/.git/objects/3d/e2d4f2ee7fda8a90095109d1d6e3e21fa9614f y src-github/.git/objects/3d/e2d4f2ee7fda8a90095109d1d6e3e21fa9614f son distintos
+Los archivos binarios srcclean/.git/objects/3e/45b5b678780c78d1c67e6d41f5599f56d55342 y src-github/.git/objects/3e/45b5b678780c78d1c67e6d41f5599f56d55342 son distintos
+Los archivos binarios srcclean/.git/objects/3e/50e01ed990d329579cdf6579e39807fee55cdb y src-github/.git/objects/3e/50e01ed990d329579cdf6579e39807fee55cdb son distintos
+Los archivos binarios srcclean/.git/objects/3e/7267cda28f4274976e8dce65dffeed1e50bf35 y src-github/.git/objects/3e/7267cda28f4274976e8dce65dffeed1e50bf35 son distintos
+Los archivos binarios srcclean/.git/objects/3e/ddb436577bde94fa10b8b6428b3055f32c95d1 y src-github/.git/objects/3e/ddb436577bde94fa10b8b6428b3055f32c95d1 son distintos
+Los archivos binarios srcclean/.git/objects/3f/01bce04cc0ee21c28eac69984632b38ea596e5 y src-github/.git/objects/3f/01bce04cc0ee21c28eac69984632b38ea596e5 son distintos
+Los archivos binarios srcclean/.git/objects/3f/27a617ccbe4fdeabed9e8a2d5fe65e354c9438 y src-github/.git/objects/3f/27a617ccbe4fdeabed9e8a2d5fe65e354c9438 son distintos
+Los archivos binarios srcclean/.git/objects/40/620155f40e2b67253354c10890fd7156ea06f4 y src-github/.git/objects/40/620155f40e2b67253354c10890fd7156ea06f4 son distintos
+Los archivos binarios srcclean/.git/objects/40/6ef1cce29d2d56c3f0a59ddf4d602c53b6517f y src-github/.git/objects/40/6ef1cce29d2d56c3f0a59ddf4d602c53b6517f son distintos
+Los archivos binarios srcclean/.git/objects/40/cb4a618e246f4c9310872a38011fef00eac947 y src-github/.git/objects/40/cb4a618e246f4c9310872a38011fef00eac947 son distintos
+Los archivos binarios srcclean/.git/objects/42/a52352f87b19e5c897e43f9a5d4ba2f32fa5f0 y src-github/.git/objects/42/a52352f87b19e5c897e43f9a5d4ba2f32fa5f0 son distintos
+Los archivos binarios srcclean/.git/objects/43/09df5cd7fca347ce8b239c783f5654b4c5537f y src-github/.git/objects/43/09df5cd7fca347ce8b239c783f5654b4c5537f son distintos
+Los archivos binarios srcclean/.git/objects/43/f30f5b280fe0dac53d3ae6d8a87ef2f7cb382a y src-github/.git/objects/43/f30f5b280fe0dac53d3ae6d8a87ef2f7cb382a son distintos
+Los archivos binarios srcclean/.git/objects/44/1f2e6b03d51d8215d7b51b62b46082e5e77f01 y src-github/.git/objects/44/1f2e6b03d51d8215d7b51b62b46082e5e77f01 son distintos
+Los archivos binarios srcclean/.git/objects/44/508965e27d06c8738146cdc9d8dcf396a9d073 y src-github/.git/objects/44/508965e27d06c8738146cdc9d8dcf396a9d073 son distintos
+Los archivos binarios srcclean/.git/objects/44/6fff7f9785aa163062c7525c892b3f6d995768 y src-github/.git/objects/44/6fff7f9785aa163062c7525c892b3f6d995768 son distintos
+Los archivos binarios srcclean/.git/objects/45/e62be134181082b91957a775e5953777325547 y src-github/.git/objects/45/e62be134181082b91957a775e5953777325547 son distintos
+Los archivos binarios srcclean/.git/objects/46/14e344be7aa4421db04fafd744d8129b940621 y src-github/.git/objects/46/14e344be7aa4421db04fafd744d8129b940621 son distintos
+Los archivos binarios srcclean/.git/objects/46/2a5174bacbc2925953747ce4ed5676e0f803bf y src-github/.git/objects/46/2a5174bacbc2925953747ce4ed5676e0f803bf son distintos
+Los archivos binarios srcclean/.git/objects/46/58d0b73d037f4dd693857bbed4c9747e96f366 y src-github/.git/objects/46/58d0b73d037f4dd693857bbed4c9747e96f366 son distintos
+Los archivos binarios srcclean/.git/objects/46/a4d8cfee4c206f2b5b663b0fadc81f77698c03 y src-github/.git/objects/46/a4d8cfee4c206f2b5b663b0fadc81f77698c03 son distintos
+Los archivos binarios srcclean/.git/objects/48/543ed829b5ddabf84a5e7a76919ba622df8c84 y src-github/.git/objects/48/543ed829b5ddabf84a5e7a76919ba622df8c84 son distintos
+Los archivos binarios srcclean/.git/objects/48/705be8bc941ecd7d9f71e8615a306bd6d326a2 y src-github/.git/objects/48/705be8bc941ecd7d9f71e8615a306bd6d326a2 son distintos
+Los archivos binarios srcclean/.git/objects/48/8773d59bbcfd3aa5f52bdf1232be550561a1a7 y src-github/.git/objects/48/8773d59bbcfd3aa5f52bdf1232be550561a1a7 son distintos
+Los archivos binarios srcclean/.git/objects/48/eefa4a917c1356de333ad9aade202b1a07d68f y src-github/.git/objects/48/eefa4a917c1356de333ad9aade202b1a07d68f son distintos
+Los archivos binarios srcclean/.git/objects/49/5af6cb5dd33c4f85a336bc9f14b51333584e74 y src-github/.git/objects/49/5af6cb5dd33c4f85a336bc9f14b51333584e74 son distintos
+Los archivos binarios srcclean/.git/objects/49/decd8f4f32c3126b53b9cf77784decd95e7b43 y src-github/.git/objects/49/decd8f4f32c3126b53b9cf77784decd95e7b43 son distintos
+Los archivos binarios srcclean/.git/objects/4a/60b69725c26477a11edd806b4af3a359a0e0a6 y src-github/.git/objects/4a/60b69725c26477a11edd806b4af3a359a0e0a6 son distintos
+Los archivos binarios srcclean/.git/objects/4a/7d9407906943fab206dab5e1cd4ce2238d1e7c y src-github/.git/objects/4a/7d9407906943fab206dab5e1cd4ce2238d1e7c son distintos
+Los archivos binarios srcclean/.git/objects/4b/0e3aa972b07aaca837673e1511e4236096ffb1 y src-github/.git/objects/4b/0e3aa972b07aaca837673e1511e4236096ffb1 son distintos
+Los archivos binarios srcclean/.git/objects/4b/71adf5b7ff3d318af028cef14d50208275b7a0 y src-github/.git/objects/4b/71adf5b7ff3d318af028cef14d50208275b7a0 son distintos
+Los archivos binarios srcclean/.git/objects/4b/b085b4f8fa3606f379be7f3ba53abb297faa5e y src-github/.git/objects/4b/b085b4f8fa3606f379be7f3ba53abb297faa5e son distintos
+Los archivos binarios srcclean/.git/objects/4c/5d73f1d3f999f45fb90a911b8ac43675a2e82d y src-github/.git/objects/4c/5d73f1d3f999f45fb90a911b8ac43675a2e82d son distintos
+Los archivos binarios srcclean/.git/objects/4c/a687496679b959a90c1ff2431fd3b71e3adc58 y src-github/.git/objects/4c/a687496679b959a90c1ff2431fd3b71e3adc58 son distintos
+Los archivos binarios srcclean/.git/objects/4c/f7b44a48eb32bee3b9ddbabf2ad9572bdc27e0 y src-github/.git/objects/4c/f7b44a48eb32bee3b9ddbabf2ad9572bdc27e0 son distintos
+Los archivos binarios srcclean/.git/objects/4e/155c9de002cbb8d0efc4543a006985dc59b56b y src-github/.git/objects/4e/155c9de002cbb8d0efc4543a006985dc59b56b son distintos
+Los archivos binarios srcclean/.git/objects/4e/aca2eb155a77a6ea9d781eacbbf950377a900a y src-github/.git/objects/4e/aca2eb155a77a6ea9d781eacbbf950377a900a son distintos
+Los archivos binarios srcclean/.git/objects/4e/c87eba7a23d88960aed67839fc5834e922d25d y src-github/.git/objects/4e/c87eba7a23d88960aed67839fc5834e922d25d son distintos
+Los archivos binarios srcclean/.git/objects/4f/32a1343cff6271dac61419159aefaf4cf39e87 y src-github/.git/objects/4f/32a1343cff6271dac61419159aefaf4cf39e87 son distintos
+Los archivos binarios srcclean/.git/objects/4f/7c5e280339eb48028ab407dba90bdc4dca2ec3 y src-github/.git/objects/4f/7c5e280339eb48028ab407dba90bdc4dca2ec3 son distintos
+Los archivos binarios srcclean/.git/objects/4f/ac3bbbd8c47062c510c5aa74fa005beb7d3051 y src-github/.git/objects/4f/ac3bbbd8c47062c510c5aa74fa005beb7d3051 son distintos
+Los archivos binarios srcclean/.git/objects/4f/c7e9323634eab6254e1c0f00bb971631077b05 y src-github/.git/objects/4f/c7e9323634eab6254e1c0f00bb971631077b05 son distintos
+Los archivos binarios srcclean/.git/objects/4f/f6a270eb81a77bbbe99e9f4a9e6c9245bf5a30 y src-github/.git/objects/4f/f6a270eb81a77bbbe99e9f4a9e6c9245bf5a30 son distintos
+Los archivos binarios srcclean/.git/objects/50/b1d8b2cfc9f64f2c7c51f874684d1c1b75228f y src-github/.git/objects/50/b1d8b2cfc9f64f2c7c51f874684d1c1b75228f son distintos
+Los archivos binarios srcclean/.git/objects/50/b2770e42a340477f2fca85fdfea70d34dd6dac y src-github/.git/objects/50/b2770e42a340477f2fca85fdfea70d34dd6dac son distintos
+Los archivos binarios srcclean/.git/objects/50/c356431374db5884ff5150210043735d0fa4df y src-github/.git/objects/50/c356431374db5884ff5150210043735d0fa4df son distintos
+Los archivos binarios srcclean/.git/objects/50/c8a3f080d423422f11e76d82a3bf74f5a22870 y src-github/.git/objects/50/c8a3f080d423422f11e76d82a3bf74f5a22870 son distintos
+diff -rupN srcclean/.git/objects/51/beb88511ff5bee85189932e17a5eb51f83cf68 src-github/.git/objects/51/beb88511ff5bee85189932e17a5eb51f83cf68
+--- srcclean/.git/objects/51/beb88511ff5bee85189932e17a5eb51f83cf68	1969-12-31 21:00:00.000000000 -0300
++++ src-github/.git/objects/51/beb88511ff5bee85189932e17a5eb51f83cf68	2016-05-16 13:57:14.677449849 -0400
+@@ -0,0 +1 @@
++x•ŒMN≈ @a«¨‚n‡5¿•@cú8qŒ·˛ƒö∂4<ö∑}ç.¡·799‘ˆ}‡Á¯4∫iÊàîâkÙ~	6[∆&]j≠©Üîù¢9KócÄ({M≥dBÔc	:£∫j—-¬™Ö;d™Ÿîk|∂ÔW9‡ç•Ûûø~4…ü^˜≤n”≈ÁD€∏1x0¿Õk˝é˘G¬|¨rpn»}êŒﬁÍ&{1ﬂÍ#S
+\ No hay ning√∫n car√°cter de nueva l√≠nea al final del archivo
+Los archivos binarios srcclean/.git/objects/52/f2b1ee6426a6fd9de3e07bd4501e811ac4786e y src-github/.git/objects/52/f2b1ee6426a6fd9de3e07bd4501e811ac4786e son distintos
+Los archivos binarios srcclean/.git/objects/53/02ed86dc90f7dbc5a474bc974783e14f366771 y src-github/.git/objects/53/02ed86dc90f7dbc5a474bc974783e14f366771 son distintos
+Los archivos binarios srcclean/.git/objects/53/60c42b44850875c645ae0fc134bcb8df5e7495 y src-github/.git/objects/53/60c42b44850875c645ae0fc134bcb8df5e7495 son distintos
+Los archivos binarios srcclean/.git/objects/53/7002b1e4afadd52d1006a704a26dc490bae45f y src-github/.git/objects/53/7002b1e4afadd52d1006a704a26dc490bae45f son distintos
+Los archivos binarios srcclean/.git/objects/53/bd9d245c5099883c9665de5faa0a4ce04f6024 y src-github/.git/objects/53/bd9d245c5099883c9665de5faa0a4ce04f6024 son distintos
+Los archivos binarios srcclean/.git/objects/55/859bbfd68476c2154484a8fd3f08f483773f6a y src-github/.git/objects/55/859bbfd68476c2154484a8fd3f08f483773f6a son distintos
+Los archivos binarios srcclean/.git/objects/55/fada9039a834cf2fe5fd76384df4ecb42bdd3f y src-github/.git/objects/55/fada9039a834cf2fe5fd76384df4ecb42bdd3f son distintos
+Los archivos binarios srcclean/.git/objects/56/3fe1bbee4063a8cfb5f278b4e25cc0c0f72c75 y src-github/.git/objects/56/3fe1bbee4063a8cfb5f278b4e25cc0c0f72c75 son distintos
+Los archivos binarios srcclean/.git/objects/57/5cbed36b9d3292a7958557a3e0ad98477ae775 y src-github/.git/objects/57/5cbed36b9d3292a7958557a3e0ad98477ae775 son distintos
+Los archivos binarios srcclean/.git/objects/58/18d4600a092b6b8d72e33b17bd0b21121444d1 y src-github/.git/objects/58/18d4600a092b6b8d72e33b17bd0b21121444d1 son distintos
+Los archivos binarios srcclean/.git/objects/58/5bf3559ed4d22e9994da4d22184e4a1d88f76a y src-github/.git/objects/58/5bf3559ed4d22e9994da4d22184e4a1d88f76a son distintos
+Los archivos binarios srcclean/.git/objects/58/9068db3f76121677cccf7b8d90e25a79d4b813 y src-github/.git/objects/58/9068db3f76121677cccf7b8d90e25a79d4b813 son distintos
+Los archivos binarios srcclean/.git/objects/58/9c7c74f10121931e0b444b222a21c0d7d1f742 y src-github/.git/objects/58/9c7c74f10121931e0b444b222a21c0d7d1f742 son distintos
+Los archivos binarios srcclean/.git/objects/59/091709e929b337dc3aa3f9354746b7765c6fd8 y src-github/.git/objects/59/091709e929b337dc3aa3f9354746b7765c6fd8 son distintos
+Los archivos binarios srcclean/.git/objects/59/46558925ffcbe03d75d1b7a6552d3596d84df7 y src-github/.git/objects/59/46558925ffcbe03d75d1b7a6552d3596d84df7 son distintos
+diff -rupN srcclean/.git/objects/59/49e66e6bb3b78bf251fcef5bb4549237450b72 src-github/.git/objects/59/49e66e6bb3b78bf251fcef5bb4549237450b72
+--- srcclean/.git/objects/59/49e66e6bb3b78bf251fcef5bb4549237450b72	1969-12-31 21:00:00.000000000 -0300
++++ src-github/.git/objects/59/49e66e6bb3b78bf251fcef5bb4549237450b72	2016-05-16 14:23:51.257483786 -0400
+@@ -0,0 +1 @@
++x•éKj√0@ª÷)Ê1ÚËk•õlzÄÏGöq±-£»Ù˙5Õ≤|xº\◊uÓÄŒÙ&éÿKàÖ%ó8ëìI®1å1`pŒ:r^Ì‘dÎ0ôâ5ñÄ|:);„O«ÎòF-Vã§ÇëäCEG‘ﬂmp„_j¸ÑÎœIÉºËk•yﬁáº|¬hΩ±h¥·¢≠÷*ˇèvy#°Ó≥l\ÅÎ∆ÚÏ≤¿ﬁjZd%ıs@R?
+\ No hay ning√∫n car√°cter de nueva l√≠nea al final del archivo
+Los archivos binarios srcclean/.git/objects/59/b44426e42f6827ef1b2cd553fff453d7d726ab y src-github/.git/objects/59/b44426e42f6827ef1b2cd553fff453d7d726ab son distintos
+Los archivos binarios srcclean/.git/objects/59/c6dfa9b31a0216093625d9ce16cc91555703b0 y src-github/.git/objects/59/c6dfa9b31a0216093625d9ce16cc91555703b0 son distintos
+Los archivos binarios srcclean/.git/objects/5a/23f379eddf111342e67e67d22a515fda307cd8 y src-github/.git/objects/5a/23f379eddf111342e67e67d22a515fda307cd8 son distintos
+Los archivos binarios srcclean/.git/objects/5a/664c698555250df59f7a24211293e65ae3aacc y src-github/.git/objects/5a/664c698555250df59f7a24211293e65ae3aacc son distintos
+Los archivos binarios srcclean/.git/objects/5a/d6e78fdecf89aef3c7a7eb2027187275545a56 y src-github/.git/objects/5a/d6e78fdecf89aef3c7a7eb2027187275545a56 son distintos
+diff -rupN srcclean/.git/objects/5a/ddf7f475c72ed81eb1723be27219a07269b77f src-github/.git/objects/5a/ddf7f475c72ed81eb1723be27219a07269b77f
+--- srcclean/.git/objects/5a/ddf7f475c72ed81eb1723be27219a07269b77f	1969-12-31 21:00:00.000000000 -0300
++++ src-github/.git/objects/5a/ddf7f475c72ed81eb1723be27219a07269b77f	2016-05-16 20:24:14.218533837 -0400
+@@ -0,0 +1,2 @@
++x•ŒAn√ @—¨9≈\†ò`)ä≤È¶∑fŸë±-ÇïÎ∑jè–Â€|}ﬁk]:å8^zSÖ´µ‰≈br.idµ,πLú≤fÔ
++Iê8aÃ£9®È÷Q≤0˙…çjãra§8ïB»‰c*◊ê®8…ÜŒ>ÔæN⁄‡Sﬁ‘‰∑Áè˝”£“≤ßØwp}cÄ¨5¸;⁄ı	S˙¢õœ‘wX	2µ¶ç@Í¢M»|oïU¶
+\ No hay ning√∫n car√°cter de nueva l√≠nea al final del archivo
+Los archivos binarios srcclean/.git/objects/5a/f9c52865aab3f8ecea99b6b924673450ac79f9 y src-github/.git/objects/5a/f9c52865aab3f8ecea99b6b924673450ac79f9 son distintos
+Los archivos binarios srcclean/.git/objects/5b/570a0d2d8d62dc4b4d50d4ae725e7beeb6ce11 y src-github/.git/objects/5b/570a0d2d8d62dc4b4d50d4ae725e7beeb6ce11 son distintos
+Los archivos binarios srcclean/.git/objects/5d/1a5cfe4e2b8c081fea26b45e5d85ac3be79c10 y src-github/.git/objects/5d/1a5cfe4e2b8c081fea26b45e5d85ac3be79c10 son distintos
+Los archivos binarios srcclean/.git/objects/5d/29f8405d8c8202ddcf29e9c35a7343f7925558 y src-github/.git/objects/5d/29f8405d8c8202ddcf29e9c35a7343f7925558 son distintos
+Los archivos binarios srcclean/.git/objects/5d/8045949e50137a82b641ef41e10b9d440b1c04 y src-github/.git/objects/5d/8045949e50137a82b641ef41e10b9d440b1c04 son distintos
+Los archivos binarios srcclean/.git/objects/5e/2410b965a77e9517ef2fe401f9e6518b7fb514 y src-github/.git/objects/5e/2410b965a77e9517ef2fe401f9e6518b7fb514 son distintos
+Los archivos binarios srcclean/.git/objects/5e/31122e3ced382fa5e42615044a417b62b33b63 y src-github/.git/objects/5e/31122e3ced382fa5e42615044a417b62b33b63 son distintos
+Los archivos binarios srcclean/.git/objects/5f/2a605fafbc67933b13fa8b02c786229d24eb6d y src-github/.git/objects/5f/2a605fafbc67933b13fa8b02c786229d24eb6d son distintos
+Los archivos binarios srcclean/.git/objects/5f/968ff5d2003c25bbb893dd9635c4ce76332747 y src-github/.git/objects/5f/968ff5d2003c25bbb893dd9635c4ce76332747 son distintos
+Los archivos binarios srcclean/.git/objects/5f/ef2f70d7c9e3bd7c12b15ff5406554cee956fc y src-github/.git/objects/5f/ef2f70d7c9e3bd7c12b15ff5406554cee956fc son distintos
+Los archivos binarios srcclean/.git/objects/60/709c55525fe378d2f6e5b53f0778595cb10420 y src-github/.git/objects/60/709c55525fe378d2f6e5b53f0778595cb10420 son distintos
+Los archivos binarios srcclean/.git/objects/61/25175dbb8fb5fba02799b20815c66c041894e6 y src-github/.git/objects/61/25175dbb8fb5fba02799b20815c66c041894e6 son distintos
+Los archivos binarios srcclean/.git/objects/61/407ed1672ebf477d5afb9ca2db47047f42876a y src-github/.git/objects/61/407ed1672ebf477d5afb9ca2db47047f42876a son distintos
+Los archivos binarios srcclean/.git/objects/61/5528d5acf8f6deb5f3f1f7e766db9731ca31a4 y src-github/.git/objects/61/5528d5acf8f6deb5f3f1f7e766db9731ca31a4 son distintos
+diff -rupN srcclean/.git/objects/62/65e63fd928c4fd7d189d32ee9c247174c0e22d src-github/.git/objects/62/65e63fd928c4fd7d189d32ee9c247174c0e22d
+--- srcclean/.git/objects/62/65e63fd928c4fd7d189d32ee9c247174c0e22d	1969-12-31 21:00:00.000000000 -0300
++++ src-github/.git/objects/62/65e63fd928c4fd7d189d32ee9c247174c0e22d	2016-05-09 21:48:20.058347927 -0300
+@@ -0,0 +1 @@
++x•ŒANƒ0@Q÷9Ö/0≈±ìI#ç–lÿp7±EQ⁄éB*ÆÇ#∞|õØ_ém[P§ß—U!S“îñRÃºR"Õﬁ∏(öVçú1a$˜êÆ˚Ä9ñØû´i"∂8[ıä1H‡g„@VŸúú„˝Ëv ØıKz˝Ñ€«è&˝”}ìµMg}L•ΩÄWöÉßú·ÇåË ÔË–$úIú;<ÉÓ–⁄∫tÌ´∏o^GP•
+\ No hay ning√∫n car√°cter de nueva l√≠nea al final del archivo
+Los archivos binarios srcclean/.git/objects/62/796233061f6cf5f50f31dc59c0a32d878056e0 y src-github/.git/objects/62/796233061f6cf5f50f31dc59c0a32d878056e0 son distintos
+Los archivos binarios srcclean/.git/objects/62/ef8f92e8249941d4557ebb58c693d6b42dcb99 y src-github/.git/objects/62/ef8f92e8249941d4557ebb58c693d6b42dcb99 son distintos
+Los archivos binarios srcclean/.git/objects/63/876b14971e512c4332d55e2573233530ded125 y src-github/.git/objects/63/876b14971e512c4332d55e2573233530ded125 son distintos
+Los archivos binarios srcclean/.git/objects/64/6c3b4baaa941291670d70d62619409ec66db19 y src-github/.git/objects/64/6c3b4baaa941291670d70d62619409ec66db19 son distintos
+Los archivos binarios srcclean/.git/objects/65/833b9376098b0e25eaf22e7fb090f4425d0a9c y src-github/.git/objects/65/833b9376098b0e25eaf22e7fb090f4425d0a9c son distintos
+Los archivos binarios srcclean/.git/objects/65/b6ce924afabc718c97ca61b08abfadfcdfd0b8 y src-github/.git/objects/65/b6ce924afabc718c97ca61b08abfadfcdfd0b8 son distintos
+Los archivos binarios srcclean/.git/objects/65/efada878c5a5ce9881c9ae42b9cb06f4a014f5 y src-github/.git/objects/65/efada878c5a5ce9881c9ae42b9cb06f4a014f5 son distintos
+Los archivos binarios srcclean/.git/objects/66/1fab700c1cbf7f7be7af6fad42d5bd9f6438fb y src-github/.git/objects/66/1fab700c1cbf7f7be7af6fad42d5bd9f6438fb son distintos
+Los archivos binarios srcclean/.git/objects/66/b5a38335bfdafce4569c6d5dddabbc58af841b y src-github/.git/objects/66/b5a38335bfdafce4569c6d5dddabbc58af841b son distintos
+diff -rupN srcclean/.git/objects/66/dbdc63912e0fecfc6a59ffa6ca358f748af1db src-github/.git/objects/66/dbdc63912e0fecfc6a59ffa6ca358f748af1db
+--- srcclean/.git/objects/66/dbdc63912e0fecfc6a59ffa6ca358f748af1db	1969-12-31 21:00:00.000000000 -0300
++++ src-github/.git/objects/66/dbdc63912e0fecfc6a59ffa6ca358f748af1db	2016-05-16 19:30:38.158465476 -0400
+@@ -0,0 +1 @@
++x•èKN√0@Y˚sÅF˛å„XBàM7‹b∆ûà†ÿé\á™∑ßÇ#∞|õß˜R+e`Cx]ú‰ÃËfgâ∏í—ºåvaßΩ_ùM—g£ÍRDg]ñô(Ò*î≠÷ûçOΩ]kmp—#+:«gÎqRÖkæSœ7x˝z“$Ù^h€ß3S⁄ﬂ¿‡Ï∫.µVÈ7t»?*Q·≠›@*ÏLΩK'x¿—SÕR´wz@=Âõ sO‘nÑZE
+\ No hay ning√∫n car√°cter de nueva l√≠nea al final del archivo
+Los archivos binarios srcclean/.git/objects/66/f0257d5c01de28ac580231036fd73cfa3ac4a1 y src-github/.git/objects/66/f0257d5c01de28ac580231036fd73cfa3ac4a1 son distintos
+Los archivos binarios srcclean/.git/objects/67/0d2a6d3a82604802c3c728b528d1ae650efb43 y src-github/.git/objects/67/0d2a6d3a82604802c3c728b528d1ae650efb43 son distintos
+Los archivos binarios srcclean/.git/objects/67/d7c3816afc3c895aef70142f02c628db05db61 y src-github/.git/objects/67/d7c3816afc3c895aef70142f02c628db05db61 son distintos
+Los archivos binarios srcclean/.git/objects/68/348dd99045afc1dd5b4a1af8a7951e53bc3e65 y src-github/.git/objects/68/348dd99045afc1dd5b4a1af8a7951e53bc3e65 son distintos
+Los archivos binarios srcclean/.git/objects/68/675cb8aabc8cdaf10f6b919f2cf4e78c384ced y src-github/.git/objects/68/675cb8aabc8cdaf10f6b919f2cf4e78c384ced son distintos
+Los archivos binarios srcclean/.git/objects/68/a6eb1c3c0d92f88a0d09636b2967061ad51e2d y src-github/.git/objects/68/a6eb1c3c0d92f88a0d09636b2967061ad51e2d son distintos
+Los archivos binarios srcclean/.git/objects/69/854d3c0231f1d35aaad69b374cba0025c0044d y src-github/.git/objects/69/854d3c0231f1d35aaad69b374cba0025c0044d son distintos
+diff -rupN srcclean/.git/objects/6a/a88c7d527d70ca4b7d45454a26685212a149df src-github/.git/objects/6a/a88c7d527d70ca4b7d45454a26685212a149df
+--- srcclean/.git/objects/6a/a88c7d527d70ca4b7d45454a26685212a149df	1969-12-31 21:00:00.000000000 -0300
++++ src-github/.git/objects/6a/a88c7d527d70ca4b7d45454a26685212a149df	2016-05-16 18:47:42.374410725 -0400
+@@ -0,0 +1 @@
++x+)JMU07b040031QMÃNMÀÃIe(õuz√ı∑>ÛÆ*0*øm£ˇhTMr~^yb•^2√œù2ãW\?¯$á3p«ú¶C^nÀ±Á 
+\ No hay ning√∫n car√°cter de nueva l√≠nea al final del archivo
+Los archivos binarios srcclean/.git/objects/6c/5a16a54d34b732a84ecb47e549e637aef89741 y src-github/.git/objects/6c/5a16a54d34b732a84ecb47e549e637aef89741 son distintos
+Los archivos binarios srcclean/.git/objects/6d/8a2392399e7b9a226d05308d31f7a4cd06c8e5 y src-github/.git/objects/6d/8a2392399e7b9a226d05308d31f7a4cd06c8e5 son distintos
+Los archivos binarios srcclean/.git/objects/6e/08815232b7d8ff9eac6598dcfddbc83d2ec572 y src-github/.git/objects/6e/08815232b7d8ff9eac6598dcfddbc83d2ec572 son distintos
+Los archivos binarios srcclean/.git/objects/6e/219931768bca789c37add389dbd1f9657fd472 y src-github/.git/objects/6e/219931768bca789c37add389dbd1f9657fd472 son distintos
+Los archivos binarios srcclean/.git/objects/6f/078de4c4dce53794398d6cdbf70512fcabdc36 y src-github/.git/objects/6f/078de4c4dce53794398d6cdbf70512fcabdc36 son distintos
+Los archivos binarios srcclean/.git/objects/6f/478d08707e23d298d8534e1ad92b95294942ab y src-github/.git/objects/6f/478d08707e23d298d8534e1ad92b95294942ab son distintos
+Los archivos binarios srcclean/.git/objects/6f/610f9a95ba4711e22c3988b533d58864071950 y src-github/.git/objects/6f/610f9a95ba4711e22c3988b533d58864071950 son distintos
+Los archivos binarios srcclean/.git/objects/6f/d75fbfb21738fdfc8f0647c8f91c832f51d54d y src-github/.git/objects/6f/d75fbfb21738fdfc8f0647c8f91c832f51d54d son distintos
+Los archivos binarios srcclean/.git/objects/70/031baefcc8b1fec1106116f2ddf0b26b532b6e y src-github/.git/objects/70/031baefcc8b1fec1106116f2ddf0b26b532b6e son distintos
+Los archivos binarios srcclean/.git/objects/70/0a3d068118e5ce0cdbf9c8beb31fad4d5965b2 y src-github/.git/objects/70/0a3d068118e5ce0cdbf9c8beb31fad4d5965b2 son distintos
+Los archivos binarios srcclean/.git/objects/70/35ebd417779e8b57207a1bd405d93018884733 y src-github/.git/objects/70/35ebd417779e8b57207a1bd405d93018884733 son distintos
+Los archivos binarios srcclean/.git/objects/70/daa890edfc48a8030969633cb1ee2d1204d934 y src-github/.git/objects/70/daa890edfc48a8030969633cb1ee2d1204d934 son distintos
+Los archivos binarios srcclean/.git/objects/71/e777c6692388bef919b33f2a4db8b14a95d01a y src-github/.git/objects/71/e777c6692388bef919b33f2a4db8b14a95d01a son distintos
+Los archivos binarios srcclean/.git/objects/72/0f3d911b9878363824459924d52e2b1b19128a y src-github/.git/objects/72/0f3d911b9878363824459924d52e2b1b19128a son distintos
+Los archivos binarios srcclean/.git/objects/72/5dd574eed83c41d03a1933bb0875efd1fe6e18 y src-github/.git/objects/72/5dd574eed83c41d03a1933bb0875efd1fe6e18 son distintos
+Los archivos binarios srcclean/.git/objects/73/65f169412baf06254e50d8334f96f7b3ac6454 y src-github/.git/objects/73/65f169412baf06254e50d8334f96f7b3ac6454 son distintos
+Los archivos binarios srcclean/.git/objects/74/38153f318080d89e8bf8bd95590cde93e6d8ed y src-github/.git/objects/74/38153f318080d89e8bf8bd95590cde93e6d8ed son distintos
+Los archivos binarios srcclean/.git/objects/75/3d08d5e0defe00999596b87e797349b52fd350 y src-github/.git/objects/75/3d08d5e0defe00999596b87e797349b52fd350 son distintos
+Los archivos binarios srcclean/.git/objects/76/9acbba00d7ed4c809ed52001c277db3c2fe2a0 y src-github/.git/objects/76/9acbba00d7ed4c809ed52001c277db3c2fe2a0 son distintos
+Los archivos binarios srcclean/.git/objects/77/a54eab99ce8d73a1afa50de7ebd8e64be51114 y src-github/.git/objects/77/a54eab99ce8d73a1afa50de7ebd8e64be51114 son distintos
+Los archivos binarios srcclean/.git/objects/77/b40d87fee499e3b6ebd368038d21f34e7b593a y src-github/.git/objects/77/b40d87fee499e3b6ebd368038d21f34e7b593a son distintos
+diff -rupN srcclean/.git/objects/77/df115eac770f061a82348e7358dd4f86adc25f src-github/.git/objects/77/df115eac770f061a82348e7358dd4f86adc25f
+--- srcclean/.git/objects/77/df115eac770f061a82348e7358dd4f86adc25f	1969-12-31 21:00:00.000000000 -0300
++++ src-github/.git/objects/77/df115eac770f061a82348e7358dd4f86adc25f	2016-05-17 15:52:42.948974670 -0400
+@@ -0,0 +1,2 @@
++x•éK
++1]Á}á¸&â ¢7ÇáËt:::?bØÔ†GpYPØx4CWA[ø©Ö(gMÜŸ&T∂u1høÀ^[©lˆÜâ0 ìäb∆¬cä∆DÙ1d2ä2"j«ÉkW[Yo÷ñ2$.ı>∏,8¬9Ω±§Ï+5¸£„Ä]ﬂ,in®?Ä≤Œ¥ÎﬁiÿJ+•†Ô— $ƒ©æı”xÑ+>9w=ã[O˝
+\ No hay ning√∫n car√°cter de nueva l√≠nea al final del archivo
+Los archivos binarios srcclean/.git/objects/78/166a43bb7cf215cdcb3dff87158aae77592fb8 y src-github/.git/objects/78/166a43bb7cf215cdcb3dff87158aae77592fb8 son distintos
+Los archivos binarios srcclean/.git/objects/79/92ab52a1aadad286846e0e2ff1c13da92d9d7d y src-github/.git/objects/79/92ab52a1aadad286846e0e2ff1c13da92d9d7d son distintos
+Los archivos binarios srcclean/.git/objects/7a/206abcc77db073e02819552ed219f81b103345 y src-github/.git/objects/7a/206abcc77db073e02819552ed219f81b103345 son distintos
+Los archivos binarios srcclean/.git/objects/7b/c0a732bb8cf079a506948830b01fb5d29de636 y src-github/.git/objects/7b/c0a732bb8cf079a506948830b01fb5d29de636 son distintos
+Los archivos binarios srcclean/.git/objects/7c/30e2e8fdcb7ab426c707de82d1a2c7c19cf595 y src-github/.git/objects/7c/30e2e8fdcb7ab426c707de82d1a2c7c19cf595 son distintos
+Los archivos binarios srcclean/.git/objects/7c/924713958a841d9863e6c55db16ca92cec3d27 y src-github/.git/objects/7c/924713958a841d9863e6c55db16ca92cec3d27 son distintos
+Los archivos binarios srcclean/.git/objects/7d/1d4d27f5c94ff9b301297a2fa0b3884561af10 y src-github/.git/objects/7d/1d4d27f5c94ff9b301297a2fa0b3884561af10 son distintos
+Los archivos binarios srcclean/.git/objects/7d/96238a8a4d6e58beaa857351c0db899a748d4f y src-github/.git/objects/7d/96238a8a4d6e58beaa857351c0db899a748d4f son distintos
+Los archivos binarios srcclean/.git/objects/7e/079ce00fa672a78b386f33a625841371b2f14c y src-github/.git/objects/7e/079ce00fa672a78b386f33a625841371b2f14c son distintos
+Los archivos binarios srcclean/.git/objects/7e/d51d15fd2519b54ab059bf62e3580ae679f0b8 y src-github/.git/objects/7e/d51d15fd2519b54ab059bf62e3580ae679f0b8 son distintos
+Los archivos binarios srcclean/.git/objects/7e/fb80f699dcc7ea7629ce21d9b72809c94fb464 y src-github/.git/objects/7e/fb80f699dcc7ea7629ce21d9b72809c94fb464 son distintos
+diff -rupN srcclean/.git/objects/7f/503df7f0052a5b9a818017bb810cbc20ab4eb8 src-github/.git/objects/7f/503df7f0052a5b9a818017bb810cbc20ab4eb8
+--- srcclean/.git/objects/7f/503df7f0052a5b9a818017bb810cbc20ab4eb8	1969-12-31 21:00:00.000000000 -0300
++++ src-github/.git/objects/7f/503df7f0052a5b9a818017bb810cbc20ab4eb8	2016-05-17 19:21:19.342774172 -0400
+@@ -0,0 +1,2 @@
++x•ŒK
++¬0Äa◊9≈\¿íWìDt·FìdF´}Sºæ¢Gp˘m~˛4èc_A[ø©ÖdåÅ≥ˆ∂sëì«Œƒ6´Ç“éP#'%≥ö*(Fìc»Íd£*∞„Ïµ≠âîdÙùKA‡ZosÅÛäúÚK~¬Ó˛QC?FÏáfÕKìÜ=(ÎL´Ωˆ∂“J)“w¥“	q,ÖÆ√¸ö‡Ç‚~ Ò˝≈Oô
+\ No hay ning√∫n car√°cter de nueva l√≠nea al final del archivo
+Los archivos binarios srcclean/.git/objects/80/5fc66713e434a198ec340658d7f8487f13c291 y src-github/.git/objects/80/5fc66713e434a198ec340658d7f8487f13c291 son distintos
+Los archivos binarios srcclean/.git/objects/81/97407af9d4096696be29085333701410f9e1df y src-github/.git/objects/81/97407af9d4096696be29085333701410f9e1df son distintos
+Los archivos binarios srcclean/.git/objects/82/c78da6837ca466ba8ed7d1d7e55cdbde1309c5 y src-github/.git/objects/82/c78da6837ca466ba8ed7d1d7e55cdbde1309c5 son distintos
+Los archivos binarios srcclean/.git/objects/83/1f0f9fdfc5e2a51e3aeee815609d30df28ba05 y src-github/.git/objects/83/1f0f9fdfc5e2a51e3aeee815609d30df28ba05 son distintos
+Los archivos binarios srcclean/.git/objects/83/6e45498ecc20d4818a6a0a1ef6258c6d6e004c y src-github/.git/objects/83/6e45498ecc20d4818a6a0a1ef6258c6d6e004c son distintos
+Los archivos binarios srcclean/.git/objects/83/e3f6980482ccd4d1de2c816ff2758d076e734a y src-github/.git/objects/83/e3f6980482ccd4d1de2c816ff2758d076e734a son distintos
+Los archivos binarios srcclean/.git/objects/83/fb7796929bc3f8d42c4d2185455e373b758e94 y src-github/.git/objects/83/fb7796929bc3f8d42c4d2185455e373b758e94 son distintos
+Los archivos binarios srcclean/.git/objects/84/116b758ceca531f40719f1305b73b351a76d9a y src-github/.git/objects/84/116b758ceca531f40719f1305b73b351a76d9a son distintos
+Los archivos binarios srcclean/.git/objects/84/2b00ee9849cd626bd34ba3665e12acdc083f59 y src-github/.git/objects/84/2b00ee9849cd626bd34ba3665e12acdc083f59 son distintos
+Los archivos binarios srcclean/.git/objects/84/eea7a31d3d58d6e76fbcd3738c5deb5fd4155c y src-github/.git/objects/84/eea7a31d3d58d6e76fbcd3738c5deb5fd4155c son distintos
+Los archivos binarios srcclean/.git/objects/85/1cd64dc6b8f244d597bcec26712d2d158e4204 y src-github/.git/objects/85/1cd64dc6b8f244d597bcec26712d2d158e4204 son distintos
+Los archivos binarios srcclean/.git/objects/85/2de6c734c6c10c883565829f3313e8043e6d51 y src-github/.git/objects/85/2de6c734c6c10c883565829f3313e8043e6d51 son distintos
+Los archivos binarios srcclean/.git/objects/85/cd5613dfe723fd439fd1e054a43b08f342fd3f y src-github/.git/objects/85/cd5613dfe723fd439fd1e054a43b08f342fd3f son distintos
+Los archivos binarios srcclean/.git/objects/87/2b9b10ff5a39cb2c5e365334e83f7b5f653e19 y src-github/.git/objects/87/2b9b10ff5a39cb2c5e365334e83f7b5f653e19 son distintos
+diff -rupN srcclean/.git/objects/87/a7a6d14b425f5b27bc66a2246fa6ce7b6629d1 src-github/.git/objects/87/a7a6d14b425f5b27bc66a2246fa6ce7b6629d1
+--- srcclean/.git/objects/87/a7a6d14b425f5b27bc66a2246fa6ce7b6629d1	1969-12-31 21:00:00.000000000 -0300
++++ src-github/.git/objects/87/a7a6d14b425f5b27bc66a2246fa6ce7b6629d1	2016-05-16 14:24:36.817484754 -0400
+@@ -0,0 +1,2 @@
++x•Œ1n√0@—Œ:/Éñ(Ÿä¢Kó ª(Rà€2π~ãÊﬂÚÒs›∂•Éı·≠7U»àY»ïà2˙hgU'T4z¶Y0Y&É5Gj∫wë¢Ü†ÅŸÒ4s±~,Yãg&O—∫â<ÚdM:˚≠6¯>”_ÚHMÓ˛ÛßAü˙‹“≤ßC^?`§‡»:ú\êM˛Ì˙B¬\›•Ç‘]ÙﬁË
++G´ºÍñÃ/bQÍ
+\ No hay ning√∫n car√°cter de nueva l√≠nea al final del archivo
+diff -rupN srcclean/.git/objects/88/410483060940a316ffcb37f0b2b3a456d15c8e src-github/.git/objects/88/410483060940a316ffcb37f0b2b3a456d15c8e
+--- srcclean/.git/objects/88/410483060940a316ffcb37f0b2b3a456d15c8e	1969-12-31 21:00:00.000000000 -0300
++++ src-github/.git/objects/88/410483060940a316ffcb37f0b2b3a456d15c8e	2016-05-16 20:52:41.030859317 -0400
+@@ -0,0 +1,2 @@
++xÕTMk€@ÌU˚+ä€iMh)¯\pK@q¿ê^Ö>÷Ò“ï∂H+í4¯øwf•][JúÙ–Cè;;˚fÊΩ7õHï¿‰”Á/ÔŒDë :„0ÀE!>‰zWÚ8ªÿ-ÿ·Jä\Ë™‹!D,/vÉCﬁ‡W©¥¢;À¯Væ.7õ´’&˙.øÉ?πg≥ÀI¿ò(4¥•¢$.K¡À(„ï.’£ﬂèk8oSÇ'Êâ≠ﬂû`>áımR‘+πÆÀVWÎÀp º=c¬’©Ü(Í!"f$0ˇtJ‡™N "‰µÊëTÈOˇ}2^òcÄ`˜;!πè≠t,a—‹4hRUd—},¥†”:P˚~µ∫x^ØÉfâ#§ÜlB”qÜÎπ•Ï„î!Y/	ÇÜ–Ø®1zî™∫–4·i*âm±Öø”çÀäe˚$PKﬁØƒoÆ∂'’
++Ç¿ôÅ¥fWÎõÎ’5≤A1Î!R›ícùß¿˚§ôÒù4£∆kG‘%]R£§Ò#Ê%ê¨ñ6«∆Ûé1ÊM™«"}ﬁ∞3'2ˇıˇ±—iôÌŒ‡6ˇ(âªÙ(Qj8Ò–{hÈ6õfaÿEÑÒ_∫Õ0Ú%•ä≥4Æ€HÀ„röÌyi≠psO¶}¬wΩo`÷ùà2¥)ˇ⁄?Ä_òÁÜè©≠ﬁ‘]∫¨©ˇÕ\ƒ¯?Ü?Õı˛
+\ No hay ning√∫n car√°cter de nueva l√≠nea al final del archivo
+Los archivos binarios srcclean/.git/objects/88/4a518685db65f620bdf00d09d9da69272a35e3 y src-github/.git/objects/88/4a518685db65f620bdf00d09d9da69272a35e3 son distintos
+Los archivos binarios srcclean/.git/objects/88/7a58102c92d3fd3a9d0a6a3dc1712354439ca1 y src-github/.git/objects/88/7a58102c92d3fd3a9d0a6a3dc1712354439ca1 son distintos
+Los archivos binarios srcclean/.git/objects/8a/2de281c56c1d758028480fc033547b72883c43 y src-github/.git/objects/8a/2de281c56c1d758028480fc033547b72883c43 son distintos
+Los archivos binarios srcclean/.git/objects/8a/fb8d940aa1f466511026535051c77b8a660666 y src-github/.git/objects/8a/fb8d940aa1f466511026535051c77b8a660666 son distintos
+Los archivos binarios srcclean/.git/objects/8b/a01dd2c2e00342567db07fbf852b45efb92588 y src-github/.git/objects/8b/a01dd2c2e00342567db07fbf852b45efb92588 son distintos
+Los archivos binarios srcclean/.git/objects/8b/e15a1095eb04fd14e8bef1b1ee9089d3aaf62a y src-github/.git/objects/8b/e15a1095eb04fd14e8bef1b1ee9089d3aaf62a son distintos
+Los archivos binarios srcclean/.git/objects/8b/fd9d8cc0be9726242268a128e97f5872ba67f3 y src-github/.git/objects/8b/fd9d8cc0be9726242268a128e97f5872ba67f3 son distintos
+Los archivos binarios srcclean/.git/objects/8b/ffb2a62b5ec1ff45c107526b10a8c706a0c067 y src-github/.git/objects/8b/ffb2a62b5ec1ff45c107526b10a8c706a0c067 son distintos
+Los archivos binarios srcclean/.git/objects/8c/4da7a62b6b2ccf92d742bd8a49543dc24f433f y src-github/.git/objects/8c/4da7a62b6b2ccf92d742bd8a49543dc24f433f son distintos
+Los archivos binarios srcclean/.git/objects/8c/4e55fb72252f057b0f2df376e99f2a9f0a32f4 y src-github/.git/objects/8c/4e55fb72252f057b0f2df376e99f2a9f0a32f4 son distintos
+Los archivos binarios srcclean/.git/objects/8c/ab5a89f8d8ee487fe4a3f8e5ff2851918daba9 y src-github/.git/objects/8c/ab5a89f8d8ee487fe4a3f8e5ff2851918daba9 son distintos
+Los archivos binarios srcclean/.git/objects/8d/2eff7608d00324913e32398b6eb037cdf43e94 y src-github/.git/objects/8d/2eff7608d00324913e32398b6eb037cdf43e94 son distintos
+diff -rupN srcclean/.git/objects/8d/b90e59226fe050582cd5bf876744fdc934ed56 src-github/.git/objects/8d/b90e59226fe050582cd5bf876744fdc934ed56
+--- srcclean/.git/objects/8d/b90e59226fe050582cd5bf876744fdc934ed56	1969-12-31 21:00:00.000000000 -0300
++++ src-github/.git/objects/8d/b90e59226fe050582cd5bf876744fdc934ed56	2016-05-16 12:20:47.781326841 -0400
+@@ -0,0 +1 @@
++x+)JMU07b040031QMÃNMÀÃIe(õuz√ı∑>ÛÆ*0*øm£ˇhTMr~^yb•^2CxÃæÀŸsç&-ü⁄æ¯¡⁄ÓUœK®Æ ﬂ
+\ No hay ning√∫n car√°cter de nueva l√≠nea al final del archivo
+Los archivos binarios srcclean/.git/objects/8e/6169cb1dd8cb2fa8dace69ee41e048d66e98df y src-github/.git/objects/8e/6169cb1dd8cb2fa8dace69ee41e048d66e98df son distintos
+Los archivos binarios srcclean/.git/objects/8e/bec03f3bd498633cb3ecb0a7fbfe592a14f675 y src-github/.git/objects/8e/bec03f3bd498633cb3ecb0a7fbfe592a14f675 son distintos
+diff -rupN srcclean/.git/objects/8f/d414c37987251a77127b0a973386b9dda1e604 src-github/.git/objects/8f/d414c37987251a77127b0a973386b9dda1e604
+--- srcclean/.git/objects/8f/d414c37987251a77127b0a973386b9dda1e604	1969-12-31 21:00:00.000000000 -0300
++++ src-github/.git/objects/8f/d414c37987251a77127b0a973386b9dda1e604	2016-05-09 22:14:37.110381450 -0300
+@@ -0,0 +1,2 @@
++x•ŒM¬ @a◊úb.`”)–ƒ]∏Ò±∆˛Ñ“x}=ÇÀoÛÚ‚<éCÖN”°ñî¿"QÁÖ8fü≠§@YgÃ.9k%ÙNcdçl‘¬%Mt √ÜÖ…hœB®)KíAf
++≠Ò÷!ˆ‚oı1∏o<¡Mﬁ\dÖ”sWì~∫å<ºöMñ&æŒÄ∆vﬁtﬁY8∂∫mU¸é÷ÙGB]˜ÜuPkJ¨
+\ No hay ning√∫n car√°cter de nueva l√≠nea al final del archivo
+Los archivos binarios srcclean/.git/objects/92/4a2e77bccff1e272e91f3ce0fff0de53907052 y src-github/.git/objects/92/4a2e77bccff1e272e91f3ce0fff0de53907052 son distintos
+Los archivos binarios srcclean/.git/objects/93/23de6aacbfead2005b15cb95281b0014f7954b y src-github/.git/objects/93/23de6aacbfead2005b15cb95281b0014f7954b son distintos
+diff -rupN srcclean/.git/objects/93/9d02f72deb2bc536727608b10e40eebf28af52 src-github/.git/objects/93/9d02f72deb2bc536727608b10e40eebf28af52
+--- srcclean/.git/objects/93/9d02f72deb2bc536727608b10e40eebf28af52	1969-12-31 21:00:00.000000000 -0300
++++ src-github/.git/objects/93/9d02f72deb2bc536727608b10e40eebf28af52	2016-05-16 14:23:24.197483211 -0400
+@@ -0,0 +1,4 @@
++x•èKjƒ0≥÷)˙c⁄˙∫aŸÃ&»æ•n€2ô\?&9Bñè‚U©€∂t∞!æÙ¶
++™ƒ…'e*™1epŒ4;Ÿ8e7_‘Zsp”ΩÉ“à„îâf≤»¬BÑ·öeIúÇÕ.Õ%ZB√gˇ¨ﬁOﬁ·!ﬂ‹‰	˜Øã˝£∑çóu8Â ˙
++£èŒ[áË·Ü—îﬂ£]ˇ°0ãÓRAÍ.WÈ≥3Ë
++G´y’çÕtRH
+\ No hay ning√∫n car√°cter de nueva l√≠nea al final del archivo
+Los archivos binarios srcclean/.git/objects/93/ede05c5a08a22da24de7d6208bc8b4f227ff9a y src-github/.git/objects/93/ede05c5a08a22da24de7d6208bc8b4f227ff9a son distintos
+Los archivos binarios srcclean/.git/objects/95/143bee311a1edf07260c4e19fa5ebcc67a45fb y src-github/.git/objects/95/143bee311a1edf07260c4e19fa5ebcc67a45fb son distintos
+Los archivos binarios srcclean/.git/objects/95/b8cbab2e518e1b495aca10809e17577b21dd26 y src-github/.git/objects/95/b8cbab2e518e1b495aca10809e17577b21dd26 son distintos
+Los archivos binarios srcclean/.git/objects/96/0b59550172c441c4f967386d07455926634ab0 y src-github/.git/objects/96/0b59550172c441c4f967386d07455926634ab0 son distintos
+Los archivos binarios srcclean/.git/objects/96/41934035455dac0a69baec8978981a5daae5dc y src-github/.git/objects/96/41934035455dac0a69baec8978981a5daae5dc son distintos
+diff -rupN srcclean/.git/objects/96/467774a7921d1a61a8624f8a43af110b3890c2 src-github/.git/objects/96/467774a7921d1a61a8624f8a43af110b3890c2
+--- srcclean/.git/objects/96/467774a7921d1a61a8624f8a43af110b3890c2	1969-12-31 21:00:00.000000000 -0300
++++ src-github/.git/objects/96/467774a7921d1a61a8624f8a43af110b3890c2	2016-05-09 21:07:06.342295346 -0300
+@@ -0,0 +1 @@
++xµT]k€0›kÙ+.)ådôªÑR‰2ËF¿ÕCXGﬂÇ?‘FÃëä,”Ü‚ˇﬁ+Ÿíc«&}hüú]ü{Ó9W¬‰˙Á¯À„Qí≈f{∆ŸÀèΩ⁄Iƒóª©é∂g*≠a˝G§íÀ]ø™Î?I°ÑÜà:<—ò>@™d)(Y∑a %£r€ÇLIW-y%ΩåßÏë”"ëq5=îPAÇÄm±œ}—ÙÛèè÷è)…ßÑ\†>∆)¸Zn6´õÕˆ∑ø¸É…ù?õ]MÜÑ0~™2¶(R∂Y5œ∑ÚÁ≈≤áA˘ÊsXﬂ˘æF{í™Lr∏Y≠ˇ-}Tñì¶ÍDDˇ_ÀwΩÖaàïœ;ñPÀÈ-Ã»∞®)7¨,3Îs¿‘ô∆æCyﬁTëÒ.5~ÎEE©[hπ∂¨à‚¥ŒÕU:2∆@⁄˝∆ïTgÕÎÃ∑∫w%ﬁâ≤Íçâ]E.#≥è0á’˙Ôˆvyè”ª£"¶y-&<?;tz‡—ô°≠∆¬·Æ∏ µ˘ÑÖ©6‹í„¢_§!úÿÄ)7ºçj•r/{Õn;®∞uTÔﬁπ\¬&ªPä éÇ¥yÙä∫ ¬¡Óï∑q˛ú&)}≈∑[/‰¨ÓÄÆsmå†˜ﬁH¸2ÙzaÈ¨Áiπ≠.’∑;ÒÒ≥Î‰rº¢ojÙ◊
+\ No hay ning√∫n car√°cter de nueva l√≠nea al final del archivo
+Los archivos binarios srcclean/.git/objects/97/44a885286ad560d5317bfbdadc145106202315 y src-github/.git/objects/97/44a885286ad560d5317bfbdadc145106202315 son distintos
+Los archivos binarios srcclean/.git/objects/97/842dd38e964417a11b7bde919b01a819896479 y src-github/.git/objects/97/842dd38e964417a11b7bde919b01a819896479 son distintos
+Los archivos binarios srcclean/.git/objects/97/ee5f065ee27cbae408cb4c3ec4e7dd201083ad y src-github/.git/objects/97/ee5f065ee27cbae408cb4c3ec4e7dd201083ad son distintos
+Los archivos binarios srcclean/.git/objects/98/1b4c23a4c984344eb3178e9a23bdc0075d03fa y src-github/.git/objects/98/1b4c23a4c984344eb3178e9a23bdc0075d03fa son distintos
+Los archivos binarios srcclean/.git/objects/98/6ddcc74d05fecfebef1b2f1b0a63888ffb53a1 y src-github/.git/objects/98/6ddcc74d05fecfebef1b2f1b0a63888ffb53a1 son distintos
+Los archivos binarios srcclean/.git/objects/9a/0eb38e984d248868e7f5d48d44dab4fec5c566 y src-github/.git/objects/9a/0eb38e984d248868e7f5d48d44dab4fec5c566 son distintos
+Los archivos binarios srcclean/.git/objects/9a/a74ed918c76a688603c66c083ae82fd5badd05 y src-github/.git/objects/9a/a74ed918c76a688603c66c083ae82fd5badd05 son distintos
+Los archivos binarios srcclean/.git/objects/9c/4aba4b6e9903a6c87a40a7467e00838376aad9 y src-github/.git/objects/9c/4aba4b6e9903a6c87a40a7467e00838376aad9 son distintos
+diff -rupN srcclean/.git/objects/9c/4d40063a1046b0c0ffd37a7aa3c5f2fbb4b375 src-github/.git/objects/9c/4d40063a1046b0c0ffd37a7aa3c5f2fbb4b375
+--- srcclean/.git/objects/9c/4d40063a1046b0c0ffd37a7aa3c5f2fbb4b375	1969-12-31 21:00:00.000000000 -0300
++++ src-github/.git/objects/9c/4d40063a1046b0c0ffd37a7aa3c5f2fbb4b375	2016-05-09 21:09:09.898297972 -0300
+@@ -0,0 +1 @@
++x•éKNƒ0DYÁ}Åâú∏˝ìbl∏j€ù£$élGà€„Å#∞®í^©T›!o[j Ö~jÖú^9•ƒdÊÄ8\ú6“Í(*Âf≠%í√AÖ˜E¥N¢∑Zõ8eÏåàÌ¬f!—I2ÍÅŒvœﬁO⁄·-~Qâû?;ç¸GØ•u<„1Üı&‘≥ï÷°ÖãêB·˜—∆ˇòÆ∑¬7äT°ÂáØ]ÀπáîwÆ∂v/LÒ√S)©ü˙Ü‡‹´]-›w\©§\á˚c(
+\ No hay ning√∫n car√°cter de nueva l√≠nea al final del archivo
+Los archivos binarios srcclean/.git/objects/9c/847e20b9edb2c6a5f9d27f9e96b5fb5e9400eb y src-github/.git/objects/9c/847e20b9edb2c6a5f9d27f9e96b5fb5e9400eb son distintos
+Los archivos binarios srcclean/.git/objects/9c/9b18b9cf13038b0133f8903edf764518f6eaae y src-github/.git/objects/9c/9b18b9cf13038b0133f8903edf764518f6eaae son distintos
+Los archivos binarios srcclean/.git/objects/9d/aa09fa0a70af406efcb327b13793cdfce3eef0 y src-github/.git/objects/9d/aa09fa0a70af406efcb327b13793cdfce3eef0 son distintos
+Los archivos binarios srcclean/.git/objects/9e/7386641bef2878eff911e4f9f673930ad196e8 y src-github/.git/objects/9e/7386641bef2878eff911e4f9f673930ad196e8 son distintos
+Los archivos binarios srcclean/.git/objects/9e/d426ea5d2e09ceaf69714955576c38408f564f y src-github/.git/objects/9e/d426ea5d2e09ceaf69714955576c38408f564f son distintos
+Los archivos binarios srcclean/.git/objects/9f/3e010cfaac42481dfca9da40476970b925831f y src-github/.git/objects/9f/3e010cfaac42481dfca9da40476970b925831f son distintos
+Los archivos binarios srcclean/.git/objects/9f/681b85004ebd4645a2a367fa0a996b0011c5b4 y src-github/.git/objects/9f/681b85004ebd4645a2a367fa0a996b0011c5b4 son distintos
+Los archivos binarios srcclean/.git/objects/9f/e840af34dc3b08451d49e5ac157dfecf50a139 y src-github/.git/objects/9f/e840af34dc3b08451d49e5ac157dfecf50a139 son distintos
+Los archivos binarios srcclean/.git/objects/a0/4532f15baa171a204982079ba96639e2c99deb y src-github/.git/objects/a0/4532f15baa171a204982079ba96639e2c99deb son distintos
+Los archivos binarios srcclean/.git/objects/a1/3baf84c1c06fe83f935ae131330d251fb2bfa0 y src-github/.git/objects/a1/3baf84c1c06fe83f935ae131330d251fb2bfa0 son distintos
+Los archivos binarios srcclean/.git/objects/a1/aa4a87dfb5b7a60a7a8db1611d8f9077368140 y src-github/.git/objects/a1/aa4a87dfb5b7a60a7a8db1611d8f9077368140 son distintos
+diff -rupN srcclean/.git/objects/a1/fd03d959cde06f1fe7b7422ac060862ed15b6b src-github/.git/objects/a1/fd03d959cde06f1fe7b7422ac060862ed15b6b
+--- srcclean/.git/objects/a1/fd03d959cde06f1fe7b7422ac060862ed15b6b	1969-12-31 21:00:00.000000000 -0300
++++ src-github/.git/objects/a1/fd03d959cde06f1fe7b7422ac060862ed15b6b	2016-05-16 18:53:12.546417743 -0400
+@@ -0,0 +1,2 @@
++x•èAnƒ EªÊæ¿D$8§™Íf6ΩÖ¡5UÄàI:ö€7jè–Â[¸ßˇr+eŸaÚ˛eÔ™Ä4±…;±ŒﬂPÑ¢≥OIsÙË5“Õôçª÷sòEñh’¬9kFV≤S
++£0;Às`¥^˚gÎqpÖ´<∏À^øNÙèﬁ/Îp»6‰ıF$á.éqÇãEkM˛=∫Î?&sIKªÉVX˜Æù·	[oâ´4»≠>¯	ı–o.gûö)@Z
+\ No hay ning√∫n car√°cter de nueva l√≠nea al final del archivo
+diff -rupN srcclean/.git/objects/a2/67171b6b0a7bd04a50a1032405b626486878af src-github/.git/objects/a2/67171b6b0a7bd04a50a1032405b626486878af
+--- srcclean/.git/objects/a2/67171b6b0a7bd04a50a1032405b626486878af	1969-12-31 21:00:00.000000000 -0300
++++ src-github/.git/objects/a2/67171b6b0a7bd04a50a1032405b626486878af	2016-05-17 19:07:30.462756554 -0400
+@@ -0,0 +1,2 @@
++x•é[
++¬0E˝Œ*fñd&ÕDÙ√¡ELì©V˚êÿ‚ˆ-∫?œÖs9iÜn¥~3‡Hî0¥cƒ$Ôu}∞‰-51Æ#FIÍ…E∆U4…HìΩÛÜëâù«\nPc B–%¨/Ûm*p^xÑS~s…/ÿ›W™‰GáÅªæZÚ≥J˝åuT£≥µÜ≠∂Z´ÙùÂèu,EÆ˝Ù·¬iª^‘˛˜L
+\ No hay ning√∫n car√°cter de nueva l√≠nea al final del archivo
+Los archivos binarios srcclean/.git/objects/a2/6f8f4329d10802bf50cf0a6bff3a9c58467aed y src-github/.git/objects/a2/6f8f4329d10802bf50cf0a6bff3a9c58467aed son distintos
+diff -rupN srcclean/.git/objects/a2/b8fdeae0b96a39fe5d6b15faf748319579ec0d src-github/.git/objects/a2/b8fdeae0b96a39fe5d6b15faf748319579ec0d
+--- srcclean/.git/objects/a2/b8fdeae0b96a39fe5d6b15faf748319579ec0d	1969-12-31 21:00:00.000000000 -0300
++++ src-github/.git/objects/a2/b8fdeae0b96a39fe5d6b15faf748319579ec0d	2016-05-17 18:03:50.349141901 -0400
+@@ -0,0 +1,2 @@
++xÕêOK√@≈=ÁS<jZBãÒ†$VHrh°«íÓNõ≈tWv'ä¯Á≥ªI$¢–ã‡ûÜ∑3Ô7Û÷•Y„¸ÏÙËXiQVíp…dw ∏qq|âïVée_ÛÇ2µLF∞îKáç5;<–À£%Á"HCNü0H£I†4cK,ä…(9^¯ÁÿVÇ—raJô3€öûÎ‚¢i™GE±ØYxì˙+ƒ|qì§´€‰~ñfÌ,Ü˚∆÷”Œ¥'è≈™‹î˘É)>B$Òuö•x√,æÀ:Óg‘"û˚ˆ•gvêñ)
++èkéÃmÿj∏|€‹WV7øˇûoù+π^≤Ùè£=<ç?œÙªÁ£
+\ No hay ning√∫n car√°cter de nueva l√≠nea al final del archivo
+Los archivos binarios srcclean/.git/objects/a2/da8de9e9f8ec2489f8f242fb14cbade8cd4143 y src-github/.git/objects/a2/da8de9e9f8ec2489f8f242fb14cbade8cd4143 son distintos
+Los archivos binarios srcclean/.git/objects/a3/1142a36b7a84c3baa2e1e22e1dd990a2d4587a y src-github/.git/objects/a3/1142a36b7a84c3baa2e1e22e1dd990a2d4587a son distintos
+Los archivos binarios srcclean/.git/objects/a4/48ffe1fdb3be09c4224e1de9905713840a2329 y src-github/.git/objects/a4/48ffe1fdb3be09c4224e1de9905713840a2329 son distintos
+Los archivos binarios srcclean/.git/objects/a4/ce370d5131a30841ee69b556dea5140bfd15e3 y src-github/.git/objects/a4/ce370d5131a30841ee69b556dea5140bfd15e3 son distintos
+Los archivos binarios srcclean/.git/objects/a5/2d91886c77ea6a5ed4225600e1859de9fa5026 y src-github/.git/objects/a5/2d91886c77ea6a5ed4225600e1859de9fa5026 son distintos
+Los archivos binarios srcclean/.git/objects/a5/83c2e713a0922ffab966260adc447b4ebc4c48 y src-github/.git/objects/a5/83c2e713a0922ffab966260adc447b4ebc4c48 son distintos
+Los archivos binarios srcclean/.git/objects/a5/cf4b07dbe5255316a4e40f4bf2fe6b2d4e17a0 y src-github/.git/objects/a5/cf4b07dbe5255316a4e40f4bf2fe6b2d4e17a0 son distintos
+Los archivos binarios srcclean/.git/objects/a7/93fb93cae668aa68b2088460f314faf6b19cca y src-github/.git/objects/a7/93fb93cae668aa68b2088460f314faf6b19cca son distintos
+Los archivos binarios srcclean/.git/objects/a7/fa70de29bf3a8082fa041343de0314c604b644 y src-github/.git/objects/a7/fa70de29bf3a8082fa041343de0314c604b644 son distintos
+Los archivos binarios srcclean/.git/objects/a8/c99fd07e245ac660ff11b4ce3a96bce772c890 y src-github/.git/objects/a8/c99fd07e245ac660ff11b4ce3a96bce772c890 son distintos
+Los archivos binarios srcclean/.git/objects/a9/33c28f39958e1c770f9784374a33b998e129ec y src-github/.git/objects/a9/33c28f39958e1c770f9784374a33b998e129ec son distintos
+Los archivos binarios srcclean/.git/objects/a9/b6fadb187897802a2dbaff03fefd2c358cfdbd y src-github/.git/objects/a9/b6fadb187897802a2dbaff03fefd2c358cfdbd son distintos
+Los archivos binarios srcclean/.git/objects/a9/ffb0d20b45726261c9e7f149c7906c27f20d75 y src-github/.git/objects/a9/ffb0d20b45726261c9e7f149c7906c27f20d75 son distintos
+Los archivos binarios srcclean/.git/objects/aa/306f06f57998c6ae9141484e3bc5d3032a4b34 y src-github/.git/objects/aa/306f06f57998c6ae9141484e3bc5d3032a4b34 son distintos
+Los archivos binarios srcclean/.git/objects/aa/938ef351f5f155c9207fa6024f0ff7dc450adf y src-github/.git/objects/aa/938ef351f5f155c9207fa6024f0ff7dc450adf son distintos
+Los archivos binarios srcclean/.git/objects/ac/5cce56e70f51e9320910141052ac462d4560fa y src-github/.git/objects/ac/5cce56e70f51e9320910141052ac462d4560fa son distintos
+diff -rupN srcclean/.git/objects/ad/189bc81016ac02b293ff3b7c43fa2f34e857ff src-github/.git/objects/ad/189bc81016ac02b293ff3b7c43fa2f34e857ff
+--- srcclean/.git/objects/ad/189bc81016ac02b293ff3b7c43fa2f34e857ff	1969-12-31 21:00:00.000000000 -0300
++++ src-github/.git/objects/ad/189bc81016ac02b293ff3b7c43fa2f34e857ff	2016-05-16 15:25:19.058152604 -0400
+@@ -0,0 +1 @@
++x•ŒAn√ @—Æ9≈\ ÷ÄÉTU›tìd?0É‚ 6∆ ıS5G»Úmæ~ÆÎ:w0ŒÙ&$1∞∑ﬁ#i≤"©h§RfL)Ô2S“jß&[áG√%'BéQó`J•LßÃËúu…âväŒ~ØÆ'm√j|¿ÁÔüyÈ{•yNﬁáº|Å∂~¥∆O:¿-¢ ˇ£]ﬁH®€,W‡∫±Äù@ÿ[Mã¨§û/TS3
+\ No hay ning√∫n car√°cter de nueva l√≠nea al final del archivo
+Los archivos binarios srcclean/.git/objects/ad/5a2c37dce53480b83a9f2d0ce070a82bd11c71 y src-github/.git/objects/ad/5a2c37dce53480b83a9f2d0ce070a82bd11c71 son distintos
+Los archivos binarios srcclean/.git/objects/ae/5ff8bf1876db3351dd4d138dc3b94429f87e39 y src-github/.git/objects/ae/5ff8bf1876db3351dd4d138dc3b94429f87e39 son distintos
+Los archivos binarios srcclean/.git/objects/ae/98d64660a1a4eebf10aff50c0bb8265cdacea1 y src-github/.git/objects/ae/98d64660a1a4eebf10aff50c0bb8265cdacea1 son distintos
+Los archivos binarios srcclean/.git/objects/ae/b6865f9fd2de5fd2c26e29eadf9b0faa0653bf y src-github/.git/objects/ae/b6865f9fd2de5fd2c26e29eadf9b0faa0653bf son distintos
+Los archivos binarios srcclean/.git/objects/ae/ce5e5b2ed9172a9700db6219d9574abb579c4c y src-github/.git/objects/ae/ce5e5b2ed9172a9700db6219d9574abb579c4c son distintos
+Los archivos binarios srcclean/.git/objects/af/7ba2b02521a7529ff5ed8621d6d26d6d20f10d y src-github/.git/objects/af/7ba2b02521a7529ff5ed8621d6d26d6d20f10d son distintos
+Los archivos binarios srcclean/.git/objects/b0/cb733e3af88a7b6e1e981c0ef29f40d942eda9 y src-github/.git/objects/b0/cb733e3af88a7b6e1e981c0ef29f40d942eda9 son distintos
+diff -rupN srcclean/.git/objects/b0/e052306220e652da76fea5cb10fd27f729b9f5 src-github/.git/objects/b0/e052306220e652da76fea5cb10fd27f729b9f5
+--- srcclean/.git/objects/b0/e052306220e652da76fea5cb10fd27f729b9f5	1969-12-31 21:00:00.000000000 -0300
++++ src-github/.git/objects/b0/e052306220e652da76fea5cb10fd27f729b9f5	2016-05-09 21:45:07.658343838 -0300
+@@ -0,0 +1,2 @@
++xµT]k€0›kÙ+.)å§ôõÖ1ÿ»d–çÄóá∞ñæ®ç®#Y¶≈ˇΩW≤%«éMˆ–>99æ:˜‹sÆ&"Ñ…˜??]0%YLa6ŒR9Ne4ﬁ3Œ^∆{µì4àØvR’$lœTZ√˙»$Wª~U◊íB	ux¢1ΩáT…,RP≤n√@JFÂ∂ôíÆZÚJzOŸß1D"„jz(°Ç€bü)˙¢ËÁ	#¨SíO	π@}åS¯µ‹lV◊õÌo˘ì6˚6¬¯© ò¢Hqÿf’<óÂœ!äe˜ÉÚÃÁ∞æÒ}çˆ$Uô‰pΩZﬂ.}Tñì¶ÍDDèÉœÂYoaFbÂÛé%‘rz32,j M+ÀÃ˙0uD¶±/–Bû7UdºKGçﬂzQQÍZÆ-+¢8≠ssïé|≈@⁄˝∆ïTgÕÎÃ∑∫w%ﬁâ≤Íçâ]E.#≥è0á’˙ﬂˆÔÚßwØäòÊµò˝Ÿ°”èŒm5w≈UÆÕ,Lµ·ñ˝¯"·ƒLπ·ÕhÑP+ï;lÏ5ªÌ†¬÷QΩx‰r	õÏB)Ç8
++“Ê-–+Í*ªWﬁ∆e¯sö§ÙO∑^»Y›]Á⁄Aˇ{#ÒÀ–ÎÖ•≥ûßÂ∂∫T7‹Óƒ˚œÆìÀÒäæoË
+\ No hay ning√∫n car√°cter de nueva l√≠nea al final del archivo
+diff -rupN srcclean/.git/objects/b1/1ebf53bbe1e369da97c80f8918bf2c19b463a3 src-github/.git/objects/b1/1ebf53bbe1e369da97c80f8918bf2c19b463a3
+--- srcclean/.git/objects/b1/1ebf53bbe1e369da97c80f8918bf2c19b463a3	1969-12-31 21:00:00.000000000 -0300
++++ src-github/.git/objects/b1/1ebf53bbe1e369da97c80f8918bf2c19b463a3	2016-05-17 18:51:50.838736581 -0400
+@@ -0,0 +1,5 @@
++xUéAÇ@Ö;ÔØ$#‹
++ÍbuÏOÑáu5ÿaw≠$˙Ôç"Ç∑˜æ7Ûf
++”p<üVk$m∫≤Çã%∂isd∞X≤éê'óÃáTL ∞
++i3ÂjΩ›([÷ØGû¿W¿Dº”pÖHó ;Ô$[ië#uk≠¢“≥†∑Í%ƒ1§ìÅ(õ8~b}GSqœÿ»9‰o¥
++Ó„€ÛH2Ï˘ﬁá —h]:G∞œƒO¸*ñXë
+\ No hay ning√∫n car√°cter de nueva l√≠nea al final del archivo
+Los archivos binarios srcclean/.git/objects/b1/fbc08bc00b34dded298417cfa653d0f5c8eeeb y src-github/.git/objects/b1/fbc08bc00b34dded298417cfa653d0f5c8eeeb son distintos
+Los archivos binarios srcclean/.git/objects/b2/5b944cbe207cf64a3cae0d7b7a955d10e8be3a y src-github/.git/objects/b2/5b944cbe207cf64a3cae0d7b7a955d10e8be3a son distintos
+Los archivos binarios srcclean/.git/objects/b2/a089dc09947fc585490e1d387e09b48f4b492a y src-github/.git/objects/b2/a089dc09947fc585490e1d387e09b48f4b492a son distintos
+Los archivos binarios srcclean/.git/objects/b2/ad62fbf06ab716163b2bf350aeda4e4f596abf y src-github/.git/objects/b2/ad62fbf06ab716163b2bf350aeda4e4f596abf son distintos
+Los archivos binarios srcclean/.git/objects/b2/c8876971bd571d6b6c04652c968968109ec3eb y src-github/.git/objects/b2/c8876971bd571d6b6c04652c968968109ec3eb son distintos
+Los archivos binarios srcclean/.git/objects/b3/018070064e43d8934761d1d28ca5324096f81e y src-github/.git/objects/b3/018070064e43d8934761d1d28ca5324096f81e son distintos
+Los archivos binarios srcclean/.git/objects/b4/f78775aa814f7afda9598b6bb681f5e45f3da4 y src-github/.git/objects/b4/f78775aa814f7afda9598b6bb681f5e45f3da4 son distintos
+Los archivos binarios srcclean/.git/objects/b5/01a606ea49698b9a87983def8c31c1cf23c389 y src-github/.git/objects/b5/01a606ea49698b9a87983def8c31c1cf23c389 son distintos
+Los archivos binarios srcclean/.git/objects/b5/028717c6885703494eed65b1cc8ff731f9ff50 y src-github/.git/objects/b5/028717c6885703494eed65b1cc8ff731f9ff50 son distintos
+Los archivos binarios srcclean/.git/objects/b5/28e6abd73fa6c965caaddc437b001eb6fb1cbc y src-github/.git/objects/b5/28e6abd73fa6c965caaddc437b001eb6fb1cbc son distintos
+diff -rupN srcclean/.git/objects/b5/d2d7f820fbf8ed39d3486d56db6a1dd0f84158 src-github/.git/objects/b5/d2d7f820fbf8ed39d3486d56db6a1dd0f84158
+--- srcclean/.git/objects/b5/d2d7f820fbf8ed39d3486d56db6a1dd0f84158	1969-12-31 21:00:00.000000000 -0300
++++ src-github/.git/objects/b5/d2d7f820fbf8ed39d3486d56db6a1dd0f84158	2016-05-17 19:35:18.198792003 -0400
+@@ -0,0 +1 @@
++xUçQÇ@Ñ{æ_±HÖxÅ’cB|8O≥oçª”íËøwóQ¯6ÛÕÏl—¥lˆ€ŸI6]Y¡¡ÿ€¯zb‘`1e°kNô±©ˆå!YPi·Ö–µå@^ÖÜï”}ñ/·…`$FÀ,Ÿ≠Û‘7 o√¬°YÔåÊŒqÖÑ.[•ï∆	∫ãÅCB¸5,˝¬¯ƒÂ¨œÿTpÙﬂ˚,˘Ì;Óˇ;üC3[)}¨Ælß	÷){±7¯?^É
+\ No hay ning√∫n car√°cter de nueva l√≠nea al final del archivo
+Los archivos binarios srcclean/.git/objects/b6/e34899cc16d2154d53d065952a309b37e60fcf y src-github/.git/objects/b6/e34899cc16d2154d53d065952a309b37e60fcf son distintos
+diff -rupN srcclean/.git/objects/b8/537367f1ceaf63a8ee36dd2c63b49dc6ca0fce src-github/.git/objects/b8/537367f1ceaf63a8ee36dd2c63b49dc6ca0fce
+--- srcclean/.git/objects/b8/537367f1ceaf63a8ee36dd2c63b49dc6ca0fce	1969-12-31 21:00:00.000000000 -0300
++++ src-github/.git/objects/b8/537367f1ceaf63a8ee36dd2c63b49dc6ca0fce	2016-05-17 15:41:56.768960935 -0400
+@@ -0,0 +1,2 @@
++x•ŒMNƒ0@a÷9Ö/@’§Œè•öÕlXq◊vEQ€åB*ß¡X~õß'uﬂ◊”CofêÇ-e°`% z≈≥Õs,íh“4cPôâ‹ùõ∆†1Mô<≥hV#^ÃrÒYB(Vêºx¡Héœ˛Z<ü|¿M?∏È;\ﬁ~4ÿüÆ;Ø€pÍ}êÌ	<¶)zÙ>¡„à„Ë‰w¥€?Ó•’Oì^aYﬁ÷/÷Íæ
++ÿN‚
+\ No hay ning√∫n car√°cter de nueva l√≠nea al final del archivo
+Los archivos binarios srcclean/.git/objects/b8/64e94ec968b45b37988495488bc162c988d275 y src-github/.git/objects/b8/64e94ec968b45b37988495488bc162c988d275 son distintos
+Los archivos binarios srcclean/.git/objects/b8/741929bbc5281e167313b951dda88f90bc61a1 y src-github/.git/objects/b8/741929bbc5281e167313b951dda88f90bc61a1 son distintos
+Los archivos binarios srcclean/.git/objects/b8/c825555b7a99eaa29da016e3cc519eae5fff6c y src-github/.git/objects/b8/c825555b7a99eaa29da016e3cc519eae5fff6c son distintos
+Los archivos binarios srcclean/.git/objects/b8/dafd2d4e513c9b02e5ad49f9de1510a31aaffa y src-github/.git/objects/b8/dafd2d4e513c9b02e5ad49f9de1510a31aaffa son distintos
+diff -rupN srcclean/.git/objects/ba/b6f27f00add67497eb8c9346caabfb8f771512 src-github/.git/objects/ba/b6f27f00add67497eb8c9346caabfb8f771512
+--- srcclean/.git/objects/ba/b6f27f00add67497eb8c9346caabfb8f771512	1969-12-31 21:00:00.000000000 -0300
++++ src-github/.git/objects/ba/b6f27f00add67497eb8c9346caabfb8f771512	2016-05-16 12:28:28.025336624 -0400
+@@ -0,0 +1 @@
++x+)JMU07b040031QMÃNMÀÃIe(õuz√ı∑>ÛÆ*0*øm£ˇhTMr~^yb•^2√ã’"67LœπlöxJo Ow’ e'ß `
+\ No hay ning√∫n car√°cter de nueva l√≠nea al final del archivo
+Los archivos binarios srcclean/.git/objects/ba/cf9b77ba42876c62fb7d87364a28911bfc7b03 y src-github/.git/objects/ba/cf9b77ba42876c62fb7d87364a28911bfc7b03 son distintos
+Los archivos binarios srcclean/.git/objects/bc/1893635501e0f5991030093db3f5736afe0ec9 y src-github/.git/objects/bc/1893635501e0f5991030093db3f5736afe0ec9 son distintos
+Los archivos binarios srcclean/.git/objects/bd/3927359f7e7f53943c8c784f9dc848a8bb331c y src-github/.git/objects/bd/3927359f7e7f53943c8c784f9dc848a8bb331c son distintos
+Los archivos binarios srcclean/.git/objects/bd/88c77120818795d44fba8767fd50b8489fd1de y src-github/.git/objects/bd/88c77120818795d44fba8767fd50b8489fd1de son distintos
+Los archivos binarios srcclean/.git/objects/bd/cefc3b420d701df8c3cc161c66010c01aaa0d6 y src-github/.git/objects/bd/cefc3b420d701df8c3cc161c66010c01aaa0d6 son distintos
+Los archivos binarios srcclean/.git/objects/be/cfc2b1b3151eb0b6293cef454719b8fb67e35b y src-github/.git/objects/be/cfc2b1b3151eb0b6293cef454719b8fb67e35b son distintos
+Los archivos binarios srcclean/.git/objects/bf/61dccc3168153d6e449bf66d184097341a7165 y src-github/.git/objects/bf/61dccc3168153d6e449bf66d184097341a7165 son distintos
+Los archivos binarios srcclean/.git/objects/c0/0cd43f90d15928ee3d4fe950db48d0a2b42962 y src-github/.git/objects/c0/0cd43f90d15928ee3d4fe950db48d0a2b42962 son distintos
+Los archivos binarios srcclean/.git/objects/c0/b67aa491b02e0ee3f00b2ef9641c3ec678ba06 y src-github/.git/objects/c0/b67aa491b02e0ee3f00b2ef9641c3ec678ba06 son distintos
+Los archivos binarios srcclean/.git/objects/c0/c1560c932c10647ff2f1d196f0cd03100b4b00 y src-github/.git/objects/c0/c1560c932c10647ff2f1d196f0cd03100b4b00 son distintos
+Los archivos binarios srcclean/.git/objects/c1/0dc43d9a784b5aaa608884bd101f53ab31a29e y src-github/.git/objects/c1/0dc43d9a784b5aaa608884bd101f53ab31a29e son distintos
+Los archivos binarios srcclean/.git/objects/c2/ce364d8d940d673488c852aa60a97864d24596 y src-github/.git/objects/c2/ce364d8d940d673488c852aa60a97864d24596 son distintos
+Los archivos binarios srcclean/.git/objects/c3/7ef71519bbf857ab6991bb1a1e5a313b8f28c9 y src-github/.git/objects/c3/7ef71519bbf857ab6991bb1a1e5a313b8f28c9 son distintos
+Los archivos binarios srcclean/.git/objects/c3/a73f5ca7da4f1058230bdd5e98165388d4f6b6 y src-github/.git/objects/c3/a73f5ca7da4f1058230bdd5e98165388d4f6b6 son distintos
+Los archivos binarios srcclean/.git/objects/c4/502be2a8687367b2e42e4bdf0d489aca96bbf8 y src-github/.git/objects/c4/502be2a8687367b2e42e4bdf0d489aca96bbf8 son distintos
+Los archivos binarios srcclean/.git/objects/c4/89f783432663295aa2b3a0fdd9779ab5a6f7a6 y src-github/.git/objects/c4/89f783432663295aa2b3a0fdd9779ab5a6f7a6 son distintos
+Los archivos binarios srcclean/.git/objects/c5/25126709d3f09fd65dfea00513110e1afa0415 y src-github/.git/objects/c5/25126709d3f09fd65dfea00513110e1afa0415 son distintos
+Los archivos binarios srcclean/.git/objects/c5/35dcb26273c6c98772c05c71e96b8eac2023e1 y src-github/.git/objects/c5/35dcb26273c6c98772c05c71e96b8eac2023e1 son distintos
+Los archivos binarios srcclean/.git/objects/c6/e3ec48854184a42ce24fa174b9fef2085e297c y src-github/.git/objects/c6/e3ec48854184a42ce24fa174b9fef2085e297c son distintos
+Los archivos binarios srcclean/.git/objects/c7/24c36f7b07c2655c5156f705ddce94ed9cefed y src-github/.git/objects/c7/24c36f7b07c2655c5156f705ddce94ed9cefed son distintos
+Los archivos binarios srcclean/.git/objects/c7/bba3470e1fe18531e2a6b395860c80812d79b3 y src-github/.git/objects/c7/bba3470e1fe18531e2a6b395860c80812d79b3 son distintos
+Los archivos binarios srcclean/.git/objects/c7/e61d718e945efae39232c283d857d35162f843 y src-github/.git/objects/c7/e61d718e945efae39232c283d857d35162f843 son distintos
+Los archivos binarios srcclean/.git/objects/c8/2a5b952a30e1495e5cfd3a367faf592d3204cd y src-github/.git/objects/c8/2a5b952a30e1495e5cfd3a367faf592d3204cd son distintos
+Los archivos binarios srcclean/.git/objects/c8/40b74cbcfb1f1db73c8d4c03b2a4e9ad6dbd33 y src-github/.git/objects/c8/40b74cbcfb1f1db73c8d4c03b2a4e9ad6dbd33 son distintos
+Los archivos binarios srcclean/.git/objects/c9/10752aa7e335d2fb5b049e1aaf721203c5a5cf y src-github/.git/objects/c9/10752aa7e335d2fb5b049e1aaf721203c5a5cf son distintos
+Los archivos binarios srcclean/.git/objects/c9/62bd759fb160bb9505a09a342ad1f0c8049127 y src-github/.git/objects/c9/62bd759fb160bb9505a09a342ad1f0c8049127 son distintos
+Los archivos binarios srcclean/.git/objects/ca/45585d905ab7660e632330a1a2fb1044553908 y src-github/.git/objects/ca/45585d905ab7660e632330a1a2fb1044553908 son distintos
+Los archivos binarios srcclean/.git/objects/ca/ec9e54a96cdd0ad4affd23969da2fdc8546b47 y src-github/.git/objects/ca/ec9e54a96cdd0ad4affd23969da2fdc8546b47 son distintos
+Los archivos binarios srcclean/.git/objects/cb/33ba7b8fc31cfaaa26e2a86573e14733ee13c0 y src-github/.git/objects/cb/33ba7b8fc31cfaaa26e2a86573e14733ee13c0 son distintos
+Los archivos binarios srcclean/.git/objects/cb/9b7d5fbe6b925d62f0bb316a575a1799d3b6d1 y src-github/.git/objects/cb/9b7d5fbe6b925d62f0bb316a575a1799d3b6d1 son distintos
+Los archivos binarios srcclean/.git/objects/cb/a158a2f3f536bee30f68c67e06ac7666bc97e7 y src-github/.git/objects/cb/a158a2f3f536bee30f68c67e06ac7666bc97e7 son distintos
+Los archivos binarios srcclean/.git/objects/cb/cc1389467463f161fb696712206799be4afb45 y src-github/.git/objects/cb/cc1389467463f161fb696712206799be4afb45 son distintos
+Los archivos binarios srcclean/.git/objects/cb/d5967eb92b7001e846f230f8ef9dc0298e73b0 y src-github/.git/objects/cb/d5967eb92b7001e846f230f8ef9dc0298e73b0 son distintos
+Los archivos binarios srcclean/.git/objects/cc/f8d63c8cdb62294080d364737f9bbb7b4781f3 y src-github/.git/objects/cc/f8d63c8cdb62294080d364737f9bbb7b4781f3 son distintos
+Los archivos binarios srcclean/.git/objects/cd/29d0b50f521df5fee2e49563c828ea1cc4889f y src-github/.git/objects/cd/29d0b50f521df5fee2e49563c828ea1cc4889f son distintos
+Los archivos binarios srcclean/.git/objects/cd/7cb36fa8379cf9b8ec44374c6738920c7867f2 y src-github/.git/objects/cd/7cb36fa8379cf9b8ec44374c6738920c7867f2 son distintos
+Los archivos binarios srcclean/.git/objects/cd/a75511134ed68526a46a1f062062f0de66c2c1 y src-github/.git/objects/cd/a75511134ed68526a46a1f062062f0de66c2c1 son distintos
+Los archivos binarios srcclean/.git/objects/cf/21f0f15705ab3fc7ec233776cf1b4d1d9a4007 y src-github/.git/objects/cf/21f0f15705ab3fc7ec233776cf1b4d1d9a4007 son distintos
+Los archivos binarios srcclean/.git/objects/cf/619a2c3636f823d5fc6ade79bde61bbd37b68a y src-github/.git/objects/cf/619a2c3636f823d5fc6ade79bde61bbd37b68a son distintos
+Los archivos binarios srcclean/.git/objects/cf/a4da1ab196ae34bdbf4897c2c4637f666ebcf1 y src-github/.git/objects/cf/a4da1ab196ae34bdbf4897c2c4637f666ebcf1 son distintos
+Los archivos binarios srcclean/.git/objects/cf/f2c3ee4da1456b8279f724014f73ecca8aec1b y src-github/.git/objects/cf/f2c3ee4da1456b8279f724014f73ecca8aec1b son distintos
+Los archivos binarios srcclean/.git/objects/d1/cb8c1fa65ad62334a76c979369f09bd98b7778 y src-github/.git/objects/d1/cb8c1fa65ad62334a76c979369f09bd98b7778 son distintos
+Los archivos binarios srcclean/.git/objects/d2/741e455e66d29896144c3cd6b5dfe39ec03a2b y src-github/.git/objects/d2/741e455e66d29896144c3cd6b5dfe39ec03a2b son distintos
+diff -rupN srcclean/.git/objects/d3/060c789424bc70650627e42319439e2fc2ccf4 src-github/.git/objects/d3/060c789424bc70650627e42319439e2fc2ccf4
+--- srcclean/.git/objects/d3/060c789424bc70650627e42319439e2fc2ccf4	1969-12-31 21:00:00.000000000 -0300
++++ src-github/.git/objects/d3/060c789424bc70650627e42319439e2fc2ccf4	2016-05-16 18:47:42.390410725 -0400
+@@ -0,0 +1,2 @@
++x•èKjƒ0D≥÷)˙1˙´C»f6πEKj[2yÜπ}ú‰©›É‚Qï⁄∂-t/£3É—%yÌäeïdëåsûU.ËX{rîË,ŒàbßŒuÄ˘âÊ9ï$ëùé©XîJ<ªÆ¯B¶ÂgA«¯l>™pÕÍ˘óØì&˛£˜çñu:Ú>•ıîı∆DØ·UZ)E˙:¯
++ëhãKªWX	"ıŒù‡	{oëjnêZ}–Í¡w⁄Œ{,æÍ	Y∆
+\ No hay ning√∫n car√°cter de nueva l√≠nea al final del archivo
+Los archivos binarios srcclean/.git/objects/d3/39cb0c2245d8502b8725f94343a7e3cca85a2b y src-github/.git/objects/d3/39cb0c2245d8502b8725f94343a7e3cca85a2b son distintos
+Los archivos binarios srcclean/.git/objects/d3/9ab5c89240dcfe6ab52e6b7418dd86fc024b11 y src-github/.git/objects/d3/9ab5c89240dcfe6ab52e6b7418dd86fc024b11 son distintos
+Los archivos binarios srcclean/.git/objects/d4/af5701b9a9634eff81ed6e501e82614de97ed9 y src-github/.git/objects/d4/af5701b9a9634eff81ed6e501e82614de97ed9 son distintos
+Los archivos binarios srcclean/.git/objects/d4/f71729c80070f246259a1b2ef93a0fa0c9dd4d y src-github/.git/objects/d4/f71729c80070f246259a1b2ef93a0fa0c9dd4d son distintos
+Los archivos binarios srcclean/.git/objects/d5/5bea0a52c0fda046f1e1a08a4980202ccb7e25 y src-github/.git/objects/d5/5bea0a52c0fda046f1e1a08a4980202ccb7e25 son distintos
+Los archivos binarios srcclean/.git/objects/d5/dc11ca1a0032ac9421f30e9950908d21f2571e y src-github/.git/objects/d5/dc11ca1a0032ac9421f30e9950908d21f2571e son distintos
+Los archivos binarios srcclean/.git/objects/d6/28844ddabef89a56bf49c8b91263343e99067f y src-github/.git/objects/d6/28844ddabef89a56bf49c8b91263343e99067f son distintos
+Los archivos binarios srcclean/.git/objects/d6/490708ce71e8d7554134302a8d47f5133e3432 y src-github/.git/objects/d6/490708ce71e8d7554134302a8d47f5133e3432 son distintos
+Los archivos binarios srcclean/.git/objects/d6/5f91bd2de04e1af7b7c10cd05c62138d485f2a y src-github/.git/objects/d6/5f91bd2de04e1af7b7c10cd05c62138d485f2a son distintos
+Los archivos binarios srcclean/.git/objects/d6/c8458984443895d7fc28996af1b507ecd04abe y src-github/.git/objects/d6/c8458984443895d7fc28996af1b507ecd04abe son distintos
+Los archivos binarios srcclean/.git/objects/d7/1f61109d53e5dedc87d0c9b7ee0b99ec74c475 y src-github/.git/objects/d7/1f61109d53e5dedc87d0c9b7ee0b99ec74c475 son distintos
+Los archivos binarios srcclean/.git/objects/d7/80fa9fe97389289bd3eb63977780e5bcd765ff y src-github/.git/objects/d7/80fa9fe97389289bd3eb63977780e5bcd765ff son distintos
+Los archivos binarios srcclean/.git/objects/d8/2be0d1b92c1f3171a014176a9923d52369ccd5 y src-github/.git/objects/d8/2be0d1b92c1f3171a014176a9923d52369ccd5 son distintos
+Los archivos binarios srcclean/.git/objects/d8/3be530c463591211d0e7329740b25d1ecf7274 y src-github/.git/objects/d8/3be530c463591211d0e7329740b25d1ecf7274 son distintos
+Los archivos binarios srcclean/.git/objects/d9/17db400707d8e97d3f65888f01208ae0337ef0 y src-github/.git/objects/d9/17db400707d8e97d3f65888f01208ae0337ef0 son distintos
+Los archivos binarios srcclean/.git/objects/d9/4bc9bc0445f1cae46db0cb7d900f9c6ec15557 y src-github/.git/objects/d9/4bc9bc0445f1cae46db0cb7d900f9c6ec15557 son distintos
+diff -rupN srcclean/.git/objects/d9/566fec8af3a154069654bd0d47efc144f0cb9e src-github/.git/objects/d9/566fec8af3a154069654bd0d47efc144f0cb9e
+--- srcclean/.git/objects/d9/566fec8af3a154069654bd0d47efc144f0cb9e	1969-12-31 21:00:00.000000000 -0300
++++ src-github/.git/objects/d9/566fec8af3a154069654bd0d47efc144f0cb9e	2016-05-16 12:29:10.725337532 -0400
+@@ -0,0 +1,2 @@
++x•ŒMé¬0@a÷9Ö/0U~ùTBàÕl∏Ök{4E¥A!‚ˆ 8ÀoÛÙ∏.À‹¡«q◊õ*ÿÇ)h@Ã÷q"ˆ,$*%j˙cØìüF5Wj∫v%ó¬Tr&ƒàô’ª§%dÃÖãêãTFC[ˇØN≠+wjrÉ˝˘•A?:.4_ÜMÆ_‡"ÜË–%?6Zk¯=⁄ıãÑ©ΩUò◊˛Ø 
++\◊;=Ã6O⁄
+\ No hay ning√∫n car√°cter de nueva l√≠nea al final del archivo
+Los archivos binarios srcclean/.git/objects/d9/8ea11caa631c466864c7bfec975f962eead6e3 y src-github/.git/objects/d9/8ea11caa631c466864c7bfec975f962eead6e3 son distintos
+Los archivos binarios srcclean/.git/objects/d9/b9a1b89c5cb90f003d05fe06f8d64bf83a8119 y src-github/.git/objects/d9/b9a1b89c5cb90f003d05fe06f8d64bf83a8119 son distintos
+Los archivos binarios srcclean/.git/objects/d9/c42cce67311562b665bc67a6a34273bd100e57 y src-github/.git/objects/d9/c42cce67311562b665bc67a6a34273bd100e57 son distintos
+Los archivos binarios srcclean/.git/objects/da/0a294da49a0cfa1e859a41a7c710c2a8df4b77 y src-github/.git/objects/da/0a294da49a0cfa1e859a41a7c710c2a8df4b77 son distintos
+Los archivos binarios srcclean/.git/objects/da/68c25fbc2919dde16cfb08bc5026bf06da44eb y src-github/.git/objects/da/68c25fbc2919dde16cfb08bc5026bf06da44eb son distintos
+Los archivos binarios srcclean/.git/objects/da/c90565c0ce9f61e2dec761c82686ebc677001f y src-github/.git/objects/da/c90565c0ce9f61e2dec761c82686ebc677001f son distintos
+Los archivos binarios srcclean/.git/objects/da/e0d00d2c7c4d85586e024df95e581bfdc11c51 y src-github/.git/objects/da/e0d00d2c7c4d85586e024df95e581bfdc11c51 son distintos
+Los archivos binarios srcclean/.git/objects/db/e1222fe93ac7fed498943204f5230ea8057609 y src-github/.git/objects/db/e1222fe93ac7fed498943204f5230ea8057609 son distintos
+Los archivos binarios srcclean/.git/objects/db/f0acdd3fcb0de62ad4960a0c39c41c001103bf y src-github/.git/objects/db/f0acdd3fcb0de62ad4960a0c39c41c001103bf son distintos
+Los archivos binarios srcclean/.git/objects/dc/3cf13a88d34e62c18355cd24fd34fe5293f085 y src-github/.git/objects/dc/3cf13a88d34e62c18355cd24fd34fe5293f085 son distintos
+Los archivos binarios srcclean/.git/objects/dc/822b10e44170a2ba198299fab3f54238058cc0 y src-github/.git/objects/dc/822b10e44170a2ba198299fab3f54238058cc0 son distintos
+Los archivos binarios srcclean/.git/objects/dc/930ff1e2095c13f9baef19d54d6801074c7c3a y src-github/.git/objects/dc/930ff1e2095c13f9baef19d54d6801074c7c3a son distintos
+Los archivos binarios srcclean/.git/objects/dd/25a2e932f871c7435f72ef7c08f576ac4590f9 y src-github/.git/objects/dd/25a2e932f871c7435f72ef7c08f576ac4590f9 son distintos
+Los archivos binarios srcclean/.git/objects/dd/a6af2deec5a07ca6951f08b99694d19ec76d26 y src-github/.git/objects/dd/a6af2deec5a07ca6951f08b99694d19ec76d26 son distintos
+Los archivos binarios srcclean/.git/objects/df/495d2d4abcf04f24a00f858a5afb43887ce43e y src-github/.git/objects/df/495d2d4abcf04f24a00f858a5afb43887ce43e son distintos
+Los archivos binarios srcclean/.git/objects/e0/8d24978a37473e1716d812acb307b903e1023b y src-github/.git/objects/e0/8d24978a37473e1716d812acb307b903e1023b son distintos
+Los archivos binarios srcclean/.git/objects/e1/10a71c35c7f5ec295f65c9d3c9ded9cec2bc5d y src-github/.git/objects/e1/10a71c35c7f5ec295f65c9d3c9ded9cec2bc5d son distintos
+Los archivos binarios srcclean/.git/objects/e1/32c2c7358d8f9a13997cb2d75c83b382b0ce70 y src-github/.git/objects/e1/32c2c7358d8f9a13997cb2d75c83b382b0ce70 son distintos
+Los archivos binarios srcclean/.git/objects/e2/51468103bb18af2a5286a41c478b89a72bf5da y src-github/.git/objects/e2/51468103bb18af2a5286a41c478b89a72bf5da son distintos
+Los archivos binarios srcclean/.git/objects/e3/19c41d2272e4513ee8c4afc6d0b599a33cc8a3 y src-github/.git/objects/e3/19c41d2272e4513ee8c4afc6d0b599a33cc8a3 son distintos
+Los archivos binarios srcclean/.git/objects/e3/23d4f718d42712022fb776badb3ed5ff9288af y src-github/.git/objects/e3/23d4f718d42712022fb776badb3ed5ff9288af son distintos
+Los archivos binarios srcclean/.git/objects/e3/2ac3813e9b06425732f58163b8b7a93d78fea7 y src-github/.git/objects/e3/2ac3813e9b06425732f58163b8b7a93d78fea7 son distintos
+Los archivos binarios srcclean/.git/objects/e3/31323b9a5c7c3fe9970cfed7a29e8a2b5a8a05 y src-github/.git/objects/e3/31323b9a5c7c3fe9970cfed7a29e8a2b5a8a05 son distintos
+Los archivos binarios srcclean/.git/objects/e3/b6878585c259a48689e4e17f2dc57f39bce1b0 y src-github/.git/objects/e3/b6878585c259a48689e4e17f2dc57f39bce1b0 son distintos
+Los archivos binarios srcclean/.git/objects/e4/46b923f929c31f92b31fdd9ffeb8e3b429ea8f y src-github/.git/objects/e4/46b923f929c31f92b31fdd9ffeb8e3b429ea8f son distintos
+Los archivos binarios srcclean/.git/objects/e4/5cfdf3591d250114cccaaec8737088a6f4da8b y src-github/.git/objects/e4/5cfdf3591d250114cccaaec8737088a6f4da8b son distintos
+Los archivos binarios srcclean/.git/objects/e4/83528d3917408d6039815bafaf672ffa0640d8 y src-github/.git/objects/e4/83528d3917408d6039815bafaf672ffa0640d8 son distintos
+Los archivos binarios srcclean/.git/objects/e5/22e91875a0d9e35b115befa3fba2eda84b4e8a y src-github/.git/objects/e5/22e91875a0d9e35b115befa3fba2eda84b4e8a son distintos
+Los archivos binarios srcclean/.git/objects/e6/55d38524c977253f37a6cde73fadb5dd6c3dc8 y src-github/.git/objects/e6/55d38524c977253f37a6cde73fadb5dd6c3dc8 son distintos
+diff -rupN srcclean/.git/objects/e6/9df3500a0e8aab7ec3d8fac69275e65ed5d1a2 src-github/.git/objects/e6/9df3500a0e8aab7ec3d8fac69275e65ed5d1a2
+--- srcclean/.git/objects/e6/9df3500a0e8aab7ec3d8fac69275e65ed5d1a2	1969-12-31 21:00:00.000000000 -0300
++++ src-github/.git/objects/e6/9df3500a0e8aab7ec3d8fac69275e65ed5d1a2	2016-05-16 15:16:28.314141322 -0400
+@@ -0,0 +1,2 @@
++x•ŒKN≈0@Q∆YÖ7@ï&qÍJOà	¿‹±]Q‘6U^*∂œo	Ô‰ËJ›˜µC¿¸–õhå≥/!$TB
++Mó9≈y≤(¬Ñä;πŸ—!£-¨L	2äÕD£Ãl)î'/â˝òt|ı˜⁄‡ı‚^Ùìõﬁ·ˆÒ]É˝’ÛŒÎ6\z≤=¡òrL!èDËì˜N~Gª˝Épo´ZAÎ°vÔ∂¡ŸjŸlg˜m∂R~
+\ No hay ning√∫n car√°cter de nueva l√≠nea al final del archivo
+Los archivos binarios srcclean/.git/objects/e7/4b5950aabe12395a7139038a4dfd96eff93b5a y src-github/.git/objects/e7/4b5950aabe12395a7139038a4dfd96eff93b5a son distintos
+Los archivos binarios srcclean/.git/objects/e7/9d393143ab40789ecd27f476bf589ce1b4d29b y src-github/.git/objects/e7/9d393143ab40789ecd27f476bf589ce1b4d29b son distintos
+Los archivos binarios srcclean/.git/objects/e8/9fcd3354c973c19888d867698dc3c6d5af0f46 y src-github/.git/objects/e8/9fcd3354c973c19888d867698dc3c6d5af0f46 son distintos
+Los archivos binarios srcclean/.git/objects/e8/ab143cd835ce44b291ca2e94f9472579a076c9 y src-github/.git/objects/e8/ab143cd835ce44b291ca2e94f9472579a076c9 son distintos
+Los archivos binarios srcclean/.git/objects/e9/1018b99f920adad99058b3bd7a752b37fc6290 y src-github/.git/objects/e9/1018b99f920adad99058b3bd7a752b37fc6290 son distintos
+Los archivos binarios srcclean/.git/objects/e9/7906f9aec9e3ec9ee2e22b4a3bb6e440ba573f y src-github/.git/objects/e9/7906f9aec9e3ec9ee2e22b4a3bb6e440ba573f son distintos
+Los archivos binarios srcclean/.git/objects/ea/fbc39627697aef8f11573944f04462418bb78d y src-github/.git/objects/ea/fbc39627697aef8f11573944f04462418bb78d son distintos
+Los archivos binarios srcclean/.git/objects/eb/36ae503f1566976f869d3722b34b989ba3f925 y src-github/.git/objects/eb/36ae503f1566976f869d3722b34b989ba3f925 son distintos
+Los archivos binarios srcclean/.git/objects/eb/6cc0429668491b764839bffaf5cee5e7db8e2c y src-github/.git/objects/eb/6cc0429668491b764839bffaf5cee5e7db8e2c son distintos
+Los archivos binarios srcclean/.git/objects/eb/875f472e4897f813cc557f18ebd20846a85c8e y src-github/.git/objects/eb/875f472e4897f813cc557f18ebd20846a85c8e son distintos
+Los archivos binarios srcclean/.git/objects/eb/fb36bdeee1069b8d98bde2868665245d7f08e9 y src-github/.git/objects/eb/fb36bdeee1069b8d98bde2868665245d7f08e9 son distintos
+Los archivos binarios srcclean/.git/objects/ed/0cafeefb9fb4ad1c78fa082cf26843c2677080 y src-github/.git/objects/ed/0cafeefb9fb4ad1c78fa082cf26843c2677080 son distintos
+Los archivos binarios srcclean/.git/objects/ed/79a20f6560a374c91117003999127034bba839 y src-github/.git/objects/ed/79a20f6560a374c91117003999127034bba839 son distintos
+Los archivos binarios srcclean/.git/objects/ee/40136ec46c13ab72ed8cfe7a3b69734fb40cb6 y src-github/.git/objects/ee/40136ec46c13ab72ed8cfe7a3b69734fb40cb6 son distintos
+Los archivos binarios srcclean/.git/objects/ee/90660cd492580f7398fbfdac6dfe8968ad8628 y src-github/.git/objects/ee/90660cd492580f7398fbfdac6dfe8968ad8628 son distintos
+Los archivos binarios srcclean/.git/objects/ee/9a747ddea9cee67b350fb98528268b31c4ce22 y src-github/.git/objects/ee/9a747ddea9cee67b350fb98528268b31c4ce22 son distintos
+Los archivos binarios srcclean/.git/objects/ef/47c0ba8a7a3c789716eacf2d8c430b2a56f80c y src-github/.git/objects/ef/47c0ba8a7a3c789716eacf2d8c430b2a56f80c son distintos
+Los archivos binarios srcclean/.git/objects/ef/d2f75e8c3226a4f53f1b0319edffad7d13dcb8 y src-github/.git/objects/ef/d2f75e8c3226a4f53f1b0319edffad7d13dcb8 son distintos
+Los archivos binarios srcclean/.git/objects/f0/5934a1ecafb669fdcf966066c97a392d4ee9a5 y src-github/.git/objects/f0/5934a1ecafb669fdcf966066c97a392d4ee9a5 son distintos
+Los archivos binarios srcclean/.git/objects/f1/0fdd78805901d05b950190eddd60eb31e5ce9f y src-github/.git/objects/f1/0fdd78805901d05b950190eddd60eb31e5ce9f son distintos
+Los archivos binarios srcclean/.git/objects/f1/2613c6ffd5d8e989de03da93fe2df59d3bd300 y src-github/.git/objects/f1/2613c6ffd5d8e989de03da93fe2df59d3bd300 son distintos
+Los archivos binarios srcclean/.git/objects/f1/36f2f9cd135b28df33d7d94286344f8f32c2fe y src-github/.git/objects/f1/36f2f9cd135b28df33d7d94286344f8f32c2fe son distintos
+Los archivos binarios srcclean/.git/objects/f1/579224625e86a39c40a648d8c624f3c6df98bd y src-github/.git/objects/f1/579224625e86a39c40a648d8c624f3c6df98bd son distintos
+Los archivos binarios srcclean/.git/objects/f1/856b6331462938ee9997f41bee29881dbf5504 y src-github/.git/objects/f1/856b6331462938ee9997f41bee29881dbf5504 son distintos
+diff -rupN srcclean/.git/objects/f1/c3c571c35ffa8fb9c1c0e251ebfdeaa106ff1c src-github/.git/objects/f1/c3c571c35ffa8fb9c1c0e251ebfdeaa106ff1c
+--- srcclean/.git/objects/f1/c3c571c35ffa8fb9c1c0e251ebfdeaa106ff1c	1969-12-31 21:00:00.000000000 -0300
++++ src-github/.git/objects/f1/c3c571c35ffa8fb9c1c0e251ebfdeaa106ff1c	2016-05-16 15:16:28.314141322 -0400
+@@ -0,0 +1 @@
++x+)JMU07b040031QMÃNMÀÃIe(õuz√ı∑>ÛÆ*0*øm£ˇhTMr~^yb•^2√G˛ªëå¢ß2Nx{7·µ·”sÛ•$ Í
+\ No hay ning√∫n car√°cter de nueva l√≠nea al final del archivo
+Los archivos binarios srcclean/.git/objects/f1/e8338294a84237e26122edaa470a09245eb77d y src-github/.git/objects/f1/e8338294a84237e26122edaa470a09245eb77d son distintos
+Los archivos binarios srcclean/.git/objects/f2/265a60176f0d7d19ee9a6cfc157127b2d3fc49 y src-github/.git/objects/f2/265a60176f0d7d19ee9a6cfc157127b2d3fc49 son distintos
+Los archivos binarios srcclean/.git/objects/f2/481b4af5c54ad4333e785208641294d8bc9e2f y src-github/.git/objects/f2/481b4af5c54ad4333e785208641294d8bc9e2f son distintos
+Los archivos binarios srcclean/.git/objects/f2/585d6ec53c059451270aeb92649a023fe11265 y src-github/.git/objects/f2/585d6ec53c059451270aeb92649a023fe11265 son distintos
+Los archivos binarios srcclean/.git/objects/f3/0f4fa2c421468a99cefb12fc7b7d73aa3492c5 y src-github/.git/objects/f3/0f4fa2c421468a99cefb12fc7b7d73aa3492c5 son distintos
+diff -rupN srcclean/.git/objects/f4/632b39fe0635d0ccd9a187e0c43348423e147a src-github/.git/objects/f4/632b39fe0635d0ccd9a187e0c43348423e147a
+--- srcclean/.git/objects/f4/632b39fe0635d0ccd9a187e0c43348423e147a	1969-12-31 21:00:00.000000000 -0300
++++ src-github/.git/objects/f4/632b39fe0635d0ccd9a187e0c43348423e147a	2016-05-17 19:35:20.646792055 -0400
+@@ -0,0 +1,2 @@
++x•ŒMé¬0@a÷9Ö/@ÂÑ4u%Ñ`¡âC8±3˙ÉB*Æö9¬,øÕ”KÀ4úÔ6µ®i∞°O—äPä.3	'Ω™∑äû$ÌI≤yr—πBó[‹IÓ2bÎ∏ç=ì%¥]åd1≈‰ê£◊HÜ◊z[
++\Vû·,o.ÚÇ˝˝´FˇtúxõUûM`}ÿµé¨Cÿ¢G4Èw¥Í?ÊTä˛åÀtÜ+?4£öE˜O⁄
+\ No hay ning√∫n car√°cter de nueva l√≠nea al final del archivo
+Los archivos binarios srcclean/.git/objects/f4/7d443465603e94ad6121a8ab2e4a4be66f49eb y src-github/.git/objects/f4/7d443465603e94ad6121a8ab2e4a4be66f49eb son distintos
+Los archivos binarios srcclean/.git/objects/f6/5f3206d380087dce023980a1763b234f1e2dd0 y src-github/.git/objects/f6/5f3206d380087dce023980a1763b234f1e2dd0 son distintos
+diff -rupN srcclean/.git/objects/f6/ba09e08c3b75934384a468aa9540fe96466f55 src-github/.git/objects/f6/ba09e08c3b75934384a468aa9540fe96466f55
+--- srcclean/.git/objects/f6/ba09e08c3b75934384a468aa9540fe96466f55	1969-12-31 21:00:00.000000000 -0300
++++ src-github/.git/objects/f6/ba09e08c3b75934384a468aa9540fe96466f55	2016-05-16 18:17:37.058372351 -0400
+@@ -0,0 +1 @@
++x•èKn√ @ªÊsÄ‘Ï·c)™∫…¶∑`P]≈ú®∑/jè–Â€<ΩÎæofÁ_zMÊú‚Lnø¯m6¥ê£êì≥Y≥õ]P7nR:¨ŸzºA$	â,ûy±.3Ú∫⁄Ä®á2ê‚£÷∏§'∑táÛ◊†I˛Ë}ÁÌ:È6≈Îh≤-çÉW$DCª¸C°jo∂“GxÖ$kyÚ˜	xî1‹∑Å[ì∆'{iÍÏ’Z$
+\ No hay ning√∫n car√°cter de nueva l√≠nea al final del archivo
+diff -rupN srcclean/.git/objects/f6/e91e9ed816540da241acd2b16d763ee0ce4079 src-github/.git/objects/f6/e91e9ed816540da241acd2b16d763ee0ce4079
+--- srcclean/.git/objects/f6/e91e9ed816540da241acd2b16d763ee0ce4079	1969-12-31 21:00:00.000000000 -0300
++++ src-github/.git/objects/f6/e91e9ed816540da241acd2b16d763ee0ce4079	2016-05-16 13:04:17.621382317 -0400
+@@ -0,0 +1,2 @@
++x•ŒAN≈ Äa◊úb.hgHåq„∆∏fà5mix4Ô˙=ÇÀoÛÁ/mﬂ◊3Ò”Ë™∞(R¶Ã>¯`ã‚
++{eAWâb¨ƒB¥‡lŒ‘ı ëò´ñêÍí°Â»ÑY¨†◊Zbµ%G5Èü≠√˚ïxìGÍráÁØM˙ß◊=≠€t…9ïÌÚÇ.Ã‰·f—ZS~Gá˛#a>V=§Å¥CÙ>Ëgoy”=ôoÌ^Q‰
+\ No hay ning√∫n car√°cter de nueva l√≠nea al final del archivo
+Los archivos binarios srcclean/.git/objects/f8/438f7facacf0f7a3643fd70504bd6634522b3e y src-github/.git/objects/f8/438f7facacf0f7a3643fd70504bd6634522b3e son distintos
+diff -rupN srcclean/.git/objects/f8/59748954dbf8bb36f963afcd1c216865c83343 src-github/.git/objects/f8/59748954dbf8bb36f963afcd1c216865c83343
+--- srcclean/.git/objects/f8/59748954dbf8bb36f963afcd1c216865c83343	1969-12-31 21:00:00.000000000 -0300
++++ src-github/.git/objects/f8/59748954dbf8bb36f963afcd1c216865c83343	2016-05-16 18:01:11.010351391 -0400
+@@ -0,0 +1,2 @@
++x•éM
++¬0F]ÁsÀ§˘k@ƒço1ôL±bâ)‚Ì-z7<>x<.Û<5Ëm‹µ*v$6)•<∞Ë{vŸÖÌ@tIR»ùV™≤4Sô{/4‰,Q¡¶1êqQ∂¡Ak÷û¢V¥∂k©pYiÅs~QÕO8‹6Í‰Gßô¶{∑ÊG«˜#hÎç5¬-¢‚ohì?™¥Z`Z⁄^ pY^ÙVΩP§
+\ No hay ning√∫n car√°cter de nueva l√≠nea al final del archivo
+diff -rupN srcclean/.git/objects/f9/32dfcba0d991f82f9890ef7107cd05545b5e15 src-github/.git/objects/f9/32dfcba0d991f82f9890ef7107cd05545b5e15
+--- srcclean/.git/objects/f9/32dfcba0d991f82f9890ef7107cd05545b5e15	1969-12-31 21:00:00.000000000 -0300
++++ src-github/.git/objects/f9/32dfcba0d991f82f9890ef7107cd05545b5e15	2016-05-16 15:19:12.922144821 -0400
+@@ -0,0 +1 @@
++x•Œ=n√0@·Œ:/É˙£l ≤d…∫”"ç∫∞-CëëÎ'Hè–Ò[^.Î:7pëæZUõmRÚﬁ«!{öl‡Ñ—çAˆ∂«îIER`≥s’≠Å“ ìèàå⁄3èI≥ó~‚LÉKQ)™D±ÏÌßT∏º¡Mû\ÂÁﬂ∑:˝”uÂyÈŸªº\¿Ú¡ëèNM˛å6˝G¬|œ∫I)õ(Ë£1Ë{-„¢+õ*‚R:
+\ No hay ning√∫n car√°cter de nueva l√≠nea al final del archivo
+Los archivos binarios srcclean/.git/objects/f9/7043c291db93bb0d163c739ec93b2f5a05ef50 y src-github/.git/objects/f9/7043c291db93bb0d163c739ec93b2f5a05ef50 son distintos
+Los archivos binarios srcclean/.git/objects/f9/b91ca3a8d357c1e46c0951b89c82c24a4630a7 y src-github/.git/objects/f9/b91ca3a8d357c1e46c0951b89c82c24a4630a7 son distintos
+Los archivos binarios srcclean/.git/objects/fa/586136778a0c230dce5dde8390bb8c7b29fb52 y src-github/.git/objects/fa/586136778a0c230dce5dde8390bb8c7b29fb52 son distintos
+Los archivos binarios srcclean/.git/objects/fa/5d99c57e76546ef751ff68a43d8b0c85ac0590 y src-github/.git/objects/fa/5d99c57e76546ef751ff68a43d8b0c85ac0590 son distintos
+Los archivos binarios srcclean/.git/objects/fa/73204fee48e425354cdaa56f0967eb15a8038f y src-github/.git/objects/fa/73204fee48e425354cdaa56f0967eb15a8038f son distintos
+Los archivos binarios srcclean/.git/objects/fa/ca09eb58823d6d689c1934692d7125bd4b325d y src-github/.git/objects/fa/ca09eb58823d6d689c1934692d7125bd4b325d son distintos
+Los archivos binarios srcclean/.git/objects/fa/d3140032da971d133224d4b40b4bce3a6f1e5b y src-github/.git/objects/fa/d3140032da971d133224d4b40b4bce3a6f1e5b son distintos
+Los archivos binarios srcclean/.git/objects/fb/6e4907d1e65fccaaa79e8093ba1b00bcaaa8f4 y src-github/.git/objects/fb/6e4907d1e65fccaaa79e8093ba1b00bcaaa8f4 son distintos
+diff -rupN srcclean/.git/objects/fb/9fcc26ea8dde91874bf7a359ea350811c16a91 src-github/.git/objects/fb/9fcc26ea8dde91874bf7a359ea350811c16a91
+--- srcclean/.git/objects/fb/9fcc26ea8dde91874bf7a359ea350811c16a91	1969-12-31 21:00:00.000000000 -0300
++++ src-github/.git/objects/fb/9fcc26ea8dde91874bf7a359ea350811c16a91	2016-05-16 18:00:14.782350196 -0400
+@@ -0,0 +1 @@
++x•éKj√0@ª÷)Ê1˙åG6ÑíM6Ω≈H3".±Tôê€◊¥G»Ú-ﬁ„Â∫ÆKèÛGo™∏DÒ9ïâê£/>%±1™éQÀ8·(DA…ô7›:‰¬(Ï8πôX&Iß9füëB,D§)gxÔ∑⁄‡kÁÆÚ‰&?p˛>h–∫¨º‹á]CæÇ;ld¬…¢µ&ˇçv}#ajoñ≠„D!◊Ì…/Û\Q*
+\ No hay ning√∫n car√°cter de nueva l√≠nea al final del archivo
+Los archivos binarios srcclean/.git/objects/fb/ab8f61a61fa510f488c3d84bda749c81c2a461 y src-github/.git/objects/fb/ab8f61a61fa510f488c3d84bda749c81c2a461 son distintos
+Los archivos binarios srcclean/.git/objects/fb/d4a7c316832d71750d733c181328b57eaf1df3 y src-github/.git/objects/fb/d4a7c316832d71750d733c181328b57eaf1df3 son distintos
+Los archivos binarios srcclean/.git/objects/fc/391019363006499fb61ca3e86211162d3b3ff5 y src-github/.git/objects/fc/391019363006499fb61ca3e86211162d3b3ff5 son distintos
+Los archivos binarios srcclean/.git/objects/fc/77c25288b5a65c13a0f00efaca55d0fea5d570 y src-github/.git/objects/fc/77c25288b5a65c13a0f00efaca55d0fea5d570 son distintos
+Los archivos binarios srcclean/.git/objects/fc/db8d802f7d3dd54ec05c7ed0b746e9f700211f y src-github/.git/objects/fc/db8d802f7d3dd54ec05c7ed0b746e9f700211f son distintos
+Los archivos binarios srcclean/.git/objects/fd/70fdebcdcc416c4220ed41f5619c0222c17242 y src-github/.git/objects/fd/70fdebcdcc416c4220ed41f5619c0222c17242 son distintos
+Los archivos binarios srcclean/.git/objects/fd/73d0264716d615156fa37974fd8165818b481b y src-github/.git/objects/fd/73d0264716d615156fa37974fd8165818b481b son distintos
+Los archivos binarios srcclean/.git/objects/fd/a54c47b282de195698367a5fb15f4f4a12bd8a y src-github/.git/objects/fd/a54c47b282de195698367a5fb15f4f4a12bd8a son distintos
+Los archivos binarios srcclean/.git/objects/fe/de34253bc2aca502e77d0e643a1ec778a8f3d0 y src-github/.git/objects/fe/de34253bc2aca502e77d0e643a1ec778a8f3d0 son distintos
+Los archivos binarios srcclean/.git/objects/fe/f92d3814dcfa3569d7fedec97e20d2199feb71 y src-github/.git/objects/fe/f92d3814dcfa3569d7fedec97e20d2199feb71 son distintos
+Los archivos binarios srcclean/.git/objects/pack/pack-bcb76c8b5690dbde1607d294ea4cd33c6b423900.idx y src-github/.git/objects/pack/pack-bcb76c8b5690dbde1607d294ea4cd33c6b423900.idx son distintos
+Los archivos binarios srcclean/.git/objects/pack/pack-bcb76c8b5690dbde1607d294ea4cd33c6b423900.pack y src-github/.git/objects/pack/pack-bcb76c8b5690dbde1607d294ea4cd33c6b423900.pack son distintos
+diff -rupN srcclean/.git/ORIG_HEAD src-github/.git/ORIG_HEAD
+--- srcclean/.git/ORIG_HEAD	1969-12-31 21:00:00.000000000 -0300
++++ src-github/.git/ORIG_HEAD	2016-05-19 19:17:49.415405269 -0400
+@@ -0,0 +1 @@
++e251468103bb18af2a5286a41c478b89a72bf5da
+diff -rupN srcclean/.git/refs/heads/master src-github/.git/refs/heads/master
+--- srcclean/.git/refs/heads/master	1969-12-31 21:00:00.000000000 -0300
++++ src-github/.git/refs/heads/master	2016-05-19 19:17:34.875404959 -0400
+@@ -0,0 +1 @@
++e251468103bb18af2a5286a41c478b89a72bf5da
+diff -rupN srcclean/.git/refs/remotes/origin/master src-github/.git/refs/remotes/origin/master
+--- srcclean/.git/refs/remotes/origin/master	1969-12-31 21:00:00.000000000 -0300
++++ src-github/.git/refs/remotes/origin/master	2016-05-19 19:18:45.439406459 -0400
+@@ -0,0 +1 @@
++e251468103bb18af2a5286a41c478b89a72bf5da
+diff -rupN srcclean/include/limits.h src-github/include/limits.h
+--- srcclean/include/limits.h	2016-03-24 22:07:03.000000000 -0300
++++ src-github/include/limits.h	2016-05-09 20:59:24.074285519 -0300
+@@ -34,6 +34,19 @@
+ #ifndef _LIMITS_H_
+ #define	_LIMITS_H_
+ 
++/* _EM_WSIZE is a compiler-generated symbol giving the word size in bytes. */
++#if _EM_WSIZE == 2
++#define INT_MIN   (-32767-1)	/* minimum value of a 16-bit int */
++#define INT_MAX        32767	/* maximum value of a 16-bit int */
++#define UINT_MAX      0xFFFF	/* maximum value of an unsigned 16-bit int */
++#endif
++
++#if _EM_WSIZE == 4
++#define INT_MIN (-2147483647-1)	/* minimum value of a 32-bit int */
++#define INT_MAX   2147483647	/* maximum value of a 32-bit int */
++#define UINT_MAX  0xFFFFFFFF	/* maximum value of an unsigned 32-bit int */
++#endif
++
+ #include <sys/featuretest.h>
+ 
+ #if defined(_POSIX_C_SOURCE) || defined(_XOPEN_SOURCE) || \
+diff -rupN srcclean/minix/commands/conway/conio.h src-github/minix/commands/conway/conio.h
+--- srcclean/minix/commands/conway/conio.h	1969-12-31 21:00:00.000000000 -0300
++++ src-github/minix/commands/conway/conio.h	2016-05-17 17:07:24.061069000 -0400
+@@ -0,0 +1,31 @@
++#include <termios.h>
++#include <unistd.h>
++#include <stdio.h>
++
++/* reads from keypress, doesn't echo */
++int getch(void)
++{
++    struct termios oldattr, newattr;
++    int ch;
++    tcgetattr( STDIN_FILENO, &oldattr );
++    newattr = oldattr;
++    newattr.c_lflag &= ~( ICANON | ECHO );
++    tcsetattr( STDIN_FILENO, TCSANOW, &newattr );
++    ch = getchar();
++    tcsetattr( STDIN_FILENO, TCSANOW, &oldattr );
++    return ch;
++}
++
++/* reads from keypress, echoes */
++int getche(void)
++{
++    struct termios oldattr, newattr;
++    int ch;
++    tcgetattr( STDIN_FILENO, &oldattr );
++    newattr = oldattr;
++    newattr.c_lflag &= ~( ICANON );
++    tcsetattr( STDIN_FILENO, TCSANOW, &newattr );
++    ch = getchar();
++    tcsetattr( STDIN_FILENO, TCSANOW, &oldattr );
++    return ch;
++}
+\ No hay ning√∫n car√°cter de nueva l√≠nea al final del archivo
+diff -rupN srcclean/minix/commands/conway/conway.c src-github/minix/commands/conway/conway.c
+--- srcclean/minix/commands/conway/conway.c	1969-12-31 21:00:00.000000000 -0300
++++ src-github/minix/commands/conway/conway.c	2016-05-19 16:46:27.663652632 -0400
+@@ -0,0 +1,438 @@
++#include <stdio.h>
++#include <stdlib.h>
++#include <unistd.h>
++#include <minix/mthread.h>
++#include <string.h>
++#include <time.h>
++#include <sys/time.h>
++#include <limits.h>
++#include "conio.h"
++
++#define DEAD 0
++#define ALIVE 1
++#define RTIME 500000
++
++
++unsigned int N;
++unsigned int M;
++unsigned int n;
++unsigned int m;
++unsigned int h;
++int *t_ids;
++mthread_barrier_t *barrier;
++char *configFile;
++int **grilla1;
++int **grilla2;
++int **current, **next, **aux;
++int **init;
++
++/* FUNCIONES */
++
++int read_N(char *configFile); //obetener N  // LISTO
++int read_M(char *configFile); //obtener M   // LISTO
++int read_n(char *configFile); //obetener n  // LISTO
++int read_m(char *configFile); //obtener m   // LISTO
++int read_h(char *configFile); //obtener h   // LISTO
++int vecinos_vivos(int **current, int x, int y); //numero de vecinos vivos en la celda x,y  // LISTO
++int validar_argts(int argc, char *argv[]); //check de argumentos   // LISTO
++void iniciar_tablero(int **current, int **init); //iniciar tablero         // LISTO
++void set_init(int **init, char *configFile);//set de celdad vivas inicial // LISTO
++void print(int **curptr);//imprimir tablero             // LISTO
++void print_help();//ayuda                   // LISTO
++void *entry_function(void *ptr);//funcion de entrada para los hilos    // LISTO
++void jugar(int **current, int **next, int start_x, int finish_x, int start_y, int finish_y);//juega el siguiente turno // LISTO
++
++/* MAIN */
++int main(int argc, char *argv[] ){
++  /*CHECK ARGS*/
++  if(validar_argts(argc, argv) == 1){
++    print_help();
++    return -1;
++  }
++  /*----------CHECK ARGS END---------------*/
++
++  /* SET DE VARIABLES */
++  configFile = argv[1];
++  n = read_n(configFile);
++  m = read_m(configFile);
++  N = read_N(configFile);
++  M = read_M(configFile);
++  h = read_h(configFile);
++  grilla1 = (int **)malloc(N*sizeof(int *));
++  if(grilla1 == NULL){
++    printf("ERROR!: No fue posible asignarle memoria a grilla1, Saliendo...\n");
++    return -1;
++  }
++
++  for (int i = 0; i < N; i++) {
++    grilla1[i] = (int *)malloc(M*sizeof(int));
++    if(grilla1[i] == NULL){
++      printf("ERROR!: No fue posible asignarle memoria a grilla1[%d]. Saliendo...\n", i);
++      return -1;
++    }
++  }
++
++  grilla2 = (int **)malloc(N*sizeof(int *));
++  if(grilla2 == NULL){
++    printf("ERROR!: No fue posible asignarle memoria a grilla2, Saliendo...\n");
++    return -1;
++  }
++  for (int i = 0; i < N; i++) {
++    grilla2[i] = (int *)malloc(M*sizeof(int));
++    if(grilla2[i] == NULL){
++      printf("ERROR!: No fue posible asignarle memoria a grilla2[%d]. Saliendo...\n", i);
++      return -1;
++    }
++  }
++
++  current = grilla1;
++  init = grilla1;
++  next = grilla2;
++  /*----------SET DE VARIABLES END---------------*/
++
++  /* INICIAR TABLERO */
++  iniciar_tablero(current, init);
++  set_init(init, configFile);
++  /*----------INICIAR TABLERO END---------------*/
++
++  /* THREADS */
++  mthread_thread_t t[h];
++  t_ids = (int *)malloc(h * sizeof(int));
++  if(t_ids == NULL){
++    printf("ERROR!: No fue posible asignarle memoria a t_ids. Saliendo...\n" );
++    return -1;
++  }
++  /*----------THREADS END---------------*/
++
++  /* BARRERA */
++  mthread_barrier_init(barrier, h);
++  /*----------BARRERA END---------------*/
++
++  /*THREADS CREATE*/
++  for (int i = 0; i < h; i++) {
++    t_ids[i] = i;
++    if(mthread_create(&t[i], NULL, &entry_function, (void*)&t_ids[i])){
++      printf("ERROR!: No se pudo crear el hilo %d. Saliendo...\n", i);
++      return -1;
++    }
++  }
++  /*----------THREAD CREATE END---------------*/
++
++  /*THREADS JOIN*/
++  for(int i = 0; i < h; i++){
++    if(mthread_join(t[i], NULL)){
++      printf("ERROR!: No se pudo unir el hilo %d. Saliendo....\n", i);
++      return -1;
++    }
++  }
++  /*----------THREAD JOIN END---------------*/
++
++int d = mthread_barrier_destroy(barrier);
++  if(d != 0){
++    printf("Barrera destruida\n");
++  }
++}
++/*MAIN END*/
++
++/*PRINT HELP*/
++void print_help(){
++  printf(" \n");
++  printf("No especifico un archivo.\n");
++  printf("La ejecuci√≥n de conway debe ser: conway <ConfigFile>\n");
++  return;
++}
++/*END PRINT HELP*/
++
++/* READ FUNC */
++int read_N(char *configFile){
++  FILE *f;
++  char linea[10];
++  f = fopen(configFile, "r");
++  if(f == NULL){
++    printf("ERROR!: no se pudo abrir \n");
++    return -1;
++  }else{
++    int i = 0;
++    while(feof(f) == 0){
++      linea[i] = fgetc(f);
++      if(i != 0 && linea[i] == ' '){break;}
++      i++;
++    }
++    int val;
++    val = atoi(linea);
++    fclose(f);
++    printf("N : %d\n", val);
++    return val;
++  }
++}
++int read_M(char *configFile){
++  FILE *f;
++  char linea[10];
++  f = fopen(configFile, "r");
++  if(f == NULL){
++    printf("ERROR!: no se pudo abrir %s. ¬øExiste el archivo?\n", configFile);
++    return -1;
++  } else{
++
++    int i = 0;
++    while(feof(f) == 0){
++      linea[i] = fgetc(f);
++      if(i != 0 && linea[i] == ' '){break;}
++      if(i != 0 && linea[i] == ' '){i = -1;}
++      i++;
++    }
++    int val;
++    val = atoi(linea);
++    fclose(f);
++    printf("M : %d\n", val);
++    return val;
++  }
++}
++int read_n(char *configFile){
++  FILE *f;
++  char linea[10];
++  f = fopen(configFile, "r");
++  if(f == NULL){
++    printf("ERROR!: no se pudo abrir %s. ¬øExiste el archivo?\n", configFile);
++    return -1;
++  }else{
++    int i = 0;
++    int enter_count = 0;
++    while(feof(f) == 0){
++      linea[i] = fgetc(f);
++      if(i != 0 && linea[i] == ' ' && enter_count == 1){break;}
++      if(i != 0 && linea[i] == '\n'){enter_count++; i = -1;}
++      i++;
++    }
++    int val;
++    val = atoi(linea);
++    fclose(f);
++    printf("n : %d\n", val);
++    return val;
++  }
++}
++int read_m(char *configFile){
++  FILE *f;
++  char linea[10];
++  f = fopen(configFile, "r");
++  if(f == NULL){
++    printf("ERROR!: no se pudo abrir %s. ¬øExiste el archivo?\n", configFile);
++    return -1;
++  }else{
++    int i = 0;
++    int enter_count = 0;
++    while(feof(f) == 0){
++      linea[i] = fgetc(f);
++      if(i != 0 && linea[i] == '\n' && enter_count == 1){break;}
++      if(i != 0 && linea[i] == '\n'){enter_count++;}
++      if(i != 0 && linea[i] == ' ' && enter_count == 1){i = -1;}
++      i++;
++    }
++    int val;
++    val = atoi(linea);
++    fclose(f);
++    printf("m : %d\n", val);
++    return val;
++
++  }
++}
++int read_h(char *configFile){
++  FILE *f;
++  char linea[10];
++  f = fopen(configFile, "r");
++  if(f == NULL){
++    printf("ERROR!: no se pudo abrir %s. ¬øExiste el archivo?\n", configFile);
++    return -1;
++  }else{
++    int i = 0;
++    int enter_count = 0;
++    while(feof(f) == 0){
++      linea[i] = fgetc(f);
++      if(i != 0 && linea[i] == '\n' && enter_count == 2){break;}
++      if(i != 0 && linea[i] == '\n'){enter_count++; i = -1;}
++      i++;
++    }
++    int val;
++    val = atoi(linea);
++    fclose(f);
++    printf("h : %d\n", val);
++    return val;
++  }
++}
++/*READ FUNC END*/
++/*Print */
++void print (int **curptr){
++  int i, j;
++
++  for (j=0; j<N; j++)
++  {
++
++    for (i=0; i<M; i++)
++    {
++      printf ("%s", curptr[i][j] ? "\x1B[32m[1]" : "\x1B[0m[0]");
++    }
++    printf ("\n");
++  }
++}//End of print()
++/*print end*/
++/* TABLERO E INIT */
++void set_init(int **init, char *configFile){
++    FILE *f;
++    FILE *f2;
++    char linea[10];
++    char cont;
++    f = fopen(configFile, "r");
++    f2 = fopen(configFile, "r");
++
++    if(f == NULL){
++      printf("ERROR!: no se pudo abrir %s. ¬øExiste el archivo?\n", configFile);
++    }else{
++      int enter = 0;
++      while(feof(f2) == 0){
++        cont = fgetc(f2);
++        if (cont == '\n'){ enter++;}
++      }
++      fclose(f2);
++      enter = enter -3;
++      int i = 0;
++      int enter_count = 0;
++      int x[enter], y[enter];
++      int cord = 0;
++      while(feof(f) == 0){
++        linea[i] = fgetc(f);
++        if(i != 0 && linea[i] == ' ' && enter_count > 2){x[cord] = atoi(linea); i = -1;}
++        if(i != 0 && linea[i] == '\n' && enter_count > 2){y[cord] = atoi(linea); i = -1; cord++;}
++        if(i != 0 && linea[i] == '\n'){enter_count++; i = -1;}
++        i++;
++      }
++      cord = 0;
++      while(cord < enter){
++        init[x[cord]][y[cord]] = ALIVE;
++        cord++;
++      }
++      fclose(f);
++      for(int x_1 = 0; x_1 < enter; x_1++){
++          printf("x: %d, y: %d\n",x[x_1], y[x_1]);
++        }
++    }
++    return;
++}
++/* END TABLERO E INIT */
++/* INICIAR GRILLA */
++void iniciar_tablero(int **current, int **init){
++
++  for (int i = 0; i < N; i++){
++    for (int j = 0; j < M; j++){
++      current[i][j]=0;
++      init[i][j]=0;
++    }
++  }
++  return;
++}
++/*      END GRILLA */
++/* CALCULAR VECINOS */
++int vecinos_vivos(int **current, int x, int y){
++  int vecinos = 0;
++
++  for (int i = -1;i<=1;i++){
++    for (int j = -1; j <=1; j++){
++      if(current[i+x][j+y]){
++        vecinos++;
++      }
++      if (vecinos>3)
++      {
++        break;
++        break;
++      }
++    }
++  }
++
++  return vecinos;
++}
++/* END VECINOS */
++/*JUGAR*/
++void jugar(int **current, int **next, int start_x, int finish_x, int start_y, int finish_y){
++  int vivo;
++  for(int i = start_x+1; i<finish_x-1;i++){
++    for (int j = start_y; j < finish_y; j++)
++    {
++      vivo = vecinos_vivos(current, i,j);
++      if (vivo == 2) next[i][j] = current[i][j];
++      if (vivo == 3) next[i][j] = ALIVE;
++      if (vivo < 2) next[i][j] = DEAD;
++      if (vivo > 3) next[i][j] = DEAD;
++    }
++  }
++}
++/*END JUGAR*/
++/*ENTRY*/
++void *entry_function(void *t_id){
++  int *thread_id=(int*)t_ids;
++  int fn = n;
++  int fm = m;
++  n = N;
++  m = M;
++  int start_x = *thread_id * (n + 1);
++  int finish_x = start_x + n;
++  int start_y = *thread_id * (m + 1);
++  int finish_y = start_y + m;
++
++  int i,bn;
++  i = 0;
++  int ch = 0;
++  while(!ch){
++    jugar (current, next, start_x, finish_x, start_y, finish_y);
++    if(i==0)
++      {
++        i++;
++        bn = mthread_barrier_sync(barrier);
++        system("clear");
++        printf("------------------\n");
++        printf("Datos iniciales\n");
++        printf("NxM: %dx%d\n", N, M);
++        printf("nxm: %dx%d\n", fn, fm);
++        printf("Hilos: %d\n", h);
++        printf("------------------\n");
++        print (current);
++        printf("------------------");
++        printf("Tablero inicial");
++        printf("------------------\n");
++        printf("¬°Presione ENTER para empezar!\n");
++        getchar();
++        system("clear");
++        pid_t child = fork();
++          if(child){
++            if(getch()){
++              system("kill 0");
++            }
++          }
++        }else{
++          i++;
++          aux=current;
++          current=next;
++          next=aux;
++          system("clear");
++          print (next);
++          printf("------------------");
++          printf("Tablero en el turno: %d",i);
++          printf("------------------\n");
++          usleep(RTIME);
++
++        }
++
++    bn = mthread_barrier_sync(barrier);
++  }
++  return 0;
++}
++/*END ENTRY*/
++
++/*VALIDAR ARGS*/
++int validar_argts(int argc, char *argv[]){
++
++  if(argc == 1){
++    print_help();
++    return -1;
++  }
++  return 0;
++}
++/*END VALIDAR ARGS*/
+diff -rupN srcclean/minix/commands/conway/Makefile src-github/minix/commands/conway/Makefile
+--- srcclean/minix/commands/conway/Makefile	1969-12-31 21:00:00.000000000 -0300
++++ src-github/minix/commands/conway/Makefile	2016-05-17 18:46:48.646730157 -0400
+@@ -0,0 +1,7 @@
++CC=gcc
++CFLAGS=-lmthread
++
++all: Conway
++
++Conway: conway.c
++	$(CC) -o conway conway.c $(CFLAGS)
+diff -rupN srcclean/minix/commands/conway-exec/conway.c src-github/minix/commands/conway-exec/conway.c
+--- srcclean/minix/commands/conway-exec/conway.c	1969-12-31 21:00:00.000000000 -0300
++++ src-github/minix/commands/conway-exec/conway.c	2016-05-17 20:09:04.906835084 -0400
+@@ -0,0 +1,26 @@
++#include <stdio.h>
++#include <stdlib.h>
++#include <unistd.h>
++#include <string.h>
++
++void print_help();
++
++int main(int argc, char *argv[]) {
++  if(argc == 1){
++    print_help();
++  }
++  system("cd /usr/src/minix/commands/conway/ && make");
++  char src[150];
++  strcpy(src, "cd /usr/src/minix/commands/conway/ && ./conway ");
++  char *configFile = argv[1];
++  strcat(src, configFile);
++  system(src);
++  return 0;
++}
++
++void print_help(){
++  printf(" \n");
++  printf("No especifico un archivo.\n");
++  printf("La ejecuci√≥n de conway debe ser: conway <ConfigFile>\n");
++  return;
++}
+diff -rupN srcclean/minix/commands/conway-exec/Makefile src-github/minix/commands/conway-exec/Makefile
+--- srcclean/minix/commands/conway-exec/Makefile	1969-12-31 21:00:00.000000000 -0300
++++ src-github/minix/commands/conway-exec/Makefile	2016-05-17 19:07:17.814756285 -0400
+@@ -0,0 +1,4 @@
++#Conway exec
++#
++PROG= conway
++.include <bsd.prog.mk>
+diff -rupN srcclean/minix/commands/Makefile src-github/minix/commands/Makefile
+--- srcclean/minix/commands/Makefile	2016-03-24 22:07:03.000000000 -0300
++++ src-github/minix/commands/Makefile	2016-05-17 20:09:01.598835013 -0400
+@@ -5,7 +5,7 @@
+ SUBDIR=	add_route arp at backup \
+ 	cawf cdprobe \
+ 	cleantmp \
+-	compress crc cron crontab \
++	compress crc cron crontab conway-exec\
+ 	DESCRIBE devmand devsize dhcpd \
+ 	dhrystone \
+ 	eject \
+diff -rupN srcclean/minix/include/minix/mthread.h src-github/minix/include/minix/mthread.h
+--- srcclean/minix/include/minix/mthread.h	2016-03-24 22:07:03.000000000 -0300
++++ src-github/minix/include/minix/mthread.h	2016-05-18 23:38:47.302010756 -0400
+@@ -34,6 +34,7 @@ struct __mthread_mutex {
+ };
+ typedef struct __mthread_mutex *mthread_mutex_t;
+ 
++
+ struct __mthread_cond {
+   struct __mthread_mutex *mc_mutex;	/* Associate mutex with condition */
+ #ifdef MTHREAD_STRICT
+@@ -50,7 +51,7 @@ struct __mthread_attr {
+   int ma_detachstate;
+   struct __mthread_attr *ma_prev;
+   struct __mthread_attr *ma_next;
+-}; 
++};
+ typedef struct __mthread_attr *mthread_attr_t;
+ 
+ typedef struct {
+@@ -63,7 +64,18 @@ typedef struct {
+   mthread_thread_t writer;
+   mthread_mutex_t queue;
+   mthread_event_t drain;
+-} mthread_rwlock_t; 
++} mthread_rwlock_t;
++
++struct __mthread_barrier
++{
++  int req;
++  int count;
++  int cycle;
++  mthread_mutex_t mutex;
++  mthread_cond_t cond;
++};
++
++typedef struct __mthread_barrier *mthread_barrier_t;
+ 
+ #define MTHREAD_CREATE_JOINABLE 001
+ #define MTHREAD_CREATE_DETACHED 002
+@@ -124,6 +136,11 @@ int mthread_mutex_lock(mthread_mutex_t *
+ int mthread_mutex_trylock(mthread_mutex_t *mutex);
+ int mthread_mutex_unlock(mthread_mutex_t *mutex);
+ 
++/*barrier.c*/
++int mthread_barrier_destroy(mthread_barrier_t *barrier);
++int mthread_barrier_init(mthread_barrier_t *barrier, int count);
++int mthread_barrier_sync(mthread_barrier_t *barrier);
++
+ /* event.c */
+ int mthread_event_destroy(mthread_event_t *event);
+ int mthread_event_init(mthread_event_t *event);
+@@ -150,6 +167,7 @@ typedef mthread_key_t pthread_key_t;
+ typedef mthread_cond_t pthread_cond_t;
+ typedef mthread_mutex_t pthread_mutex_t;
+ typedef mthread_condattr_t pthread_condattr_t;
++typedef mthread_barrier_t pthread_barrier_t;
+ typedef mthread_mutexattr_t pthread_mutexattr_t;
+ typedef mthread_attr_t pthread_attr_t;
+ typedef mthread_event_t pthread_event_t;
+@@ -207,6 +225,11 @@ int pthread_mutex_lock(pthread_mutex_t *
+ int pthread_mutex_trylock(pthread_mutex_t *mutex);
+ int pthread_mutex_unlock(pthread_mutex_t *mutex);
+ 
++/*barrier.c*/
++int pthread_barrier_destroy(pthread_barrier_t *barrier);
++int pthread_barrier_init(pthread_barrier_t *barrier, int count);
++int pthread_barrier_sync(pthread_barrier_t *barrier);
++
+ /* event.c */
+ int pthread_event_destroy(pthread_event_t *event);
+ int pthread_event_init(pthread_event_t *event);
+diff -rupN srcclean/minix/include/minix/mthread.h~ src-github/minix/include/minix/mthread.h~
+--- srcclean/minix/include/minix/mthread.h~	1969-12-31 21:00:00.000000000 -0300
++++ src-github/minix/include/minix/mthread.h~	2016-05-16 21:47:43.418929514 -0400
+@@ -0,0 +1,262 @@
++#ifndef _MTHREAD_H
++#define _MTHREAD_H
++
++#include <minix/config.h>	/* MUST be first */
++#include <minix/const.h>
++#include <sys/types.h>
++#include <stdio.h>
++#include <ucontext.h>
++#include <errno.h>
++#include <stdlib.h>
++#include <limits.h>
++#include <sys/signal.h>
++
++typedef int mthread_thread_t;
++typedef int mthread_once_t;
++typedef int mthread_key_t;
++typedef void * mthread_condattr_t;
++typedef void * mthread_mutexattr_t;
++
++struct __mthread_tcb;
++typedef struct {
++  struct __mthread_tcb *mq_head;
++  struct __mthread_tcb *mq_tail;
++} mthread_queue_t;
++
++struct __mthread_mutex {
++  mthread_queue_t mm_queue;	/* Queue of threads blocked on this mutex */
++  mthread_thread_t mm_owner;	/* Thread ID that currently owns mutex */
++#ifdef MTHREAD_STRICT
++  struct __mthread_mutex *mm_prev;
++  struct __mthread_mutex *mm_next;
++#endif
++  unsigned int mm_magic;
++};
++typedef struct __mthread_mutex *mthread_mutex_t;
++
++
++struct __mthread_cond {
++  struct __mthread_mutex *mc_mutex;	/* Associate mutex with condition */
++#ifdef MTHREAD_STRICT
++  struct __mthread_cond *mc_prev;
++  struct __mthread_cond *mc_next;
++#endif
++  unsigned int mc_magic;
++};
++typedef struct __mthread_cond *mthread_cond_t;
++
++struct __mthread_attr {
++  size_t ma_stacksize;
++  char *ma_stackaddr;
++  int ma_detachstate;
++  struct __mthread_attr *ma_prev;
++  struct __mthread_attr *ma_next;
++};
++typedef struct __mthread_attr *mthread_attr_t;
++
++typedef struct {
++  mthread_mutex_t mutex;
++  mthread_cond_t cond;
++} mthread_event_t;
++
++typedef struct {
++  unsigned int readers;
++  mthread_thread_t writer;
++  mthread_mutex_t queue;
++  mthread_event_t drain;
++} mthread_rwlock_t;
++
++struct __mthread_barrier
++{
++  int req;
++  int count;
++  int cycle;
++	mthread_mutex_t mutex;
++	mthread_cond_t cond;
++};
++
++typedef struct __mthread_barrier *mthread_barrier_t;
++
++#define MTHREAD_CREATE_JOINABLE 001
++#define MTHREAD_CREATE_DETACHED 002
++#define MTHREAD_ONCE_INIT 0
++#define MTHREAD_STACK_MIN MINSIGSTKSZ
++#define MTHREAD_KEYS_MAX 128
++
++__BEGIN_DECLS
++/* allocate.c */
++int mthread_create(mthread_thread_t *thread, mthread_attr_t *tattr, void
++	*(*proc)(void *), void *arg);
++int mthread_detach(mthread_thread_t thread);
++int mthread_equal(mthread_thread_t l, mthread_thread_t r);
++void mthread_exit(void *value);
++int mthread_join(mthread_thread_t thread, void **value);
++int mthread_once(mthread_once_t *once, void (*proc)(void));
++mthread_thread_t mthread_self(void);
++
++/* attribute.c */
++int mthread_attr_destroy(mthread_attr_t *tattr);
++int mthread_attr_getdetachstate(mthread_attr_t *tattr, int
++	*detachstate);
++int mthread_attr_getstack(mthread_attr_t *tattr, void **stackaddr,
++	size_t *stacksize);
++int mthread_attr_getstacksize(mthread_attr_t *tattr, size_t *stacksize);
++int mthread_attr_init(mthread_attr_t *tattr);
++int mthread_attr_setdetachstate(mthread_attr_t *tattr, int detachstate);
++int mthread_attr_setstack(mthread_attr_t *tattr, void *stackaddr, size_t
++	stacksize);
++int mthread_attr_setstacksize(mthread_attr_t *tattr, size_t stacksize);
++
++
++/* condition.c */
++int mthread_cond_broadcast(mthread_cond_t *cond);
++int mthread_cond_destroy(mthread_cond_t *cond);
++int mthread_cond_init(mthread_cond_t *cond, mthread_condattr_t *cattr);
++int mthread_cond_signal(mthread_cond_t *cond);
++int mthread_cond_wait(mthread_cond_t *cond, mthread_mutex_t *mutex);
++
++/* key.c */
++int mthread_key_create(mthread_key_t *key, void (*destructor)(void *));
++int mthread_key_delete(mthread_key_t key);
++void *mthread_getspecific(mthread_key_t key);
++int mthread_setspecific(mthread_key_t key, void *value);
++
++/* misc.c */
++void mthread_stats(void);
++void mthread_verify_f(char *f, int l);
++#define mthread_verify() mthread_verify_f(__FILE__, __LINE__)
++void mthread_stacktrace(mthread_thread_t t);
++void mthread_stacktraces(void);
++
++/* mutex.c */
++int mthread_mutex_destroy(mthread_mutex_t *mutex);
++int mthread_mutex_init(mthread_mutex_t *mutex, mthread_mutexattr_t
++	*mattr);
++int mthread_mutex_lock(mthread_mutex_t *mutex);
++int mthread_mutex_trylock(mthread_mutex_t *mutex);
++int mthread_mutex_unlock(mthread_mutex_t *mutex);
++
++/*barrier.c*/
++int mthread_barrier_destroy(mthread_barrier_t *barrier);
++int mthread_barrier_init(mthread_barrier_t *barrier, int count);
++int mthread_barrier_sync(mthread_barrier_t *barrier);
++
++/* event.c */
++int mthread_event_destroy(mthread_event_t *event);
++int mthread_event_init(mthread_event_t *event);
++int mthread_event_wait(mthread_event_t *event);
++int mthread_event_fire(mthread_event_t *event);
++int mthread_event_fire_all(mthread_event_t *event);
++
++/* rwlock.c */
++int mthread_rwlock_destroy(mthread_rwlock_t *rwlock);
++int mthread_rwlock_init(mthread_rwlock_t *rwlock);
++int mthread_rwlock_rdlock(mthread_rwlock_t *rwlock);
++int mthread_rwlock_wrlock(mthread_rwlock_t *rwlock);
++int mthread_rwlock_unlock(mthread_rwlock_t *rwlock);
++
++/* schedule.c */
++int mthread_yield(void);
++void mthread_yield_all(void);
++__END_DECLS
++
++#if defined(_MTHREADIFY_PTHREADS)
++typedef mthread_thread_t pthread_t;
++typedef mthread_once_t pthread_once_t;
++typedef mthread_key_t pthread_key_t;
++typedef mthread_cond_t pthread_cond_t;
++typedef mthread_mutex_t pthread_mutex_t;
++typedef mthread_condattr_t pthread_condattr_t;
++typedef mthread_barrier_t pthread_barrier_t;
++typedef mthread_mutexattr_t pthread_mutexattr_t;
++typedef mthread_attr_t pthread_attr_t;
++typedef mthread_event_t pthread_event_t;
++typedef mthread_rwlock_t pthread_rwlock_t;
++
++/* LSC: No equivalent, so void* for now. */
++typedef void *pthread_rwlockattr_t;
++
++#define PTHREAD_ONCE_INIT 0
++#define PTHREAD_MUTEX_INITIALIZER ((pthread_mutex_t) -1)
++#define PTHREAD_COND_INITIALIZER ((pthread_cond_t) -1)
++
++__BEGIN_DECLS
++/* allocate.c */
++int pthread_create(pthread_t *thread, pthread_attr_t *tattr, void
++	*(*proc)(void *), void *arg);
++int pthread_detach(pthread_t thread);
++int pthread_equal(pthread_t l, pthread_t r);
++void pthread_exit(void *value);
++int pthread_join(pthread_t thread, void **value);
++int pthread_once(pthread_once_t *once, void (*proc)(void));
++pthread_t pthread_self(void);
++
++/* attribute.c */
++int pthread_attr_destroy(pthread_attr_t *tattr);
++int pthread_attr_getdetachstate(pthread_attr_t *tattr, int
++	*detachstate);
++int pthread_attr_getstack(pthread_attr_t *tattr, void **stackaddr,
++	size_t *stacksize);
++int pthread_attr_getstacksize(pthread_attr_t *tattr, size_t *stacksize);
++int pthread_attr_init(pthread_attr_t *tattr);
++int pthread_attr_setdetachstate(pthread_attr_t *tattr, int detachstate);
++int pthread_attr_setstack(pthread_attr_t *tattr, void *stackaddr, size_t
++	stacksize);
++int pthread_attr_setstacksize(pthread_attr_t *tattr, size_t stacksize);
++
++/* condition.c */
++int pthread_cond_broadcast(pthread_cond_t *cond);
++int pthread_cond_destroy(pthread_cond_t *cond);
++int pthread_cond_init(pthread_cond_t *cond, pthread_condattr_t *cattr);
++int pthread_cond_signal(pthread_cond_t *cond);
++int pthread_cond_wait(pthread_cond_t *cond, pthread_mutex_t *mutex);
++
++/* key.c */
++int pthread_key_create(pthread_key_t *key, void (*destructor)(void *));
++int pthread_key_delete(pthread_key_t key);
++void *pthread_getspecific(pthread_key_t key);
++int pthread_setspecific(pthread_key_t key, void *value);
++
++/* mutex.c */
++int pthread_mutex_destroy(pthread_mutex_t *mutex);
++int pthread_mutex_init(pthread_mutex_t *mutex, pthread_mutexattr_t
++	*mattr);
++int pthread_mutex_lock(pthread_mutex_t *mutex);
++int pthread_mutex_trylock(pthread_mutex_t *mutex);
++int pthread_mutex_unlock(pthread_mutex_t *mutex);
++
++/*barrier.c*/
++int pthread_barrier_destroy(pthread_barrier_t *barrier);
++int pthread_barrier_init(pthread_barrier_t *barrier, int count);
++int pthread_barrier_sync(pthread_barrier_t *barrier);
++
++/* event.c */
++int pthread_event_destroy(pthread_event_t *event);
++int pthread_event_init(pthread_event_t *event);
++int pthread_event_wait(pthread_event_t *event);
++int pthread_event_fire(pthread_event_t *event);
++int pthread_event_fire_all(pthread_event_t *event);
++
++/* rwlock.c */
++int pthread_rwlock_destroy(pthread_rwlock_t *rwlock);
++int pthread_rwlock_init(pthread_rwlock_t *rwlock,
++	pthread_rwlockattr_t *UNUSED(attr));
++int pthread_rwlock_rdlock(pthread_rwlock_t *rwlock);
++int pthread_rwlock_wrlock(pthread_rwlock_t *rwlock);
++int pthread_rwlock_unlock(pthread_rwlock_t *rwlock);
++
++/* schedule.c */
++int pthread_yield(void);
++int sched_yield(void);
++void pthread_yield_all(void);
++
++/* LSC: FIXME: Maybe we should really do something with those... */
++#define pthread_mutexattr_init(u) (0)
++#define pthread_mutexattr_destroy(u) (0)
++
++#define PTHREAD_MUTEX_RECURSIVE 0
++#define pthread_mutexattr_settype(x, y) (EINVAL)
++__END_DECLS
++
++#endif /* defined(_MTHREADIFY_PTHREADS) */
++#endif
+diff -rupN srcclean/minix/lib/libmthread/barrier.c src-github/minix/lib/libmthread/barrier.c
+--- srcclean/minix/lib/libmthread/barrier.c	1969-12-31 21:00:00.000000000 -0300
++++ src-github/minix/lib/libmthread/barrier.c	2016-05-16 22:08:30.674956026 -0400
+@@ -0,0 +1,96 @@
++#include <minix/mthread.h>
++#include <limits.h>
++#include "global.h"
++#include "proto.h"
++
++
++int mthread_barrier_destroy(mthread_barrier_t *barrier){
++	if(barrier == NULL){
++		return EINVAL;
++	}
++
++	struct __mthread_barrier *b;
++	b = (struct __mthread_barrier *) *barrier;
++
++	int status, status2;
++	status = mthread_mutex_lock(&b->mutex);
++	if(status != 0){
++		return status;
++	}
++	if(b->count != b->req){
++		mthread_mutex_unlock(&b->mutex);
++		return EBUSY;
++	}
++	status = mthread_mutex_unlock(&b->mutex);
++	if(status != 0){
++		return status;
++	}
++	status = mthread_mutex_destroy(&b->mutex);
++	status2 = mthread_cond_destroy(&b->cond);
++	return (status == 0 ? status : status2);
++}
++
++int mthread_barrier_init(mthread_barrier_t *barrier, int count){
++	struct __mthread_barrier *b;
++	if (barrier == NULL){
++		return EINVAL;
++	}else if ((b = malloc(sizeof(struct __mthread_barrier))) == NULL)
++  	return(ENOMEM);
++
++  	*barrier = (mthread_barrier_t) b;
++
++	int status;
++	b->req = b->count = count;
++	b->cycle = 0;
++	status = mthread_mutex_init(&b->mutex, NULL);
++	if (status != 0){
++		return status;
++	}
++	status = mthread_cond_init(&b->cond, NULL);
++	if(status != 0){
++		mthread_mutex_destroy(&b->mutex);
++		return status;
++	}
++	return 0;
++}
++
++int mthread_barrier_sync(mthread_barrier_t *barrier){
++	if(barrier == NULL){
++		return (EINVAL);
++	}
++	struct __mthread_barrier *b;
++	b = (struct __mthread_barrier *) *barrier;
++
++	int status, cycle;
++	status = mthread_mutex_lock(&b->mutex);
++	if(status != 0){
++		return status;
++	}
++	cycle = b->cycle;
++	if (--b->count == 0){
++		b->cycle = !b->cycle;
++		b->count = b->req;
++		status = mthread_cond_broadcast(&b->cond);
++		if(status == 0){
++			status = -1;
++		}else{
++			while(cycle == b->cycle){
++				status = mthread_cond_wait(&b->cond, &b->mutex);
++				if(status != 0) break;
++			}
++		}
++	}
++	mthread_mutex_unlock(&b->mutex);
++	return status;
++}
++
++
++
++
++/*
++
++REFERENCIAS: "Programming with POSIX Threads" by David R. Butenhof. - Example code
++barrier.c: http://ptgmedia.pearsoncmg.com/images/0201633922/sourcecode/barrier.c
++barrier struct: http://ptgmedia.pearsoncmg.com/images/0201633922/sourcecode/barrier.h
++
++*/
+diff -rupN srcclean/minix/lib/libmthread/Makefile src-github/minix/lib/libmthread/Makefile
+--- srcclean/minix/lib/libmthread/Makefile	2016-03-24 22:07:03.000000000 -0300
++++ src-github/minix/lib/libmthread/Makefile	2016-05-09 21:08:20.150296914 -0300
+@@ -14,6 +14,7 @@ SRCS=	\
+ 	queue.c \
+ 	rwlock.c \
+ 	scheduler.c \
++	barrier.c \
+ 
+ WARNS?=	4
+ 
+diff -rupN srcclean/minix/lib/libmthread/proto.h src-github/minix/lib/libmthread/proto.h
+--- srcclean/minix/lib/libmthread/proto.h	2016-03-24 22:07:03.000000000 -0300
++++ src-github/minix/lib/libmthread/proto.h	2016-05-16 21:43:41.062924362 -0400
+@@ -46,6 +46,11 @@ int mthread_mutex_valid(mthread_mutex_t
+ int mthread_mutex_verify(void);
+ #endif
+ 
++/*barrier.c*/
++int mthread_barrier_destroy(mthread_barrier_t *barrier);
++int mthread_barrier_init(mthread_barrier_t *barrier, int count);
++int mthread_barrier_sync(mthread_barrier_t *barrier);
++
+ /* schedule.c */
+ int mthread_getcontext(ucontext_t *ctxt);
+ void mthread_init_scheduler(void);
