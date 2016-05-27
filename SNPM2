@@ -1,6 +1,6 @@
-diff -Naur minix-R3.3.0/conway_install/conway.c SNPM2-master/conway_install/conway.c
---- minix-R3.3.0/conway_install/conway.c	1969-12-31 21:00:00.000000000 -0300
-+++ SNPM2-master/conway_install/conway.c	2016-05-04 12:29:04.000000000 -0300
+diff -ruNP minix/conway_install/conway.c SNPM2/conway_install/conway.c
+--- minix/conway_install/conway.c	1969-12-31 21:00:00.000000000 -0300
++++ SNPM2/conway_install/conway.c	2016-05-26 22:13:40.262166730 -0300
 @@ -0,0 +1,527 @@
 +#include <stdio.h>
 +#include <stdlib.h>
@@ -529,9 +529,9 @@ diff -Naur minix-R3.3.0/conway_install/conway.c SNPM2-master/conway_install/conw
 +    /*Fin codigo de los hilos*/
 +
 +}
-diff -Naur minix-R3.3.0/conway_install/Makefile SNPM2-master/conway_install/Makefile
---- minix-R3.3.0/conway_install/Makefile	1969-12-31 21:00:00.000000000 -0300
-+++ SNPM2-master/conway_install/Makefile	2016-05-04 12:29:04.000000000 -0300
+diff -ruNP minix/conway_install/Makefile SNPM2/conway_install/Makefile
+--- minix/conway_install/Makefile	1969-12-31 21:00:00.000000000 -0300
++++ SNPM2/conway_install/Makefile	2016-05-26 22:13:40.262166730 -0300
 @@ -0,0 +1,19 @@
 +CODE= conway.c
 +OBJ= conway
@@ -552,9 +552,20 @@ diff -Naur minix-R3.3.0/conway_install/Makefile SNPM2-master/conway_install/Make
 +	rm $(OBJ)
 +
 +
-diff -Naur minix-R3.3.0/conway_install/README.md SNPM2-master/conway_install/README.md
---- minix-R3.3.0/conway_install/README.md	1969-12-31 21:00:00.000000000 -0300
-+++ SNPM2-master/conway_install/README.md	2016-05-04 12:29:04.000000000 -0300
+diff -ruNP minix/conway_install/README.txt SNPM2/conway_install/README.txt
+--- minix/conway_install/README.txt	1969-12-31 21:00:00.000000000 -0300
++++ SNPM2/conway_install/README.txt	2016-05-26 23:12:16.191701699 -0300
+@@ -0,0 +1,7 @@
++Para instalar conway ejecute "make install" en la carpeta conway_install dentro del src de minix.
++
++Luego, para ejecutar conway ejecuta "conway config"desde cualquier directorio.
++
++config debe ser una configuración válida de conway. Para obtener ayuda ejecute "conway -h".
++
++
+diff -ruNP minix/conway_install/README.txt~ SNPM2/conway_install/README.txt~
+--- minix/conway_install/README.txt~	1969-12-31 21:00:00.000000000 -0300
++++ SNPM2/conway_install/README.txt~	2016-05-26 22:13:40.262166730 -0300
 @@ -0,0 +1,5 @@
 +Para instalar conway ejecute "make install" en la carpeta conway_install dentro del src de minix.
 +
@@ -562,9 +573,9 @@ diff -Naur minix-R3.3.0/conway_install/README.md SNPM2-master/conway_install/REA
 +
 +config debe ser una configuración válida de conway. Para obtener ayuda ejecute "conway -h".
 \ No newline at end of file
-diff -Naur minix-R3.3.0/external/bsd/llvm/dist/llvm/projects/LLVMBuild.txt SNPM2-master/external/bsd/llvm/dist/llvm/projects/LLVMBuild.txt
---- minix-R3.3.0/external/bsd/llvm/dist/llvm/projects/LLVMBuild.txt	2014-09-13 18:56:50.000000000 -0300
-+++ SNPM2-master/external/bsd/llvm/dist/llvm/projects/LLVMBuild.txt	1969-12-31 21:00:00.000000000 -0300
+diff -ruNP minix/external/bsd/llvm/dist/llvm/projects/LLVMBuild.txt SNPM2/external/bsd/llvm/dist/llvm/projects/LLVMBuild.txt
+--- minix/external/bsd/llvm/dist/llvm/projects/LLVMBuild.txt	2016-05-26 22:17:13.115137434 -0300
++++ SNPM2/external/bsd/llvm/dist/llvm/projects/LLVMBuild.txt	1969-12-31 21:00:00.000000000 -0300
 @@ -1,21 +0,0 @@
 -;===- ./projects/LLVMBuild.txt ---------------------------------*- Conf -*--===;
 -;
@@ -587,9 +598,9 @@ diff -Naur minix-R3.3.0/external/bsd/llvm/dist/llvm/projects/LLVMBuild.txt SNPM2
 -type = Group
 -name = Projects
 -parent = $ROOT
-diff -Naur minix-R3.3.0/external/bsd/llvm/dist/llvm/test/Verifier/bitcast-address-space-through-constant-inttoptr-inside-gep-i SNPM2-master/external/bsd/llvm/dist/llvm/test/Verifier/bitcast-address-space-through-constant-inttoptr-inside-gep-i
---- minix-R3.3.0/external/bsd/llvm/dist/llvm/test/Verifier/bitcast-address-space-through-constant-inttoptr-inside-gep-i	1969-12-31 21:00:00.000000000 -0300
-+++ SNPM2-master/external/bsd/llvm/dist/llvm/test/Verifier/bitcast-address-space-through-constant-inttoptr-inside-gep-i	2016-05-04 12:29:04.000000000 -0300
+diff -ruNP minix/external/bsd/llvm/dist/llvm/test/Verifier/bitcast-address-space-through-constant-inttoptr-inside-gep-i SNPM2/external/bsd/llvm/dist/llvm/test/Verifier/bitcast-address-space-through-constant-inttoptr-inside-gep-i
+--- minix/external/bsd/llvm/dist/llvm/test/Verifier/bitcast-address-space-through-constant-inttoptr-inside-gep-i	1969-12-31 21:00:00.000000000 -0300
++++ SNPM2/external/bsd/llvm/dist/llvm/test/Verifier/bitcast-address-space-through-constant-inttoptr-inside-gep-i	2016-05-26 22:13:44.430620125 -0300
 @@ -0,0 +1,10 @@
 +; RUN: not llvm-as -verify -disable-output < %s
 +target datalayout = "e-p:32:32:32-p1:16:16:16-p2:8:8:8-i1:8:32-i8:8:32-i16:16:32-i32:32:32-i64:32:64-f32:32:32-f64:32:64-v64:32:64-v128:32:128-a0:0:32-n8:16:32"
@@ -601,9 +612,9 @@ diff -Naur minix-R3.3.0/external/bsd/llvm/dist/llvm/test/Verifier/bitcast-addres
 +  ret i32 addrspace(2)* %cast
 +}
 +
-diff -Naur minix-R3.3.0/external/bsd/llvm/dist/llvm/test/Verifier/bitcast-address-space-through-constant-inttoptr-inside-gep-instruction.ll SNPM2-master/external/bsd/llvm/dist/llvm/test/Verifier/bitcast-address-space-through-constant-inttoptr-inside-gep-instruction.ll
---- minix-R3.3.0/external/bsd/llvm/dist/llvm/test/Verifier/bitcast-address-space-through-constant-inttoptr-inside-gep-instruction.ll	2014-09-13 18:56:50.000000000 -0300
-+++ SNPM2-master/external/bsd/llvm/dist/llvm/test/Verifier/bitcast-address-space-through-constant-inttoptr-inside-gep-instruction.ll	1969-12-31 21:00:00.000000000 -0300
+diff -ruNP minix/external/bsd/llvm/dist/llvm/test/Verifier/bitcast-address-space-through-constant-inttoptr-inside-gep-instruction.ll SNPM2/external/bsd/llvm/dist/llvm/test/Verifier/bitcast-address-space-through-constant-inttoptr-inside-gep-instruction.ll
+--- minix/external/bsd/llvm/dist/llvm/test/Verifier/bitcast-address-space-through-constant-inttoptr-inside-gep-instruction.ll	2016-05-26 22:17:14.059253032 -0300
++++ SNPM2/external/bsd/llvm/dist/llvm/test/Verifier/bitcast-address-space-through-constant-inttoptr-inside-gep-instruction.ll	1969-12-31 21:00:00.000000000 -0300
 @@ -1,10 +0,0 @@
 -; RUN: not llvm-as -verify -disable-output < %s
 -target datalayout = "e-p:32:32:32-p1:16:16:16-p2:8:8:8-i1:8:32-i8:8:32-i16:16:32-i32:32:32-i64:32:64-f32:32:32-f64:32:64-v64:32:64-v128:32:128-a0:0:32-n8:16:32"
@@ -615,9 +626,9 @@ diff -Naur minix-R3.3.0/external/bsd/llvm/dist/llvm/test/Verifier/bitcast-addres
 -  ret i32 addrspace(2)* %cast
 -}
 -
-diff -Naur minix-R3.3.0/games/conway/config SNPM2-master/games/conway/config
---- minix-R3.3.0/games/conway/config	1969-12-31 21:00:00.000000000 -0300
-+++ SNPM2-master/games/conway/config	2016-05-04 12:29:04.000000000 -0300
+diff -ruNP minix/games/conway/config SNPM2/games/conway/config
+--- minix/games/conway/config	1969-12-31 21:00:00.000000000 -0300
++++ SNPM2/games/conway/config	2016-05-26 22:13:45.098692992 -0300
 @@ -0,0 +1,10 @@
 +11 11
 +2 2
@@ -629,9 +640,21 @@ diff -Naur minix-R3.3.0/games/conway/config SNPM2-master/games/conway/config
 +5 6  
 +7 7
 +8 8
-diff -Naur minix-R3.3.0/games/conway/conway.c SNPM2-master/games/conway/conway.c
---- minix-R3.3.0/games/conway/conway.c	1969-12-31 21:00:00.000000000 -0300
-+++ SNPM2-master/games/conway/conway.c	2016-05-04 12:29:04.000000000 -0300
+diff -ruNP minix/games/conway/conway.1 SNPM2/games/conway/conway.1
+--- minix/games/conway/conway.1	1969-12-31 21:00:00.000000000 -0300
++++ SNPM2/games/conway/conway.1	2016-05-26 23:40:56.107680985 -0300
+@@ -0,0 +1,2 @@
++hola
++
+diff -ruNP minix/games/conway/conway.1~ SNPM2/games/conway/conway.1~
+--- minix/games/conway/conway.1~	1969-12-31 21:00:00.000000000 -0300
++++ SNPM2/games/conway/conway.1~	2016-05-26 23:40:54.343513701 -0300
+@@ -0,0 +1,2 @@
++hola
++
+diff -ruNP minix/games/conway/conway.c SNPM2/games/conway/conway.c
+--- minix/games/conway/conway.c	1969-12-31 21:00:00.000000000 -0300
++++ SNPM2/games/conway/conway.c	2016-05-26 22:13:45.098692992 -0300
 @@ -0,0 +1,527 @@
 +#include <stdio.h>
 +#include <stdlib.h>
@@ -1160,9 +1183,9 @@ diff -Naur minix-R3.3.0/games/conway/conway.c SNPM2-master/games/conway/conway.c
 +    /*Fin codigo de los hilos*/
 +
 +}
-diff -Naur minix-R3.3.0/games/conway/Makefile SNPM2-master/games/conway/Makefile
---- minix-R3.3.0/games/conway/Makefile	1969-12-31 21:00:00.000000000 -0300
-+++ SNPM2-master/games/conway/Makefile	2016-05-04 12:29:04.000000000 -0300
+diff -ruNP minix/games/conway/Makefile SNPM2/games/conway/Makefile
+--- minix/games/conway/Makefile	1969-12-31 21:00:00.000000000 -0300
++++ SNPM2/games/conway/Makefile	2016-05-26 22:13:45.098692992 -0300
 @@ -0,0 +1,14 @@
 +PROG= conway
 +SRCS=	conway.c
@@ -1178,9 +1201,9 @@ diff -Naur minix-R3.3.0/games/conway/Makefile SNPM2-master/games/conway/Makefile
 +.include <bsd.prog.mk>
 +
 +
-diff -Naur minix-R3.3.0/games/Makefile SNPM2-master/games/Makefile
---- minix-R3.3.0/games/Makefile	2014-09-13 18:56:50.000000000 -0300
-+++ SNPM2-master/games/Makefile	2016-05-04 12:29:04.000000000 -0300
+diff -ruNP minix/games/Makefile SNPM2/games/Makefile
+--- minix/games/Makefile	2016-05-26 22:17:16.811590161 -0300
++++ SNPM2/games/Makefile	2016-05-26 22:13:45.094692555 -0300
 @@ -9,7 +9,7 @@
  
  SUBDIR=	adventure arithmetic \
@@ -1197,77 +1220,9 @@ diff -Naur minix-R3.3.0/games/Makefile SNPM2-master/games/Makefile
 -.include <bsd.subdir.mk>
 +.include <bsd.subdir.mk>
 \ No newline at end of file
-diff -Naur minix-R3.3.0/.gitignore SNPM2-master/.gitignore
---- minix-R3.3.0/.gitignore	2014-09-13 18:56:50.000000000 -0300
-+++ SNPM2-master/.gitignore	1969-12-31 21:00:00.000000000 -0300
-@@ -1,43 +0,0 @@
--cscope.*
--*.swap
--.*.sw[po]
--.sw[po]
--*~
--*.orig
--*.diff
--*.patch
--*.rej
--*.[1-9].gz
--*.o
--*.[psS]o
--*.pico
--lib*.so*
--*.a
--*.so.*
--*.d
--.depend
--nbsdsrc/*
--TAGS
--tags
--GPATH
--GRTAGS
--GSYMS
--GTAGS
--\#*#
--CVS
--!/.gitignore
--.gitignore
--.svn
--minix-port.patch
--*.worldstone.log
--.worldstone*
--usr.bin/mdocml/man/*.7
--etc/passwd
--etc/pwd.db
--etc/spwd.db
--releasetools/image
--releasetools/kernel
--releasetools/revision
--share/zoneinfo/builddir
--lib/libc/compat__*
--.gdbinit
-diff -Naur minix-R3.3.0/.gitreview SNPM2-master/.gitreview
---- minix-R3.3.0/.gitreview	2014-09-13 18:56:50.000000000 -0300
-+++ SNPM2-master/.gitreview	1969-12-31 21:00:00.000000000 -0300
-@@ -1,17 +0,0 @@
--# MINIX 3 code review setup.
--# 
--# This gerrit code review configuration is meant for performing per commit 
--# internal code reviews. If you are an external contributor please read and 
--# apply http://wiki.minix3.org/en/HowToContribute
--#
--# Consider reading http://wiki.openstack.org/GerritWorkflow to learn how
--# to install git review on a Linux setup. On Minix you can use pkgin to 
--# install git-review.
--#
--[gerrit]
--# The git-minix host is to be configured in your .ssh/config
--#
--host=gerrit.minix3.org
--port=2222
--project=minix
--defaultbranch=master
-diff -Naur minix-R3.3.0/minix/include/minix/mthread.h SNPM2-master/minix/include/minix/mthread.h
---- minix-R3.3.0/minix/include/minix/mthread.h	2014-09-13 18:56:50.000000000 -0300
-+++ SNPM2-master/minix/include/minix/mthread.h	2016-05-04 12:29:04.000000000 -0300
+diff -ruNP minix/minix/include/minix/mthread.h SNPM2/minix/include/minix/mthread.h
+--- minix/minix/include/minix/mthread.h	2016-05-26 22:17:17.599686728 -0300
++++ SNPM2/minix/include/minix/mthread.h	2016-05-26 22:13:46.330827561 -0300
 @@ -1,7 +1,7 @@
  #ifndef _MTHREAD_H
  #define _MTHREAD_H
@@ -1436,9 +1391,9 @@ diff -Naur minix-R3.3.0/minix/include/minix/mthread.h SNPM2-master/minix/include
 -#endif /* defined(_MTHREADIFY_PTHREADS) */
 +#endif /* defined(_MTHREADIFY_PTHREADS) Modificada*/
  #endif
-diff -Naur minix-R3.3.0/minix/lib/libmthread/barrier.c SNPM2-master/minix/lib/libmthread/barrier.c
---- minix-R3.3.0/minix/lib/libmthread/barrier.c	1969-12-31 21:00:00.000000000 -0300
-+++ SNPM2-master/minix/lib/libmthread/barrier.c	2016-05-04 12:29:04.000000000 -0300
+diff -ruNP minix/minix/lib/libmthread/barrier.c SNPM2/minix/lib/libmthread/barrier.c
+--- minix/minix/lib/libmthread/barrier.c	1969-12-31 21:00:00.000000000 -0300
++++ SNPM2/minix/lib/libmthread/barrier.c	2016-05-26 22:13:46.426838055 -0300
 @@ -0,0 +1,143 @@
 +#include <minix/mthread.h>
 +#include "global.h"
@@ -1583,9 +1538,9 @@ diff -Naur minix-R3.3.0/minix/lib/libmthread/barrier.c SNPM2-master/minix/lib/li
 +__weak_alias(pthread_barrier_init, mthread_barrier_init)
 +__weak_alias(pthread_barrier_destroy, mthread_barrier_destroy)
 +__weak_alias(pthread_barrier_update, mthread_barrier_update)
-diff -Naur minix-R3.3.0/minix/lib/libmthread/Makefile SNPM2-master/minix/lib/libmthread/Makefile
---- minix-R3.3.0/minix/lib/libmthread/Makefile	2014-09-13 18:56:50.000000000 -0300
-+++ SNPM2-master/minix/lib/libmthread/Makefile	2016-05-04 12:29:04.000000000 -0300
+diff -ruNP minix/minix/lib/libmthread/Makefile SNPM2/minix/lib/libmthread/Makefile
+--- minix/minix/lib/libmthread/Makefile	2016-05-26 22:17:17.727702415 -0300
++++ SNPM2/minix/lib/libmthread/Makefile	2016-05-26 22:13:46.426838055 -0300
 @@ -5,6 +5,7 @@
  SRCS=	\
  	allocate.c \
@@ -1594,9 +1549,9 @@ diff -Naur minix-R3.3.0/minix/lib/libmthread/Makefile SNPM2-master/minix/lib/lib
  	condition.c \
  	event.c \
  	key.c \
-diff -Naur minix-R3.3.0/minix/lib/libmthread/proto.h SNPM2-master/minix/lib/libmthread/proto.h
---- minix-R3.3.0/minix/lib/libmthread/proto.h	2014-09-13 18:56:50.000000000 -0300
-+++ SNPM2-master/minix/lib/libmthread/proto.h	2016-05-04 12:29:04.000000000 -0300
+diff -ruNP minix/minix/lib/libmthread/proto.h SNPM2/minix/lib/libmthread/proto.h
+--- minix/minix/lib/libmthread/proto.h	2016-05-26 22:17:17.731702905 -0300
++++ SNPM2/minix/lib/libmthread/proto.h	2016-05-26 22:13:46.426838055 -0300
 @@ -11,6 +11,12 @@
  int mthread_attr_verify(void);
  #endif
