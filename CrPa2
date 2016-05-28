@@ -1075,37 +1075,26 @@ diff -x '.*' -ruNP CrPa/minix/include/minix/mthread.h CrPa2/minix/include/minix/
  int pthread_event_destroy(pthread_event_t *event);
  int pthread_event_init(pthread_event_t *event);
 diff -x '.*' -ruNP CrPa/minix/lib/libmthread/barrier.c CrPa2/minix/lib/libmthread/barrier.c
---- CrPa/minix/lib/libmthread/barrier.c	2016-05-06 20:19:23.000000000 -0300
+--- CrPa/minix/lib/libmthread/barrier.c	1969-12-31 21:00:00.000000000 -0300
 +++ CrPa2/minix/lib/libmthread/barrier.c	2016-05-27 19:53:23.000000000 -0300
-@@ -1,120 +1,179 @@
- #include <minix/mthread.h>
- #include "global.h"
- #include "proto.h"
+@@ -0,0 +1,179 @@
++#include <minix/mthread.h>
++#include "global.h"
++#include "proto.h"
 +#include <errno.h>
- 
--#ifdef MTHREAD_STRICT
--static struct __mthread_barrier *bar_front, *bar_rear;
--static void mthread_barrier_init(mthread_barrier_t *m);
--static void mthread_barrier_remove(mthread_barrier_t *m)
++
 +#define ARRAY_SIZE_B 5 /* NOTA: valor de prueba, cambiarlo luego para duplicar memoria en funcion*/
 +
 +mthread_barrier_t *barreras[ARRAY_SIZE_B]; /* arreglo global para barreras */
 +
 +unsigned int tope_b; /*indice del ultimo puntero guardado en el arreglo barreras */
- 
- 
- /*===========================================================================*
-- *				mthread_init_valid_barrier	* //INICIALIZA LISTA DE BARRERAS//
++
++
++/*===========================================================================*
 + *				mthread_barrier_init			     *
-  *===========================================================================*/
--void mthread_init_valid_barrier(void)
--{
--#ifdef MTHREAD_STRICT
--/* Aqui se inicializa la lista de barreras validas */
--  bar_front = bar_rear = NULL;
--#endif
- 
- 
++ *===========================================================================*/
++
++
 +int mthread_barrier_init(mthread_barrier_t *barrier, int hilos) {
 +
 +	int err; /* definicion de variable para codigo de error */
@@ -1135,19 +1124,9 @@ diff -x '.*' -ruNP CrPa/minix/lib/libmthread/barrier.c CrPa2/minix/lib/libmthrea
 +	return indice; /* se retorna indice donde se guarda la barrera para poder manejarla posteriormente */
 +}
 +
- /*===========================================================================*
-- *				mthread_barrier_init	* //AGREGA BARRERA A LA LISTA// 
++/*===========================================================================*
 + *				mthread_barrier_destroy			     *
-  *===========================================================================*/
--//#ifdef MTHREAD_STRICT
--int mthread_barrier_init(mthread_barrier_t *barrier){ 
--	/* Se agrega una barrera a la lista de barreras */
--	if (bar_front == NULL) { /* Si es que la lista de barreras esta vacia */
--		bar_front = barrier;
--		(barrier)->bar_prev = NULL;
--	} else { 
--		bar_rear->bar_next = barrier;
--		(barrier)->bar_prev = bar_rear;
++ *===========================================================================*/
 +
 +int mthread_barrier_destroy(int index) { /* recibimos indice donde se guarda la barrera */
 +
@@ -1157,54 +1136,26 @@ diff -x '.*' -ruNP CrPa/minix/lib/libmthread/barrier.c CrPa2/minix/lib/libmthrea
 +	if (barreras[index]->cantdisp != barreras[index]->cantmax) {
 +		mthread_mutex_unlock(&barreras[index]->mutex);
 +		return (EBUSY); /* error en caso de que la cantidad de hilos disponible no sea maxima */
- 	}
++	}
 +	
 +	/* en caso de que no hayan hilos esperando en la barrera liberamos la memoria */ 
 +	free(barreras[index]);
 +	barreras[index] = NULL;
- 
--	(barrier)->bar_next = NULL;
--	bar_rear = barrier;
++
 +	return 0;
- }
- 
--
- /*===========================================================================*
-- *				mthread_barrier_destroy	  * 
++}
++
++/*===========================================================================*
 + *				mthread_barrier_sync		     *
-  *===========================================================================*/
--int mthread_mutex_destroy(barrier)
--mthread_barrier_t *barrier;
--{
--	if (barrier == NULL) 
++ *===========================================================================*/
 +
 +int mthread_barrier_sync(mthread_barrier_t *barrier) {
 +
 +	if (!barrier) /* si la barrera pasada por parametro no existe retornamos EINVAL */
- 		return (EINVAL);
- 
--// ESTUDIAR USO DE TCB - IMPORTANTE
--	
--	// if (!mthread_barrier_valid(barrier)) 
-- //  		return(EINVAL);
-- //  	else if ((*barrier)->bar_owner != NO_THREAD)
-- //  		return(EBUSY);
--	  
-- //  /* Check if this mutex is not associated with a condition */
-- //  for (t = (mthread_thread_t) 0; t < no_threads; t++) {
-- //  	tcb = mthread_find_tcb(t);
--	// if (tcb->m_state == MS_CONDITION) {
--	// 	if (tcb->m_cond != NULL && tcb->m_cond->mc_mutex == *mutex) 
--	// 		return(EBUSY);
--	// }
--
--	  /* Si la barrera no esta siendo usada se puede eliminar */
--	  mthread_barrier_remove(barrier);	
--	  free(*barrier);
--	  *barrier = NULL;
++		return (EINVAL);
++
 +	int err; /* definicion de variable para codigo de error */
- 
--	  return(0);
++
 +    err = mthread_mutex_lock(&barrier->mutex); /* se lockea el mutex de la barrera */
 +    
 +    if (err != 0)
@@ -1233,40 +1184,21 @@ diff -x '.*' -ruNP CrPa/minix/lib/libmthread/barrier.c CrPa2/minix/lib/libmthrea
 +    mthread_mutex_unlock(&barrier->mutex); /* se unlockea el mutex */
 +    return err2; 
 +}
- 
++
 +/********************************************* Otras *********************************************/
- 
++
 +void print_barrier_array() {
 +	for(int i = 0; i < ARRAY_SIZE_B; i++){
 +		printf("barreras[%d] = %p\n", i, barreras[i]);
 +	}
- }
- 
--/*===========================================================================*
-- *		mthread_barrier_valid	* //VERIFICA SI LA BARRERA ESTA EN LA LISTA// 
-- *===========================================================================*/
--#ifdef MTHREAD_STRICT
--int mthread_barrier_valid(barrier)
--mthread_barrier_t *barrier;
--{
--/* Se revisa si la barrera recibida pertenece a la lista de barreras */
--  
--  struct __mthread_barrier *loopitem;
--
--  loopitem = bar_front;
--
--  while (loopitem != NULL) {
--	if (loopitem == *barrier)
--		return(1);
- 
--	loopitem = loopitem->bar_next;
--  }
++}
++
++
 +// void duplicate_memory_array(mthread_barrier_t *arr, int old_size) {
 +	
 +// 	int new_size = old_size * 2;
 +// 	mthread_barrier_t *barreras[new_size];
- 
--  return(0);
++
 +// 	for (int i = 0; i < old_size * 2; i++){
 +// 		barreras[i] = &arr[i];
 +// 	} 
@@ -1281,33 +1213,14 @@ diff -x '.*' -ruNP CrPa/minix/lib/libmthread/barrier.c CrPa2/minix/lib/libmthrea
 +	int err = mthread_barrier_sync(barreras[0]);
 +	printf("err de sync = %d\n", err);
 +	return NULL;
- }
--#endif
- 
++}
++
 +/*************************************************************************************************/
- 
++
 +#define NUM 5
 +static mthread_thread_t hilos[NUM];
 +static int *numbers[NUM];
- 
--/*===========================================================================*
-- *				mthread_barrier_remove			     *
-- *===========================================================================*/
--#ifdef MTHREAD_STRICT
--static void mthread_barrier_remove(barrier)
--mthread_barrier_t *barrier;
--{
--	/* Remueve una barrera de la lista de barreras */ 
--
--  if ((*barrier)->bar_prev == NULL)
--  	bar_front = (*barrier)->bar_next;
--  else
--  	(*barrier)->bar_prev->bar_next = (*barrier)->bar_next;
--
--  if ((*barrier)->bar_next == NULL)
--  	bar_rear = (*barrier)->bar_prev;
--  else
--  	(*barrier)->bar_next->bar_prev = (*barrier)->bar_prev;
++
 +int main() {
 +
 +	mthread_barrier_t *barrera0 = malloc(sizeof(struct mthread_barrier_t *));
@@ -1340,9 +1253,7 @@ diff -x '.*' -ruNP CrPa/minix/lib/libmthread/barrier.c CrPa2/minix/lib/libmthrea
 +	printf("\n\n");
 +
 +	return 0;
- }
--#endif
-\ No newline at end of file
++}
 +
 +
 +
