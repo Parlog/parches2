@@ -19,7 +19,7 @@ diff -x '.*' -ruNP CrPa/games/Makefile CrPa2/games/Makefile
  .if ${MKCXX} != "no"
 diff -x '.*' -ruNP CrPa/games/conway/Makefile CrPa2/games/conway/Makefile
 --- CrPa/games/conway/Makefile	1969-12-31 21:00:00.000000000 -0300
-+++ CrPa2/games/conway/Makefile	2016-05-15 22:28:48.000000000 -0300
++++ CrPa2/games/conway/Makefile	2016-05-20 09:04:40.000000000 -0300
 @@ -0,0 +1,11 @@
 +#	$NetBSD: Makefile,v 1.30 2008/02/24 02:43:18 dholland Exp $
 +#	@(#)Makefile	8.1 (Berkeley) 5/31/93
@@ -27,257 +27,386 @@ diff -x '.*' -ruNP CrPa/games/conway/Makefile CrPa2/games/conway/Makefile
 +.include <bsd.own.mk>
 +
 +PROG=	conway
-+SRCS=	conway.c
-+MAN=	monop.6
++SRCS=	conway.c entrada.c
++MAN=	conway.6
 +HIDEGAME=hidegame
 +
 +.include <bsd.prog.mk>
-Binary files CrPa/games/conway/a.out and CrPa2/games/conway/a.out differ
 diff -x '.*' -ruNP CrPa/games/conway/config CrPa2/games/conway/config
 --- CrPa/games/conway/config	1969-12-31 21:00:00.000000000 -0300
-+++ CrPa2/games/conway/config	2016-05-15 22:28:48.000000000 -0300
-@@ -0,0 +1,8 @@
-+5 5 
-+10 09
++++ CrPa2/games/conway/config	2016-05-20 09:04:40.000000000 -0300
+@@ -0,0 +1,52 @@
++51 51
++5 5
 +3
-+0 0
-+1 1
-+2 2
-+3 3
-+4 4
-\ No newline at end of file
++25 5
++25 6
++25 7
++25 8
++25 9
++25 10
++25 11
++25 12
++25 13
++25 14
++25 15
++25 16
++25 17
++25 18
++25 19
++25 20
++25 21
++25 22
++25 23
++25 24
++25 25
++25 26
++25 27
++25 28
++25 29
++25 30
++25 31
++25 32
++25 33
++25 34
++25 35
++25 36
++25 37
++25 38
++25 39
++25 40
++25 41
++25 42
++25 43
++25 44
++25 45
++
++
++
++
++
++
++
++
 diff -x '.*' -ruNP CrPa/games/conway/conway.c CrPa2/games/conway/conway.c
 --- CrPa/games/conway/conway.c	1969-12-31 21:00:00.000000000 -0300
-+++ CrPa2/games/conway/conway.c	2016-05-15 22:28:48.000000000 -0300
-@@ -0,0 +1,197 @@
-+//Se incluyen las librerias necesarias
-+#include <stdio.h>
-+#include <string.h>
-+#include <stdlib.h>
-+#include <time.h>
-+#include  <curses.h>
-+#include <pthread.h>
-+#include "entrada.h"
-+
-+
-+/*CODIGO BASADA en JUEGO DE LA VIDA BY: AlmaVagabunda*/
-+int Col; // Columnas maximas
-+int Row; // Filas maximas
-+/*
-+char* Reader()
-+{
-+   FILE *fp;
-+   int c;
-+  
-+   fp = fopen("config","r");
-+   while(1)
-+   {
-+      c = fgetc(fp);
-+      if( feof(fp) )
-+      { 
-+         break ;
-+      }
-+      return c;
-+   }
-+   fclose(fp);
-+}
-+*/
-+
-+
-+void Print(int **M){
-+
-+    int i,j;
-+    for (i = 0;i<Row; i++){
-+        for (j = 0; j <Col; j++){
-+            if(M[i][j]==0){
-+                printf("-"); // It's Dead
-+            }
-+            else{
-+                printf("x"); // It's alive
-+            }
-+        }
-+        printf("\n");
-+        
-+    }
-+}
-+
-+void Alldead(int **M){ 
-+int i, j;       
-+        for(i=0;i<Row;i++){
-+            for(j=0;j<Col;j++){
-+                M [i][j]=0;
-+            }
-+        }
-+
-+}
-+
-+void Duplicar(int **ori, int **dest){
-+    int i,j;
-+    //Recorremos la matriz
-+    for(int i=0;i<Row;i++)
-+        for(int j=0;j<Col;j++)
-+            //Copiamos la matriz origen en destino
-+            dest[i][j]=ori[i][j];
-+}
-+int NNeighbour(int **matriz,int i,int j){
-+            int vecino = 0;
-+            if(i>0 && j>0 && matriz[i-1][j-1]==1){
-+                vecino++;
-+            }
-+            if(i>0 && matriz[i-1][j]==1){
-+                vecino++;
-+            }
-+            if(i>0 && j<Row &&matriz[i-1][j+1]==1){
-+                vecino++;
-+            }
-+            if(j>0 &&matriz[i][j-1]==1){
-+                vecino++;
-+            }
-+            if(j<Row && matriz[i][j+1]==1){
-+                vecino++;
-+            }
-+            if(i<Col && j>0 &&matriz[i+1][j-1]==1){
-+                vecino++;
-+            }
-+            if(i<Col &&matriz[i+1][j]==1){
-+                vecino++;
-+            }
-+            if(i<Col && j<Row && matriz[i+1][j+1]==1){
-+                vecino++;
-+            }
-+            return vecino;
-+}
-+
-+void Refrescar(int **matriz){
-+    //Creacion de variables
-+    int vecinos=0,i,j;   
-+    //Inicialización Matriz
-+    int **copiamatriz;
-+    copiamatriz = (int **)malloc (Row*sizeof(int *));
-+    for (i=0;i<Row;i++)
-+    copiamatriz[i] = (int *) malloc (Col*sizeof(int));
-+    //Copiamos la matriz en una copia auxiliar
-+    Duplicar(matriz, copiamatriz);
-+    for(i=0;i<Row;i++){
-+        for(j=0;j<Col;j++){
-+            vecinos = NNeighbour(matriz,i,j);
-+ 
-+            if(matriz[i][j]==1){ // Esta viva?
-+                if(vecinos==2 || vecinos==3){ // Tienes dos o tres vecinos?
-+                    copiamatriz[i][j]=1; // sigues vivo
-+                }
-+                else{
-+                    copiamatriz[i][j]=0;// Estas solo por lo tanto muerto :C
-+                }
-+            }
-+            else{ 
-+                if(vecinos==3){ // Reviviste de la muerte :)
-+                    copiamatriz[i][j]=1;
-+                }
-+            }
-+            //Ponemos a 0 el contador
-+            vecinos=0;
-+        }
-+    }
-+    //Devolvemos los nuevos datos a la matriz original
-+    Duplicar(copiamatriz, matriz);
-+}
-+
-+void Juego(){
-+
-+    //Declaración de variables
-+    int i,j;
-+    int **matriz;
-+    char letra = ' ';
-+    matriz = (int **)malloc (Row*sizeof(int *));
-+    for (i=0;i<Row;i++){ matriz[i] = (int *) malloc (Col*sizeof(int));}
-+    //Menu inicial
-+    do{
-+        //Ponemos todas las celulas muertas inicialmente
-+        Alldead(matriz);
-+        Print(matriz);
-+    
-+            /*do
-+            {
-+                //Opciones en el juego
-+                letra=getch();
-+                //Limpiamos el buffer
-+                fflush(stdin);
-+                if(letra=='s'){
-+                    system("cls");
-+                    Imprimir(Matriz);
-+                    printf("\nFin del juego");
-+                }
-+                else if(letra=='f'){
-+                    Patron(Matriz);
-+                }
-+                else if(letra=='c'){
-+                    system("cls");
-+                    Imprimir(Matriz);
-+                    Resucitar(Matriz);
-+                }
-+                else{
-+                    Refrescar(Matriz);
-+                }
-+            }
-+ 
-+            //Confirmacion de salida, para prevenir equivocaciones
-+            system("cls");
-+            printf("\n\n\n\n%20cSeguro que quieres salir? [s/n]", ' ');
-+            confirmar=getch();
-+            fflush(stdin);
-+ 
-+        }while(confirmar=='n');*/
-+    }while(letra=='s');
-+ 
-+ 
-+}
-+int main(void){
-+    Row = 5;
-+    Col = 5;
-+    pthread_t hilo;
-+    int err1;
-+    int *Argvector = (int*) malloc (sizeof(int));
-+    Argvector =Argv();
-+    int Argleght= Arg();
-+   /* if( (err1=pthread_create( &thread1, NULL, &Juego, NULL)) ){
-+      printf("Thread creation failed: %d\n", err1);
-+    }*/
-+    Juego();
-+    return 0;
-+
-+}
-\ No newline at end of file
-diff -x '.*' -ruNP CrPa/games/conway/conway2.c CrPa2/games/conway/conway2.c
---- CrPa/games/conway/conway2.c	1969-12-31 21:00:00.000000000 -0300
-+++ CrPa2/games/conway/conway2.c	2016-05-15 22:28:48.000000000 -0300
-@@ -0,0 +1,144 @@
++++ CrPa2/games/conway/conway.c	2016-05-20 09:04:40.000000000 -0300
+@@ -0,0 +1,280 @@
 +#include <stdio.h>
 +#include <stdlib.h>
 +#include <unistd.h>
 +#include <string.h>
-+#include "entrada.c"
++#include <termios.h>
++#include <signal.h>
++#include "entrada.h"
 + // Juego basado en  Juego de la vida  de :AlmaVagabunda
 + // Juego basado en  Conway_ Game_of_Life  de :rosettacode.org
 +
-+#define for_x for (int x = 0; x < h; x++) // ciclo para x
-+#define for_y for (int y = 0; y < w; y++) // ciclo para y
++#define for_x for (int x = 0; x < w; x++) // ciclo para x
++#define for_y for (int y = 0; y < h; y++) // ciclo para y
 +#define for_xy for_x for_y
-+void show(void *u, int w, int h)
++int h,w,th,tw;
++struct submatrices{
++    int Initf, Initc, Finf , Finc;
++};
++void init_submatrices(struct submatrices* A){
++        A->Initf = 0;
++        A->Initc = 0;
++        A->Finc = 0;
++        A->Finf = 0;
++    }
++
++int getch(void)
 +{
-+	int (*univ)[w] = u;
-+	for_y {
-+		for_x             
-+			if(univ[y][x]==0){
++    struct termios oldattr, newattr;
++    int ch;
++    tcgetattr( STDIN_FILENO, &oldattr );
++    newattr = oldattr;
++    newattr.c_lflag &= ~( ICANON | ECHO );
++    tcsetattr( STDIN_FILENO, TCSANOW, &newattr );
++    ch = getchar();
++    tcsetattr( STDIN_FILENO, TCSANOW, &oldattr );
++    return ch;
++}
++
++
++void show(void *u)
++{
++    int (*univ)[w] = u;
++    for_y {
++        for_x { 
++                if(univ[y][x]){
 +                printf("\033[7;31m :( "); // It's Dead
 +            }
 +            else{
 +                printf("\033[7;32m :) "); // It's alive
 +            }
++        }
 +        printf("\n");
-+	}
-+	fflush(stdout);
-+	printf("\n");
++    }
++    printf("\n");
++    printf("\033[0m ");
++    printf("\033[2K");
++}
++int NNeighbour(void *u,int i,int j){
++unsigned (*univ)[w] = u;
++int vecino = 0;
++            if(i>0 && j>0 && univ[i-1][j-1]==1){ // diagonal izq arriba
++                vecino++;
++            }
++            if(i>0 && univ[i-1][j]==1){ // arriba
++                vecino++;
++            }
++            if(i>0 && j<w &&univ[i-1][j+1]==1){ //diagonal derecha superior 
++                vecino++;
++            }
++            if(j>0 &&univ[i][j-1]==1){ // izquierda*
++                vecino++;
++            }
++            if(j<w && univ[i][j+1]==1){ // derecha
++                vecino++;
++            }
++            if(i<h && j>0 &&univ[i+1][j-1]==1){ // diagonal izqueda inferior*
++                vecino++;
++            }
++            if(i<h &&univ[i+1][j]==1){ // abajo*
++                vecino++;
++            }
++            if(i<h && j<w && univ[i+1][j+1]==1){ // diagonal derecha inferior
++                vecino++;
++            }
++            return vecino;
++}
++void setSubmatrices(void *s)
++{ // x = j = h = th || y = i = w = tw 
++struct submatrices (*sub) = s;
++int matriz[h][w];
++for_y{
++    for_x{
++     matriz[y][x] = 0;}}
++int t = 0, bloques = 0;
++        sub[t].Initf = t;
++        sub[t].Initc = t;
++        sub[t].Finc = t;
++        sub[t].Finf = t;
++for_y
++    {
++    for_x
++        {
++            t++;
++            if(matriz[y][x] == 0)
++            {   //******** OPCIONES A LA QUE ENTRA 
++                int op = 0;
++                if((x+th > 0) && (y+tw>0) && matriz[x+th][y+tw] == 0) op =1;// ver si el bloque twxth esta dentro de la matriz y esta descupados los bloques 
++                else
++                    {
++                        if((x+th < h) && (y+tw<w)) op = 2; // BLOQUE MENOR AL TAMAÑO DESEADO DE ANCHO Y LARGO
++                        else{
++                            if(x+th >=h ) op = 3; // NO CUMPLE EL LARGO
++                                else{
++                                if(y+tw>=w ) op = 4; // NO CUMPLE EL ANCHO
++                                    }
++                            }
++                    }
++
++            switch(op){
++                case 1:
++                    bloques += th*tw;
++                     for (int i = y; i < y +tw ; i++)
++                        for (int j = x; j < x+th; j++)
++                            matriz[i][j] =1;
++                    sub[t].Initf = y;
++                    sub[t].Initc = x;
++                    sub[t].Finc = y+tw;
++                    sub[t].Finf = x+th;
++                    break;
++
++                case 2:
++                    bloques += (h-x)*(w-y);
++                     for (int i = y; i < w ; i++)    
++                        for (int j = x; j < h; j++)
++                            matriz[i][j] =1;
++                    sub[t].Initf = y;
++                    sub[t].Initc = x;
++                    sub[t].Finc = w;
++                    sub[t].Finf = h; 
++                    break;
++
++                case 3:
++                    bloques += (h-x)*(tw);
++                     for (int i = y; i < w ; i++)    
++                        for (int j = x; j <x+th; j++)
++                            matriz[i][j] =1;
++                    sub[t].Initf = y;
++                    sub[t].Initc = x;
++                    sub[t].Finc = w;
++                    sub[t].Finf = x+th;   
++                    break;
++
++                case 4:
++                    bloques += (th)*(w-y);
++                     for (int i = y; i < y+tw ; i++)    
++                        for (int j = x; j <h; j++)
++                            matriz[i][j] =1;
++                    sub[t].Initf = y;
++                    sub[t].Initc = x;
++                    sub[t].Finc = y+tw;
++                    sub[t].Finf = h;
++                    break;
++                default: exit(0);
++                }
++            }
++        }
++    }
++
++}
++ 
++void evolve(void *u)
++{
++    unsigned (*univ)[w] = u;
++    unsigned new[h][w];
++        for_y for_x new[y][x] = univ[y][x];
++        int vecinos = 0;
++    for_y 
++        for_x{
++            vecinos = NNeighbour(u,y,x);
++            if(univ[y][x]==1){ // Esta viva?
++                if(vecinos==2 || vecinos==3){ // Tienes dos o tres vecinos?
++                    new[y][x]=1; // sigues vivo
++                }
++                else{
++                    new[y][x]=0;// Estas solo,por lo tanto, muerto :C
++                }
++            }
++            else{ 
++                if(vecinos==3){ // Reviviste de la muerte :)
++                    new[y][x]=1;
++                }
++            }
++            vecinos = 0; 
++        
++    }
++    for_y for_x univ[y][x] = new[y][x];
++}
++void Abort(){
++            getch();
++          pid_t main = getpid();
++            kill(main,SIGTERM);
++}
++
++void Alldead(void *u){ 
++    unsigned (*univ)[w] = u;
++for_y   for_x{
++                univ[y][x]=0;
++                }
++}
++
++void game(int*Argvector, int Arglenght)
++{   
++    //*********** PARAMETROS
++    w = Argvector[0];
++    h = Argvector[1];
++    tw = Argvector[2];
++    th = Argvector[3];
++    int cantHilos = Argvector[4];
++    
++    struct submatrices *sub = malloc(sizeof(struct submatrices)*h*w); // tamaño hxw es el maximo tamaño que puede tomar
++    unsigned univ[h][w];
++    setSubmatrices(sub);
++    int i,ano = 0;
++    //static mthread_thread_t hilos[cantHilos];
++    
++
++    Alldead(univ);
++    for (i = 5; i < Arglenght-1;i++)
++    {   
++        if(!(Argvector[i]>h) && !(Argvector[i+1]>w))
++        univ[Argvector[i]][Argvector[i+1]] = 1;
++        i++;        
++    }
++        //Abort();
++
++    pid_t pidF = getpid();
++    pid_t pidS;
++    pidS =fork();
++    if(!pidS){
++        getch();
++            kill(pidF,SIGTERM);
++            kill(pidS,SIGTERM);
++    }
++    else{
++       while(1){
++            printf("Año %d\n",ano );
++            ano++;
++            show(univ); // width -> ancho -> fi 
++            evolve(univ);
++            usleep(100000000); 
++       }
++    }
++    
++}
++
++
++
++//****************** MODO EJECUCION*******************
++// compilación ideal :  gcc -std=c99 -Wall conway2.c -o salida
++// compilación estandar :  gcc conway2.c -o salida
++// Archivo de prueba : config
++// ejecición de prueba :./salida config
++ 
++int main(int argc,char *argv[])
++{
++    int vecc = 0;
++    int *vec = (int*) malloc (sizeof(int));
++    for (int i = 0; i < argc; ++i)
++    {
++        if(strncmp(argv[i],"config",200)){
++            vec = Argv(argv[1]);
++            vecc = Argc(argv[1]);
++            game(vec, vecc);
++            exit(0);
++        }else{
++            printf("ERROR 1: EJECCIÓN ESTANDAR ARCHIVO: 'CONFIG'");
++            exit(0);
++        }
++
++    }
++}
+diff -x '.*' -ruNP CrPa/games/conway/conway1.c CrPa2/games/conway/conway1.c
+--- CrPa/games/conway/conway1.c	1969-12-31 21:00:00.000000000 -0300
++++ CrPa2/games/conway/conway1.c	2016-05-20 09:04:40.000000000 -0300
+@@ -0,0 +1,167 @@
++#include <stdio.h>
++#include <stdlib.h>
++#include <unistd.h>
++#include <string.h>
++#include <termios.h>
++#include <curses.h>
++#include <signal.h>
++#include "entrada.h"
++ // Juego basado en  Juego de la vida  de :AlmaVagabunda
++ // Juego basado en  Conway_ Game_of_Life  de :rosettacode.org
++
++#define for_x for (int x = 0; x < w; x++) // ciclo para x
++#define for_y for (int y = 0; y < h; y++) // ciclo para y
++#define for_xy for_x for_y
++
++void show(void *u, int w, int h)
++{
++    int (*univ)[w] = u;
++    for_y {
++        for_x {
++                if(univ[y][x]==0){
++                printf("\033[7;31m :( "); // It's Dead
++            }
++            else{
++                printf("\033[7;32m :) "); // It's alive
++            }
++        }
++        printf("\n");
++    }
++    fflush(stdout);
++    printf("\n");
 +}
 +int NNeighbour(void *u,int w, int h,int i,int j){
 +unsigned (*univ)[w] = u;
@@ -311,13 +440,303 @@ diff -x '.*' -ruNP CrPa/games/conway/conway2.c CrPa2/games/conway/conway2.c
 + 
 +void evolve(void *u, int w, int h)
 +{
-+	unsigned (*univ)[w] = u;
-+	unsigned new[h][w];
-+ 		for_y for_x new[y][x] = univ[y][x];
++    unsigned (*univ)[w] = u;
++    unsigned new[h][w];
++        for_y for_x new[y][x] = univ[y][x];
++        int vecinos = 0;
++    for_y 
++        for_x{
++            vecinos = NNeighbour(u,w,h,y,x);
++            if(univ[y][x]==1){ // Esta viva?
++                if(vecinos==2 || vecinos==3){ // Tienes dos o tres vecinos?
++                    new[y][x]=1; // sigues vivo
++                }
++                else{
++                    new[y][x]=0;// Estas solo,por lo tanto, muerto :C
++                }
++            }
++            else{ 
++                if(vecinos==3){ // Reviviste de la muerte :)
++                    new[y][x]=1;
++                }
++            }
++            vecinos = 0; 
++        
++    }
++    for_y for_x univ[y][x] = new[y][x];
++}
++ 
++void Alldead(void *u,  int w, int h){ 
++    unsigned (*univ)[w] = u;
++for_y   for_x{
++                univ[y][x]=0;
++                }
++        }
++
++int getcha(void){ // GETCH VERSION PAUL
++    struct termios oldattr, newattr;
++    int ch;
++    tcgetattr( STDIN_FILENO, &oldattr );
++    newattr = oldattr;
++    newattr.c_lflag &= ~( ICANON | ECHO );
++    tcsetattr( STDIN_FILENO, TCSANOW, &newattr );
++    ch = getchar();
++    tcsetattr( STDIN_FILENO, TCSANOW, &oldattr );
++    return ch;
++}
++
++
++void game(int w, int h, int*Argvector, int Arglenght)
++{   
++    unsigned univ[h][w];
++    int i,ano = 0;
++    pid_t pidF = getpid();
++    pid_t pidS;
++    Alldead(univ,w,h);
++    for (i = 5; i < Arglenght-1;i++)
++    {   
++        univ[Argvector[i]][Argvector[i+1]] = 1;
++        i++;        
++    }
++    pidS =fork();
++    if(!pidS){
++        getcha();
++            kill(pidF,SIGTERM);
++            kill(pidS,SIGTERM);
++    }
++    else{
++
++    while(1){
++        printf("Año %d\n",ano );
++        ano++;
++        show(univ, w, h); // width -> ancho -> fi 
++        evolve(univ, w, h);
++        usleep(2000000);    
++    } 
++    printf("\033[0m ");
++    printf("\033[2K");
++    }
++
++}
++
++//****************** MODO EJECUCION*******************
++// compilación ideal :  gcc -std=c99 -Wall conway2.c -o salida
++// compilación estandar :  gcc conway2.c -o salida
++// Archivo de prueba : config
++// ejecición de prueba :./salida config
++ 
++int main(int argc,char *argv[])
++{   int vecc = 0;
++    int *vec = (int*) malloc (sizeof(int));
++    for (int i = 0; i < argc; ++i)
++    {
++        if(strncmp(argv[i],"config",200)){
++            vec = Argv(argv[1]);
++            vecc = Argc(argv[1]);
++            game(vec[0], vec[1], vec, vecc);
++            exit(0);
++        }else{
++            printf("ERROR 1: EJECCIÓN ESTANDAR ARCHIVO: 'CONFIG'");
++            exit(0);
++        }
++
++    }
++    exit(0);
++}wa
+\ No newline at end of file
+diff -x '.*' -ruNP CrPa/games/conway/conway2.c CrPa2/games/conway/conway2.c
+--- CrPa/games/conway/conway2.c	1969-12-31 21:00:00.000000000 -0300
++++ CrPa2/games/conway/conway2.c	2016-05-20 09:04:40.000000000 -0300
+@@ -0,0 +1,333 @@
++#include <stdio.h>
++#include <stdlib.h>
++#include <unistd.h>
++#include <string.h>
++#include <termios.h>
++#include <signal.h>
++#include <minix/mthread.h>
++#include "bar.c"
++#include "entrada.h"
++ // Juego basado en  Juego de la vida  de :AlmaVagabunda
++ // Juego basado en  Conway_ Game_of_Life  de :rosettacode.org
++
++#define for_x for (int x = 0; x < w; x++) // ciclo para x
++#define for_y for (int y = 0; y < h; y++) // ciclo para y
++#define for_xy for_x for_y
++int h,w,th,tw;
++typedef struct submatrices_t{
++    int Initf, Initc, Finf , Finc;
++}submatrices;
++
++
++typedef struct paramloop_t{
++int t;
++submatrices *sub;
++int **univ;
++}paramloop;
++
++
++
++int getch(void)
++{
++    struct termios oldattr, newattr;
++    int ch;
++    tcgetattr( STDIN_FILENO, &oldattr );
++    newattr = oldattr;
++    newattr.c_lflag &= ~( ICANON | ECHO );
++    tcsetattr( STDIN_FILENO, TCSANOW, &newattr );
++    ch = getchar();
++    tcsetattr( STDIN_FILENO, TCSANOW, &oldattr );
++    return ch;
++}
++
++
++void *show(void *u)
++{
++	int **univ = (int**)u;
++    for_y {
++		for_x {
++                if(univ[y][x]==0){
++                printf("\033[7;31m :( "); // It's Dead
++            }
++            else{
++                printf("\033[7;32m :) "); // It's alive
++            }
++        }
++        printf("\n");
++	}
++	fflush(stdout);
++    printf("\n");
++    printf("\033[0m ");
++    printf("\033[2K");
++        return NULL;
++}
++
++int NNeighbour(void *u,int i,int j){
++int **univ = (int**)u;
++int vecino = 0;
++            if(i>0 && j>0 && univ[i-1][j-1]==1){ // diagonal izq arriba
++                vecino++;
++            }
++            if(i>0 && univ[i-1][j]==1){ // arriba
++                vecino++;
++            }
++            if(i>0 && j<w &&univ[i-1][j+1]==1){ //diagonal derecha superior 
++                vecino++;
++            }
++            if(j>0 &&univ[i][j-1]==1){ // izquierda*
++                vecino++;
++            }
++            if(j<w && univ[i][j+1]==1){ // derecha
++                vecino++;
++            }
++            if(i<h && j>0 &&univ[i+1][j-1]==1){ // diagonal izqueda inferior*
++                vecino++;
++            }
++            if(i<h &&univ[i+1][j]==1){ // abajo*
++                vecino++;
++            }
++            if(i<h && j<w && univ[i+1][j+1]==1){ // diagonal derecha inferior
++                vecino++;
++            }
++            return vecino;
++}
++
++
++int setSubmatrices(void *s){ // x = j = h = th || y = i = w = tw 
++submatrices *sub = (submatrices*)s;
++int matriz[h][w];
++for_y{
++    for_x{
++     matriz[y][x] = 0;}}
++int t = 0, bloques = 0;
++        sub[t].Initf = t;
++        sub[t].Initc = t;
++        sub[t].Finc = t;
++        sub[t].Finf = t;
++for_y
++    {
++    for_x
++        {
++            t++;
++            if(matriz[y][x] == 0)
++            {   //******** OPCIONES A LA QUE ENTRA 
++                int op = 0;
++                if((x+th > 0) && (y+tw>0) && matriz[x+th][y+tw] == 0) op =1;// ver si el bloque twxth esta dentro de la matriz y esta descupados los bloques 
++                else
++                    {
++                        if((x+th < h) && (y+tw<w)) op = 2; // BLOQUE MENOR AL TAMAÑO DESEADO DE ANCHO Y LARGO
++                        else{
++                            if(x+th >=h ) op = 3; // NO CUMPLE EL LARGO
++                                else{
++                                if(y+tw>=w ) op = 4; // NO CUMPLE EL ANCHO
++                                    }
++                            }
++                    }
++
++            switch(op){
++                case 1:
++                    bloques += th*tw;
++                     for (int i = y; i < y +tw ; i++)
++                        for (int j = x; j < x+th; j++)
++                            matriz[i][j] =1;
++                    sub[t].Initf = y;
++                    sub[t].Initc = x;
++                    sub[t].Finc = y+tw;
++                    sub[t].Finf = x+th;
++                    break;
++
++                case 2:
++                    bloques += (h-x)*(w-y);
++                     for (int i = y; i < w ; i++)    
++                        for (int j = x; j < h; j++)
++                            matriz[i][j] =1;
++                    sub[t].Initf = y;
++                    sub[t].Initc = x;
++                    sub[t].Finc = w;
++                    sub[t].Finf = h; 
++                    break;
++
++                case 3:
++                    bloques += (h-x)*(tw);
++                     for (int i = y; i < w ; i++)    
++                        for (int j = x; j <x+th; j++)
++                            matriz[i][j] =1;
++                    sub[t].Initf = y;
++                    sub[t].Initc = x;
++                    sub[t].Finc = w;
++                    sub[t].Finf = x+th;   
++                    break;
++
++                case 4:
++                    bloques += (th)*(w-y);
++                     for (int i = y; i < y+tw ; i++)    
++                        for (int j = x; j <h; j++)
++                            matriz[i][j] =1;
++                    sub[t].Initf = y;
++                    sub[t].Initc = x;
++                    sub[t].Finc = y+tw;
++                    sub[t].Finf = h;
++                    break;
++                default: exit(0);
++                }
++            }
++        }
++    }
++    return t;
++}
++ 
++void evolve(void *u, void *s, int t)
++{
++    submatrices *sub = (submatrices *)s;
++	int **univ = (int **)u;
++	int **new =  (int **)u;
 + 		int vecinos = 0;
-+	for_y 
-+		for_x{
-+			vecinos = NNeighbour(u,w,h,y,x);
++
++    for(int y = sub[t].Initc; y < sub[t].Finc; y++)
++        for (int x = sub[t].Initf; x < sub[t].Finf; x++)
++        {
++			vecinos = NNeighbour(u,y,x);
 +			if(univ[y][x]==1){ // Esta viva?
 +                if(vecinos==2 || vecinos==3){ // Tienes dos o tres vecinos?
 +                    new[y][x]=1; // sigues vivo
@@ -336,38 +755,102 @@ diff -x '.*' -ruNP CrPa/games/conway/conway2.c CrPa2/games/conway/conway2.c
 +	}
 +	for_y for_x univ[y][x] = new[y][x];
 +}
-+ 
-+void Alldead(void *u,  int w, int h){ 
-+	int (*univ)[w] = u;
-+for_y{
-+	for_x
-+                univ[y][x]=0;
-+            }
-+
-+        }
-+
-+
-+void game(int w, int h, int*Argvector, int Arglenght)
-+{
-+	unsigned univ[w][h];
-+    int i;
-+    Alldead(univ,w,h);
-+    for (i = 5; i < Arglenght; ++i)
-+    {   
-+            univ[Argvector[i]][Argvector[i+1]] = 1;
-+        i++;
-+                
-+    }
-+	printf("Para continuar presione ENTER\n");
-+	do{
-+		show(univ, w, h); // width -> ancho -> fi 
-+		evolve(univ, w, h);
-+		//usleep(2000000);	
-+	}while (getchar() == '\n'); 
-+	printf("\033[0m ");
-+	printf("\033[2K");
-+
++void *Abort(){
++            getch();
++          pid_t main = getpid();
++            kill(main,SIGTERM);
++            return NULL;
 +}
++
++void Alldead(void *u){ 
++	int **univ = (int **)u;
++for_y	for_x{
++                univ[y][x]=0;
++                }
++}
++
++ void *ciclo(void *arguments){
++        paramloop *args = (paramloop *)arguments;
++        int t =args->t;
++        submatrices (*sub) = args->sub;
++        int **univ  = args->univ;
++        free(arguments);
++        free(args);
++       int ano = 0;
++       while(1){
++            printf("Año %d\n",ano );
++            ano++;
++            show(univ); // width -> ancho -> fi 
++            for (int i = 0; i < t; ++i)
++                evolve(univ,sub,i);
++            usleep(100000); 
++       }
++       return NULL;
++}
++
++void game(int*Argvector, int Arglenght, void *u)
++{   
++    printf("hola\n");
++    //*********** PARAMETROS
++    w = Argvector[0];
++    h = Argvector[1];
++    tw = Argvector[2];
++    th = Argvector[3];
++    int cantHilos = Argvector[4];
++    submatrices *sub = (submatrices*)malloc(sizeof(submatrices)*h*w); // tamaño hxw es el maximo tamaño que puede tomar
++    int **univ = (int **)u;
++    int t = setSubmatrices(sub);
++    int i;
++    //static mthread_thread_t hilos[cantHilos];
++    printf("hola\n");
++    Alldead(univ);
++    printf("hola\n");
++    for (i = 5; i < Arglenght-1;i++)
++    {   
++        univ[Argvector[i]][Argvector[i+1]] = 1;
++        i++;        
++    }
++    printf("hola\n");
++    paramloop *p = (paramloop *)malloc(sizeof(paramloop));
++    printf("hola\n");
++    //struct paramshow params;
++    p->t = t;
++    p->sub = sub;
++    p->univ = univ;
++
++
++    
++    /*mthread_t hilos[cantHilos];
++    mthread_barrier_t *barrera1 = malloc(sizeof(struct mthread_barrier_t *));
++    int index_bar1 = mthread_barrier_init(barrera1, cantHilos);
++    
++    mthread_create(&hilos[0], NULL, &Abort, NULL);
++    mthread_create(&hilos[1], NULL, &show, (void *)&univ);
++    for (int i=2; i<cantHilos; i++) {
++      mthread_create(&hilos[i], NULL, &ciclo,&p);
++    }
++
++    for (int i=0; i<cantHilos; i++){
++    mthread_join(hilos[i], NULL);
++    }*/
++        /*
++
++        //Abort();
++
++
++	   while(1){
++            printf("Año %d\n",ano );
++            ano++;
++		    show(univ); // width -> ancho -> fi 
++		    for (i = 0; i < t; ++i)
++            {
++                evolve(univ,sub,i);
++            }
++		    usleep(100000);	
++	   }*/
++}
++
++
 +
 +//****************** MODO EJECUCION*******************
 +// compilación ideal :  gcc -std=c99 -Wall conway2.c -o salida
@@ -376,18 +859,20 @@ diff -x '.*' -ruNP CrPa/games/conway/conway2.c CrPa2/games/conway/conway2.c
 +// ejecición de prueba :./salida config
 + 
 +int main(int argc,char *argv[])
-+{	
-+	int w = 0, h = 0;
-+	int vecc = 0;
++{
++    int vecc = 0;
 +	int *vec = (int*) malloc (sizeof(int));
 +	for (int i = 0; i < argc; ++i)
 +	{
-+		if(strncmp(argv[i],"config",6)){
++		if(strncmp(argv[i],"config",200)){
 +			vec = Argv(argv[1]);
 +			vecc = Argc(argv[1]);
-+			w = vec[0];
-+			h = vec[1];
-+			game(w, h, vec, vecc);
++            int **matriz;
++            matriz = (int **)malloc (vec[0]*sizeof(int *));
++            for (int x=0;x<vec[0];i++)
++            matriz[x] = (int *) malloc (vec[1]*sizeof(int));
++
++			game(vec, vecc, matriz);
 +			exit(0);
 +		}else{
 +			printf("ERROR 1: EJECCIÓN ESTANDAR ARCHIVO: 'CONFIG'");
@@ -396,10 +881,9 @@ diff -x '.*' -ruNP CrPa/games/conway/conway2.c CrPa2/games/conway/conway2.c
 +
 +	}
 +}
-\ No newline at end of file
 diff -x '.*' -ruNP CrPa/games/conway/entrada.c CrPa2/games/conway/entrada.c
 --- CrPa/games/conway/entrada.c	1969-12-31 21:00:00.000000000 -0300
-+++ CrPa2/games/conway/entrada.c	2016-05-15 22:28:48.000000000 -0300
++++ CrPa2/games/conway/entrada.c	2016-05-20 09:04:40.000000000 -0300
 @@ -0,0 +1,42 @@
 +    #include "entrada.h"
 +    #include <stdio.h>
@@ -413,7 +897,7 @@ diff -x '.*' -ruNP CrPa/games/conway/entrada.c CrPa2/games/conway/entrada.c
 +    fp = fopen("config","r");
 +    if(fp == NULL)
 +        exit(1);
-+    int i = 0, t = 0;
++    int t = 0;
 +    while (feof(fp)==0){
 +        ch = fgetc(fp);
 +        if(ch == ' ' || ch == '\n'){
@@ -455,20 +939,6 @@ diff -x '.*' -ruNP CrPa/games/conway/entrada.h CrPa2/games/conway/entrada.h
 +    int Argc(char *archivo);
 +
 +#endif  /*ENTRADA_H */
-\ No newline at end of file
-diff -x '.*' -ruNP CrPa/games/conway/propm.h CrPa2/games/conway/propm.h
---- CrPa/games/conway/propm.h	1969-12-31 21:00:00.000000000 -0300
-+++ CrPa2/games/conway/propm.h	2016-05-15 22:28:48.000000000 -0300
-@@ -0,0 +1,9 @@
-+#ifndef	PROPM_H
-+#define	PROPM_H
-+unsigned Rellenar(int Row, int Col);
-+void Duplicar(int **ori, int **dest,int Row, int Col);/*ENTRADA_H */
-+void Print(int **M, int Row, int Col);
-+void Alldead(int **M, int Row, int Col);
-+
-+
-+#endif /*PROPM_H*/
 \ No newline at end of file
 Binary files CrPa/games/conway/salida and CrPa2/games/conway/salida differ
 Binary files CrPa/informe_avances/InformeSO_2_Final.pdf and CrPa2/informe_avances/InformeSO_2_Final.pdf differ
@@ -606,7 +1076,7 @@ diff -x '.*' -ruNP CrPa/minix/include/minix/mthread.h CrPa2/minix/include/minix/
  int pthread_event_init(pthread_event_t *event);
 diff -x '.*' -ruNP CrPa/minix/lib/libmthread/barrier.c CrPa2/minix/lib/libmthread/barrier.c
 --- CrPa/minix/lib/libmthread/barrier.c	2016-05-06 20:19:23.000000000 -0300
-+++ CrPa2/minix/lib/libmthread/barrier.c	2016-05-20 04:37:02.000000000 -0300
++++ CrPa2/minix/lib/libmthread/barrier.c	2016-05-27 19:53:23.000000000 -0300
 @@ -1,120 +1,179 @@
  #include <minix/mthread.h>
  #include "global.h"
@@ -791,20 +1261,19 @@ diff -x '.*' -ruNP CrPa/minix/lib/libmthread/barrier.c CrPa2/minix/lib/libmthrea
  
 -	loopitem = loopitem->bar_next;
 -  }
-+void duplicate_memory_array(mthread_barrier_t *arr, int old_size) {
++// void duplicate_memory_array(mthread_barrier_t *arr, int old_size) {
 +	
-+	int new_size = old_size * 2;
-+	mthread_barrier_t *barreras[new_size];
-+
-+	for (int i = 0; i < old_size * 2; i++){
-+		barreras[i] = &arr[i];
-+	} 
++// 	int new_size = old_size * 2;
++// 	mthread_barrier_t *barreras[new_size];
  
 -  return(0);
-+	return;
- }
--#endif
- 
++// 	for (int i = 0; i < old_size * 2; i++){
++// 		barreras[i] = &arr[i];
++// 	} 
++
++// 	return;
++// }
++
 +static void *test(void *arg) {
 +	int *ptr = (int *)arg;
 +	int val = *ptr;
@@ -812,9 +1281,14 @@ diff -x '.*' -ruNP CrPa/minix/lib/libmthread/barrier.c CrPa2/minix/lib/libmthrea
 +	int err = mthread_barrier_sync(barreras[0]);
 +	printf("err de sync = %d\n", err);
 +	return NULL;
-+}
+ }
+-#endif
  
 +/*************************************************************************************************/
+ 
++#define NUM 5
++static mthread_thread_t hilos[NUM];
++static int *numbers[NUM];
  
 -/*===========================================================================*
 - *				mthread_barrier_remove			     *
@@ -834,15 +1308,11 @@ diff -x '.*' -ruNP CrPa/minix/lib/libmthread/barrier.c CrPa2/minix/lib/libmthrea
 -  	bar_rear = (*barrier)->bar_prev;
 -  else
 -  	(*barrier)->bar_next->bar_prev = (*barrier)->bar_prev;
-+#define NUM 5
-+static mthread_thread_t hilos[NUM];
-+static int *numbers[NUM];
-+
 +int main() {
 +
 +	mthread_barrier_t *barrera0 = malloc(sizeof(struct mthread_barrier_t *));
 +
-+	int index_bar1 = mthread_barrier_init(barrera0, NUM);
++	mthread_barrier_init(barrera0, NUM);
 +	
 +	printf("\n\n**** PRUEBA DE INIT ****\n\n");	
 +
@@ -876,6 +1346,20 @@ diff -x '.*' -ruNP CrPa/minix/lib/libmthread/barrier.c CrPa2/minix/lib/libmthrea
 +
 +
 +
+diff -x '.*' -ruNP CrPa/minix/lib/libmthread/proto.h CrPa2/minix/lib/libmthread/proto.h
+--- CrPa/minix/lib/libmthread/proto.h	2016-05-06 20:04:00.000000000 -0300
++++ CrPa2/minix/lib/libmthread/proto.h	2016-05-27 19:53:23.000000000 -0300
+@@ -33,6 +33,10 @@
+ # define mthread_debug(m)
+ #endif
+ 
++/* barrier.c */
++
++void print_barrier_array(void);
++
+ /* mutex.c */
+ void mthread_init_valid_mutexes(void);
+ 
 Binary files CrPa/testing_barrier/barrier_init&destroy_test.png and CrPa2/testing_barrier/barrier_init&destroy_test.png differ
 Binary files CrPa/testing_barrier/barrier_sync_test1_example.png and CrPa2/testing_barrier/barrier_sync_test1_example.png differ
 Binary files CrPa/testing_barrier/barrier_sync_test2_example.png and CrPa2/testing_barrier/barrier_sync_test2_example.png differ
